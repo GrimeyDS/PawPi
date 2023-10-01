@@ -3,7 +3,7 @@ using Pri.Pawpi.Core.Entities;
 
 namespace Pri.Pawpi.Infrastructure.Data
 {
-    public class PawpiDbContext :DbContext
+    public class PawpiDbContext : DbContext
     {
         public DbSet<Practice> Practices { get; set; }
         public DbSet<Veterinarian> Veterinarians { get; set; }
