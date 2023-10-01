@@ -1,9 +1,14 @@
 ﻿using Pri.Pawpi.Core.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Pri.Pawpi.Core.Entities
 {
     public abstract class Person : BaseEntity, IContactEntity
-    {
+    { 
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime Birth { get; set; }

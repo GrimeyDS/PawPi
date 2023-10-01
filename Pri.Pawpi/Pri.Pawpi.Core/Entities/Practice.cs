@@ -12,8 +12,8 @@ namespace Pri.Pawpi.Core.Entities
         public string Postal { get; set; }
         public DateTime OpenTime { get; set; }
         public DateTime CloseTime { get; set; }
-        public List<Person> Veterinarians { get; set; }
-        public List<Person> Customers { get; set; }
+        public List<Veterinarian> Veterinarians { get; set; }
+        public List<Customer> Customers { get; set; }
 
     }
 }

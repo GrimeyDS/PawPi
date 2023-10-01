@@ -6,7 +6,7 @@
         public string Dosage { get; set; }
         public string Frequency { get; set; }
         public string Notes { get; set; }
-        public List<string> SideEffects { get; set; }
+        public string SideEffects { get; set; }
 
         public List<Pet> Pets { get; set; }
     }
