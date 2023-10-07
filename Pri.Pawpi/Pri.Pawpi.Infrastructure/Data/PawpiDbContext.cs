@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pri.Pawpi.Core.Entities;
+using Pri.Pawpi.Infrastructure.Data.Seeding;
 
 namespace Pri.Pawpi.Infrastructure.Data
 {
@@ -177,7 +178,7 @@ namespace Pri.Pawpi.Infrastructure.Data
             modelBuilder.Entity<Medication>()
                         .Property(m => m.Notes)
                         .IsRequired(false)
-                        .HasMaxLength(250);
+                        .HasMaxLength(500);
             modelBuilder.Entity<Medication>()
                         .Property(m => m.SideEffects)
                         .IsRequired(false)
@@ -195,8 +196,19 @@ namespace Pri.Pawpi.Infrastructure.Data
                         .HasMaxLength(250);
             #endregion
 
-            //Seeder.Seed(modelBuilder);
+            #region Seeding Data
+            ConsultationSeeder.Seed(modelBuilder);
+            MedicationSeeder.Seed(modelBuilder);
+            PracticeSeeder.Seed(modelBuilder);
+            SpecialtySeeder.Seed(modelBuilder);
+            VeterinarianSeeder.Seed(modelBuilder);
+            CustomerSeeder.Seed(modelBuilder);
+            PetSeeder.Seed(modelBuilder);
+            PracticeVeterinarianSeeder.Seed(modelBuilder);
+            SpecialtyVeterinarianSeeder.Seed(modelBuilder);
+            MedicationPetSeeder.Seed(modelBuilder);
             base.OnModelCreating(modelBuilder);
+            #endregion
         }
     }
 }
