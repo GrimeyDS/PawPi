@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using Pri.Pawpi.Infrastructure.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<PawpiDbContext>(
+    options => options
+    .UseSqlServer(builder.Configuration.GetConnectionString("PawpiDB"))
+    );
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
