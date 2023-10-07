@@ -10,8 +10,8 @@ namespace Pri.Pawpi.Core.Entities
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Postal { get; set; }
-        public DateTime OpenTime { get; set; }
-        public DateTime CloseTime { get; set; }
+        public DateTime? OpenTime { get; set; }
+        public DateTime? CloseTime { get; set; }
         public List<Veterinarian> Veterinarians { get; set; }
         public List<Customer> Customers { get; set; }
 
