@@ -67,5 +67,10 @@ namespace Pri.Pawpi.Infrastructure.Repositories
         {
             return _table.AsQueryable();
         }
+
+        public virtual async Task<IEnumerable<T>> SearchByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

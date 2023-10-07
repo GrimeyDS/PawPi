@@ -10,5 +10,6 @@ namespace Pri.Pawpi.Core.Interfaces.Repositories
         Task<bool> UpdateAsync(T toUpdate);
         Task<bool> DeleteAsync(T toDelete);
         IQueryable<T> GetAll();
+        Task<IEnumerable<T>> SearchByNameAsync(string name);
     }
 }
