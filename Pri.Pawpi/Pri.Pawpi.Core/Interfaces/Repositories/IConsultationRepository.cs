@@ -6,5 +6,6 @@ namespace Pri.Pawpi.Core.Interfaces.Repositories
     {
         public Task<IEnumerable<Consultation>> SearchByPetIdAsync(int petId);
         public Task<IEnumerable<Consultation>> SearchByVeterinarianIdAsync(int vetId);
+        public Task<IEnumerable<Consultation>> SearchByDateAsync(DateTime date);
     }
 }
