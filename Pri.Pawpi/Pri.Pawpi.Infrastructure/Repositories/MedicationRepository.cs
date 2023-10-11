@@ -16,7 +16,7 @@ namespace Pri.Pawpi.Infrastructure.Repositories
         public override async Task<IEnumerable<Medication>> SearchByNameAsync(string name)
         {
             var medication = GetAll();
-            return await medication.Where(s => s.Name.ToUpper() == name.ToUpper()).ToListAsync();
+            return await medication.Where(m => m.Name.ToUpper() == name.ToUpper()).ToListAsync();
         }
     }
 }

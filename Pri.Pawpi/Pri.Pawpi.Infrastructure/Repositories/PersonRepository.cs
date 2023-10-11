@@ -16,7 +16,7 @@ namespace Pri.Pawpi.Infrastructure.Repositories
         public override async Task<IEnumerable<Person>> SearchByNameAsync(string name)
         {
             var people = GetAll();
-            return await people.Where(s => s.FirstName.ToUpper().Contains(name.ToUpper()) || s.LastName.ToUpper().Contains(name.ToUpper())).ToListAsync();
+            return await people.Where(p => p.FirstName.ToUpper().Contains(name.ToUpper()) || p.LastName.ToUpper().Contains(name.ToUpper())).ToListAsync();
         }
     }
 }
