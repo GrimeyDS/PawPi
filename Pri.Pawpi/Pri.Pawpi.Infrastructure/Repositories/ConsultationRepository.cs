@@ -13,9 +13,10 @@ namespace Pri.Pawpi.Infrastructure.Repositories
 
         }
 
-        public Task<IEnumerable<Consultation>> SearchByDateAsync(DateTime date)
+        public async Task<IEnumerable<Consultation>> SearchByDateAsync(DateTime date)
         {
-            throw new NotImplementedException();
+            var consultations = GetAll();
+            return await consultations.Where(c => c.DateOfConsultation.Date == date.Date).ToListAsync();
         }
 
         public override async Task<IEnumerable<Consultation>> SearchByNameAsync(string name)
