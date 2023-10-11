@@ -22,19 +22,19 @@ namespace Pri.Pawpi.Infrastructure.Repositories
         public override async Task<IEnumerable<Consultation>> SearchByNameAsync(string name)
         {
             var consultations = GetAll();
-            return await consultations.Where(s => s.Title.ToUpper() == name.ToUpper()).ToListAsync();
+            return await consultations.Where(c => c.Title.ToUpper() == name.ToUpper()).ToListAsync();
         }
 
         public async Task<IEnumerable<Consultation>> SearchByPetIdAsync(int petId)
         {
             var consultations = GetAll();
-            return await consultations.Where(s => s.PetId == petId).ToListAsync();
+            return await consultations.Where(c => c.PetId == petId).ToListAsync();
         }
 
         public async Task<IEnumerable<Consultation>> SearchByVeterinarianIdAsync(int vetId)
         {
             var consultations = GetAll();
-            return await consultations.Where(s => s.VeterinarianId == vetId).ToListAsync();
+            return await consultations.Where(c => c.VeterinarianId == vetId).ToListAsync();
         }
     }
 }
