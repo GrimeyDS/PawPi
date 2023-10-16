@@ -1,4 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Pri.Pawpi.Core.Interfaces.Repositories;
+using Pri.Pawpi.Infrastructure.Data;
+using Pri.Pawpi.Infrastructure.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<PawpiDbContext>(
+    options => options
+    .UseSqlServer(builder.Configuration.GetConnectionString("PawpiDB"))
+    );
 
 // Add services to the container.
 
@@ -6,6 +15,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IConsultationRepository, ConsultationRepository>();
+builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
+builder.Services.AddScoped<IPetRepository, PetRepository>();
+builder.Services.AddScoped<IPracticeRepository, PracticeRepository>();
+builder.Services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 var app = builder.Build();
 

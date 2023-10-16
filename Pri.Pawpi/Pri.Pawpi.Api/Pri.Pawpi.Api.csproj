@@ -21,4 +21,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pri.Pawpi.Infrastructure\Pri.Pawpi.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
