@@ -1,4 +1,6 @@
-﻿namespace Pri.Pawpi.Api.DTOS
+﻿using Pri.Pawpi.Api.Dtos;
+
+namespace Pri.Pawpi.Api.Dtos.Medication
 {
     public class MedicationDto : BaseDto
     {

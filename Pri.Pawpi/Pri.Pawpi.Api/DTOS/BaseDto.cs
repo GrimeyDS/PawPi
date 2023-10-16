@@ -1,4 +1,4 @@
-﻿namespace Pri.Pawpi.Api.DTOS
+﻿namespace Pri.Pawpi.Api.Dtos
 {
     public abstract class BaseDto
     {
