@@ -2,10 +2,10 @@
 
 namespace Pri.Pawpi.Api.Dtos.Medication
 {
-    public class MedicationDto : BaseDto
+    public class MedicationResponseDto : BaseDto
     {
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Notes { get; set; }
         public string SideEffects { get; set; }
     }
 }
