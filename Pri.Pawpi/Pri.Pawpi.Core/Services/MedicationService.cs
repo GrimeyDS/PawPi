@@ -85,6 +85,8 @@ namespace Pri.Pawpi.Core.Services
             if (!pets.CheckIfPetsExist(updateModel.PetIds))
                 return medicationToUpdate.ToErrorModel("Invalid pets");
 
+
+            // TO UPDATE, THROWS ERROR WITH DUPLICATE PETS
             var petsToLink = pets.Where(p => updateModel.PetIds.Contains(p.Id)).ToList();
 
             medicationToUpdate.Name = updateModel.Name;
