@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pri.Pawpi.Core.Interfaces.Repositories;
+using Pri.Pawpi.Core.Interfaces.Services;
+using Pri.Pawpi.Core.Services;
 using Pri.Pawpi.Infrastructure.Data;
 using Pri.Pawpi.Infrastructure.Repositories;
 
@@ -22,6 +24,9 @@ builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<IPracticeRepository, PracticeRepository>();
 builder.Services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+builder.Services.AddScoped<IMedicationService, MedicationService>();
+builder.Services.AddScoped<IPetService, PetService>();
 
 var app = builder.Build();
 
