@@ -2,7 +2,7 @@
 
 namespace Pri.Pawpi.Core.Interfaces.Repositories
 {
-    public interface IPersonRepository : IBaseRepository<Person>
+    public interface IVeterinarianRepository : IBaseRepository<Veterinarian>
     {
     }
 }
