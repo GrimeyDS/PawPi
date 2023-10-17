@@ -13,40 +13,10 @@ namespace Pri.Pawpi.Infrastructure.Repositories
 
         }
 
-        public Task<bool> CreateAsync(Veterinarian toCreate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteAsync(Veterinarian toDelete)
-        {
-            throw new NotImplementedException();
-        }
-
         public override async Task<IEnumerable<Veterinarian>> SearchByNameAsync(string name)
         {
             var people = GetAll();
             return await people.Where(p => p.FirstName.ToUpper().Contains(name.ToUpper()) || p.LastName.ToUpper().Contains(name.ToUpper())).ToListAsync();
-        }
-
-        public Task<bool> UpdateAsync(Veterinarian toUpdate)
-        {
-            throw new NotImplementedException();
-        }
-
-        IQueryable<Veterinarian> IBaseRepository<Veterinarian>.GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<IEnumerable<Veterinarian>> IBaseRepository<Veterinarian>.GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Veterinarian> IBaseRepository<Veterinarian>.GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }
