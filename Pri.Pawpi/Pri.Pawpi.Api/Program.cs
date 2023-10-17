@@ -23,10 +23,11 @@ builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
 builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<IPracticeRepository, PracticeRepository>();
 builder.Services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
-builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IVeterinarianRepository, VeterinarianRepository>();
 
 builder.Services.AddScoped<IMedicationService, MedicationService>();
 builder.Services.AddScoped<IPetService, PetService>();
+builder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
 
 var app = builder.Build();
 
