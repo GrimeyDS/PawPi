@@ -101,5 +101,15 @@ namespace Pri.Pawpi.Core.Services
 
             return medicationToUpdate.ToResultModel();
         }
+
+        public async Task<ResultModel<Medication>> SearchByNameAsync(string name)
+        {
+            var medicine = await _medicationRepository.SearchByNameAsync(name);
+
+            if (medicine == null)
+                return medicine.ToErrorModel("Medication not found");
+
+            return medicine.ToResultModel();
+        }
     }
 }

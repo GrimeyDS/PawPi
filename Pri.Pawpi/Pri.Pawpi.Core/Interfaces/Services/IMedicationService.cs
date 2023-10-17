@@ -11,5 +11,6 @@ namespace Pri.Pawpi.Core.Interfaces.Services
         Task<ResultModel<Medication>> DeleteAsync(int id);
         Task<ResultModel<Medication>> GetAllAsync();
         Task<ResultModel<Medication>> GetByIdAsync(int id);
+        Task<ResultModel<Medication>> SearchByNameAsync(string name);
     }
 }
