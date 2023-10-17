@@ -1,9 +1,5 @@
 ﻿using Pri.Pawpi.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Pri.Pawpi.Core.Extensions
 {
@@ -12,6 +8,13 @@ namespace Pri.Pawpi.Core.Extensions
         public static bool CheckIfPetsExist(this IQueryable<Pet> pets, IEnumerable<int> petIdsToCheck)
         {
             if (pets.Where(p => petIdsToCheck.Contains(p.Id)).Count() != petIdsToCheck.Count())
+                return false;
+            return true;
+        }
+
+        public static bool CheckIfVetsExist(this IQueryable<Veterinarian> vets, IEnumerable<int> vetIdsToCheck)
+        {
+            if (vets.Where(v => vetIdsToCheck.Contains(v.Id)).Count() != vetIdsToCheck.Count())
                 return false;
             return true;
         }
