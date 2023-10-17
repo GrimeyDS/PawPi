@@ -25,7 +25,7 @@ namespace Pri.Pawpi.Core.Services
 
             var specialtyToAdd = new Specialty();
 
-            if (!vets.CheckIfVetsExist(addModel.VeterinarianIds))
+            if (!vets.CheckIfIdsExist(addModel.VeterinarianIds))
                 return specialtyToAdd.ToErrorModel("Invalid veterinarians");
 
             if (specialties.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
@@ -80,7 +80,7 @@ namespace Pri.Pawpi.Core.Services
             if (specialtyToUpdate == null)
                 return specialtyToUpdate.ToErrorModel("Specialty not found");
 
-            if (!vets.CheckIfVetsExist(updateModel.VeterinarianIds))
+            if (!vets.CheckIfIdsExist(updateModel.VeterinarianIds))
                 return specialtyToUpdate.ToErrorModel("Invalid veterinarians");
 
 

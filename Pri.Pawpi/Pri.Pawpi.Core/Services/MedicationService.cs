@@ -24,7 +24,7 @@ namespace Pri.Pawpi.Core.Services
             var medicine = _medicationRepository.GetAll();
             var medicationToAdd = new Medication();
 
-            if (!pets.CheckIfPetsExist(addModel.PetIds))
+            if (!pets.CheckIfIdsExist(addModel.PetIds))
                 return medicationToAdd.ToErrorModel("Invalid pets");
 
             if (medicine.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
@@ -82,7 +82,7 @@ namespace Pri.Pawpi.Core.Services
             if (medicationToUpdate == null)
                 return medicationToUpdate.ToErrorModel("Medication not found");
 
-            if (!pets.CheckIfPetsExist(updateModel.PetIds))
+            if (!pets.CheckIfIdsExist(updateModel.PetIds))
                 return medicationToUpdate.ToErrorModel("Invalid pets");
 
 
