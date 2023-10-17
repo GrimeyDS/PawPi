@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Medication;
+using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services.Models.Medication;
 
@@ -37,6 +38,10 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var medicine = await _medicationService.GetByIdAsync(id);
+
+            if (!medicine.IsSuccess)
+                return BadRequest(medicine.Errors);
+
             var medicineResponseDto = new MedicationResponseDto
             {
                 Id = medicine.Item.Id,

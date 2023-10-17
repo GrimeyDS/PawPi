@@ -34,6 +34,10 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var specialty = await _specialtyService.GetByIdAsync(id);
+
+            if (!specialty.IsSuccess)
+                return BadRequest(specialty.Errors);
+
             var specialtyResponseDto = new SpecialtyResponseDto
             {
                 Id = specialty.Item.Id,
@@ -65,6 +69,7 @@ namespace Pri.Pawpi.Api.Controllers
             return Ok();
         }
 
+        [HttpPut]
         public async Task<IActionResult> Update(SpecialtyRequestDto specialtyRequestDto)
         {
             if (!ModelState.IsValid)

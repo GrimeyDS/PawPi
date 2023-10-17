@@ -63,7 +63,7 @@ namespace Pri.Pawpi.Core.Services
         }
 
         public async Task<ResultModel<Specialty>> GetByIdAsync(int id)
-        {
+         {
             var specialty = await _specialtyRepository.GetByIdAsync(id);
 
             if (specialty == null)
