@@ -28,6 +28,7 @@ builder.Services.AddScoped<IVeterinarianRepository, VeterinarianRepository>();
 builder.Services.AddScoped<IMedicationService, MedicationService>();
 builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
+builder.Services.AddScoped<IVeterinarianService, VeterinarianService>();
 
 var app = builder.Build();
 
