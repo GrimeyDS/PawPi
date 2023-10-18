@@ -23,7 +23,7 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var medicine = await _medicationService.GetAllAsync();
-            var medicineResponseDto = medicine.Items.MapMediceneDto();
+            var medicineResponseDto = medicine.Items.MapMedicineDto();
 
             return Ok(medicineResponseDto);
         }
