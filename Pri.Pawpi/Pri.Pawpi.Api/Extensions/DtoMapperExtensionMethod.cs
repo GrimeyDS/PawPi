@@ -1,4 +1,5 @@
-﻿using Pri.Pawpi.Api.Dtos.Medication;
+﻿using Pri.Pawpi.Api.Dtos.Customer;
+using Pri.Pawpi.Api.Dtos.Medication;
 using Pri.Pawpi.Api.Dtos.Specialty;
 using Pri.Pawpi.Api.Dtos.Veterinarian;
 using Pri.Pawpi.Core.Entities;
@@ -33,6 +34,31 @@ namespace Pri.Pawpi.Api.Extensions
         }
         #endregion
 
+        #region customer dto mapper
+        public static IEnumerable<CustomerResponseDto> MapCustomersDto(this IEnumerable<Customer> customers)
+        {
+            return customers.Select(c => c.MapCustomerDto());
+        }
+
+        public static CustomerResponseDto MapCustomerDto(this Customer customer)
+        {
+            return new CustomerResponseDto
+            {
+                Id = customer.Id,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Birth = customer.Birth,
+                Address = customer.Address,
+                City = customer.City,
+                Email = customer.Email,
+                Phone = customer.Phone,
+                Postal = customer.Postal,
+                //Practice = customer.Practice.MapPracticeDto(),
+                //Pets = customer.Pets.MapPetsDto()
+            };
+        }
+        #endregion
+
         #region specialty dto mapper
         public static IEnumerable<SpecialtyResponseDto> MapSpecialtiesDto(this IEnumerable<Specialty> specs)
         {
@@ -50,7 +76,6 @@ namespace Pri.Pawpi.Api.Extensions
             };
         }
         #endregion
-
 
         #region medication dto mapper
         public static IEnumerable<MedicationResponseDto> MapMedicineDto(this IEnumerable<Medication> meds)
