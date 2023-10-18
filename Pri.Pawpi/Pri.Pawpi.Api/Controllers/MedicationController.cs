@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Medication;
-using Pri.Pawpi.Core.Entities;
+using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services.Models.Medication;
 
@@ -23,13 +23,7 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var medicine = await _medicationService.GetAllAsync();
-            var medicineResponseDto = medicine.Items.Select(m => new MedicationResponseDto
-            {
-                Id = m.Id,
-                Name = m.Name,
-                Notes = m.Notes,
-                SideEffects = m.SideEffects
-            });
+            var medicineResponseDto = medicine.Items.MapMediceneDto();
 
             return Ok(medicineResponseDto);
         }
@@ -42,13 +36,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!medicine.IsSuccess)
                 return BadRequest(medicine.Errors);
 
-            var medicineResponseDto = new MedicationResponseDto
-            {
-                Id = medicine.Item.Id,
-                Name = medicine.Item.Name,
-                Notes = medicine.Item.Notes,
-                SideEffects = medicine.Item.SideEffects
-            };
+            var medicineResponseDto = medicine.Item.MapMedicationDto();
 
             return Ok(medicineResponseDto);
         }
