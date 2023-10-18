@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pri.Pawpi.Api.Dtos.Specialty;
-using Pri.Pawpi.Api.Dtos.Veterinarian;
+using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Interfaces.Services;
 
 namespace Pri.Pawpi.Api.Controllers
@@ -21,22 +20,9 @@ namespace Pri.Pawpi.Api.Controllers
         {
             var veterinarians = await _veterinarianService.GetAllAsync();
 
-            var vetResponseDto = veterinarians.Items.Select(v => new VeterinarianResponseDto
-            {
-                Id = v.Id,
-                FirstName = v.FirstName,
-                LastName = v.LastName,
-                Birth = v.Birth,
-                Address = v.Address,
-                City = v.City,
-                Email = v.Email,
-                Phone = v.Phone,
-                Postal = v.Postal,
-            });
+            var vetResponseDto = veterinarians.Items.MapVeterinariansDto();
 
             return Ok(vetResponseDto);
         }
-
-
     }
 }
