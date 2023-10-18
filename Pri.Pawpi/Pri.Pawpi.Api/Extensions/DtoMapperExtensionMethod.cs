@@ -29,7 +29,6 @@ namespace Pri.Pawpi.Api.Extensions
                 Phone = vet.Phone,
                 Postal = vet.Postal,
                 Specialties = vet.Specialties.MapSpecialtiesDto(),
-                //Practices = vet.Practices.MapPracticesDto()
             };
         }
         #endregion
@@ -53,7 +52,6 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = customer.Email,
                 Phone = customer.Phone,
                 Postal = customer.Postal,
-                //Practice = customer.Practice.MapPracticeDto(),
                 //Pets = customer.Pets.MapPetsDto()
             };
         }
@@ -72,7 +70,6 @@ namespace Pri.Pawpi.Api.Extensions
                 Id = spec.Id,
                 Name = spec.Name,
                 Description = spec.Description,
-                Veterinarians = spec.Veterinarians.MapVeterinariansDto()
             };
         }
         #endregion

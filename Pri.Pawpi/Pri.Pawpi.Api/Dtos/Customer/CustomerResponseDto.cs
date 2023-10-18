@@ -3,6 +3,5 @@
     public class CustomerResponseDto : PersonResponseDto
     {
         //public IEnumerable<PetResponseDto> Pets { get; set; }
-        //public PracticeDto Practice { get; set; }
     }
 }
