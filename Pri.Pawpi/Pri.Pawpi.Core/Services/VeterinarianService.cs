@@ -32,9 +32,14 @@ namespace Pri.Pawpi.Core.Services
             return vets.ToResultModel();
         }
 
-        public Task<ResultModel<Veterinarian>> GetByIdAsync(int id)
+        public async Task<ResultModel<Veterinarian>> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var vet = await _veterinarianRepository.GetByIdAsync(id);
+
+            if (vet == null)
+                return vet.ToErrorModel("Veterinarian not found");
+
+            return vet.ToResultModel();
         }
 
         public Task<ResultModel<Veterinarian>> UpdateAsync(VeterinarianUpdateModel updateModel)

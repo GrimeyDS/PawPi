@@ -32,9 +32,14 @@ namespace Pri.Pawpi.Core.Services
             return customers.ToResultModel();
         }
 
-        public Task<ResultModel<Customer>> GetByIdAsync(int id)
+        public async Task<ResultModel<Customer>> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var customer = await _customerRepository.GetByIdAsync(id);
+
+            if (customer == null)
+                return customer.ToErrorModel("Customer not found");
+
+            return customer.ToResultModel();
         }
 
         public Task<ResultModel<Customer>> UpdateAsync(CustomerUpdateModel updateModel)

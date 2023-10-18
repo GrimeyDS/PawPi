@@ -25,5 +25,18 @@ namespace Pri.Pawpi.Api.Controllers
 
             return Ok(customerResponseDto);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var customers = await _customerService.GetByIdAsync(id);
+
+            if (!customers.IsSuccess)
+                return BadRequest(customers.Errors);
+
+            var customerResponseDto = customers.Item.MapCustomerDto();
+
+            return Ok(customerResponseDto);
+        }
     }
 }

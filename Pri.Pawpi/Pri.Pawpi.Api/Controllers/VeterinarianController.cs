@@ -24,5 +24,18 @@ namespace Pri.Pawpi.Api.Controllers
 
             return Ok(vetResponseDto);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var veterinarians = await _veterinarianService.GetByIdAsync(id);
+
+            if (!veterinarians.IsSuccess)
+                return BadRequest(veterinarians.Errors);
+
+            var veterinarianResponseDto = veterinarians.Item.MapVeterinarianDto();
+
+            return Ok(veterinarianResponseDto);
+        }
     }
 }
