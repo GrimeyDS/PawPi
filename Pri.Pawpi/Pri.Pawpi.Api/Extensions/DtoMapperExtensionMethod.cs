@@ -24,6 +24,22 @@ namespace Pri.Pawpi.Api.Extensions
                 Postal = v.Postal
             });
         }
+
+        public static VeterinarianResponseDto MapVeterinarianDto(this Veterinarian vet)
+        {
+            return new VeterinarianResponseDto
+            {
+                Id = vet.Id,
+                FirstName = vet.FirstName,
+                LastName = vet.LastName,
+                Birth = vet.Birth,
+                Address = vet.Address,
+                City = vet.City,
+                Email = vet.Email,
+                Phone = vet.Phone,
+                Postal = vet.Postal
+            };
+        }
         #endregion
 
         #region specialty dto mapper
