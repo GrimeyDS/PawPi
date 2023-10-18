@@ -35,12 +35,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!specialty.IsSuccess)
                 return BadRequest(specialty.Errors);
 
-            var specialtyResponseDto = new SpecialtyResponseDto
-            {
-                Id = specialty.Item.Id,
-                Name = specialty.Item.Name,
-                Description = specialty.Item.Description
-            };
+            var specialtyResponseDto = specialty.Item.MapSpecialtyDto();
 
             return Ok(specialtyResponseDto);
         }

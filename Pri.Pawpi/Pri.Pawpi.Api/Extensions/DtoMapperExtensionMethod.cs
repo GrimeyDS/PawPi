@@ -32,5 +32,16 @@ namespace Pri.Pawpi.Api.Extensions
                 Veterinarians = s.Veterinarians.MapVeterinariansDto()
             });
         }
+
+        public static SpecialtyResponseDto MapSpecialtyDto(this Specialty spec)
+        {
+            return new SpecialtyResponseDto
+            {
+                Id = spec.Id,
+                Name = spec.Name,
+                Description = spec.Description,
+                Veterinarians = spec.Veterinarians.MapVeterinariansDto()
+            });
+        }
     }
 }
