@@ -10,7 +10,22 @@ namespace Pri.Pawpi.Infrastructure.Repositories
     {
         public SpecialtyRepository(PawpiDbContext PawPiDb, ILogger<BaseRepository<Specialty>> logger) : base(PawPiDb, logger)
         {
+        }
 
+        public async override Task<IEnumerable<Specialty>> GetAllAsync()
+        {
+            return await _table.Include(s => s.Veterinarians).ToListAsync();
+        }
+
+        public async override Task<Specialty> GetByIdAsync(int id)
+        {
+            return await _table.Include(s => s.Veterinarians).FirstOrDefaultAsync(
+                t => t.Id == id);
+        }
+
+        public override IQueryable<Specialty> GetAll()
+        {
+            return _table.Include(s => s.Veterinarians).AsQueryable();
         }
 
         public override async Task<IEnumerable<Specialty>> SearchByNameAsync(string name)

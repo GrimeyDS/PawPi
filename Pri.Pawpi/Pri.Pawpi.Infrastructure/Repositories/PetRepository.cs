@@ -13,6 +13,30 @@ namespace Pri.Pawpi.Infrastructure.Repositories
 
         }
 
+        public async override Task<IEnumerable<Pet>> GetAllAsync()
+        {
+            return await _table.Include(p => p.Customer)
+                               .Include(p => p.Consultations)
+                               .Include(p => p.Medications)
+                               .ToListAsync();
+        }
+
+        public async override Task<Pet> GetByIdAsync(int id)
+        {
+            return await _table.Include(p => p.Customer)
+                               .Include(p => p.Consultations)
+                               .Include(p => p.Medications)
+                               .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public override IQueryable<Pet> GetAll()
+        {
+            return _table.Include(p => p.Customer)
+                         .Include(p => p.Consultations)
+                         .Include(p => p.Medications)
+                         .AsQueryable();
+        }
+
         public async Task<IEnumerable<Pet>> SearchByAnimalType(string type)
         {
             var pets = GetAll();
