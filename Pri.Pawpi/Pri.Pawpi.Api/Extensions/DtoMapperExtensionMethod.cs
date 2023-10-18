@@ -41,7 +41,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Name = spec.Name,
                 Description = spec.Description,
                 Veterinarians = spec.Veterinarians.MapVeterinariansDto()
-            });
+            };
         }
     }
 }
