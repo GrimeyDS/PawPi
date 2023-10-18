@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Specialty;
 using Pri.Pawpi.Api.Dtos.Veterinarian;
+using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services.Models.Specialty;
 
@@ -21,24 +22,7 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var specialties = await _specialtyService.GetAllAsync();
-            var specialtyResponseDto = specialties.Items.Select(s => new SpecialtyResponseDto
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Description = s.Description,
-                Veterinarians = s.Veterinarians.Select(v => new VeterinarianResponseDto
-                {
-                    Id = v.Id,
-                    FirstName = v.FirstName,
-                    LastName = v.LastName,
-                    Birth = v.Birth,
-                    Address = v.Address,
-                    City = v.City,
-                    Email = v.Email,
-                    Phone = v.Phone,
-                    Postal = v.Postal,
-                })
-            });
+            var specialtyResponseDto = specialties.Items.MapSpecialtiesDto();
 
             return Ok(specialtyResponseDto);
         }
