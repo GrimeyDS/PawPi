@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Specialty;
+using Pri.Pawpi.Api.Dtos.Veterinarian;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services.Models.Specialty;
 
@@ -24,7 +25,19 @@ namespace Pri.Pawpi.Api.Controllers
             {
                 Id = s.Id,
                 Name = s.Name,
-                Description = s.Description
+                Description = s.Description,
+                Veterinarians = s.Veterinarians.Select(v => new VeterinarianResponseDto
+                {
+                    Id = v.Id,
+                    FirstName = v.FirstName,
+                    LastName = v.LastName,
+                    Birth = v.Birth,
+                    Address = v.Address,
+                    City = v.City,
+                    Email = v.Email,
+                    Phone = v.Phone,
+                    Postal = v.Postal,
+                })
             });
 
             return Ok(specialtyResponseDto);
