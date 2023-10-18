@@ -11,18 +11,7 @@ namespace Pri.Pawpi.Api.Extensions
         #region veterinarian dto mapper
         public static IEnumerable<VeterinarianResponseDto> MapVeterinariansDto(this IEnumerable<Veterinarian> vets)
         {
-            return vets.Select(v => new VeterinarianResponseDto
-            {
-                Id = v.Id,
-                FirstName = v.FirstName,
-                LastName = v.LastName,
-                Birth = v.Birth,
-                Address = v.Address,
-                City = v.City,
-                Email = v.Email,
-                Phone = v.Phone,
-                Postal = v.Postal
-            });
+            return vets.Select(v => v.MapVeterinarianDto());
         }
 
         public static VeterinarianResponseDto MapVeterinarianDto(this Veterinarian vet)
@@ -37,7 +26,9 @@ namespace Pri.Pawpi.Api.Extensions
                 City = vet.City,
                 Email = vet.Email,
                 Phone = vet.Phone,
-                Postal = vet.Postal
+                Postal = vet.Postal,
+                Specialties = vet.Specialties.MapSpecialtiesDto(),
+                //Practices = vet.Practices.MapPracticesDto()
             };
         }
         #endregion
@@ -45,13 +36,7 @@ namespace Pri.Pawpi.Api.Extensions
         #region specialty dto mapper
         public static IEnumerable<SpecialtyResponseDto> MapSpecialtiesDto(this IEnumerable<Specialty> specs)
         {
-            return specs.Select(s => new SpecialtyResponseDto
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Description = s.Description,
-                Veterinarians = s.Veterinarians.MapVeterinariansDto()
-            });
+            return specs.Select(s => s.MapSpecialtyDto());
         }
 
         public static SpecialtyResponseDto MapSpecialtyDto(this Specialty spec)
@@ -68,15 +53,9 @@ namespace Pri.Pawpi.Api.Extensions
 
 
         #region medication dto mapper
-        public static IEnumerable<MedicationResponseDto> MapMediceneDto(this IEnumerable<Medication> meds)
+        public static IEnumerable<MedicationResponseDto> MapMedicineDto(this IEnumerable<Medication> meds)
         {
-            return meds.Select(m => new MedicationResponseDto
-            {
-                Id = m.Id,
-                Name = m.Name,
-                Notes = m.Notes,
-                SideEffects = m.SideEffects
-            });
+            return meds.Select(m => m.MapMedicationDto());
         }
 
         public static MedicationResponseDto MapMedicationDto(this Medication med)
