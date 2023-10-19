@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
 
