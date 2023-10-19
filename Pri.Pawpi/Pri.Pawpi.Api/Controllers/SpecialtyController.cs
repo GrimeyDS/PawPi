@@ -4,7 +4,6 @@ using Pri.Pawpi.Api.Dtos.Specialty.Response;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
-using Pri.Pawpi.Core.Services.Models.Specialty;
 
 namespace Pri.Pawpi.Api.Controllers
 {
