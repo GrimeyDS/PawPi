@@ -6,6 +6,7 @@ using Pri.Pawpi.Api.Dtos.Practice;
 using Pri.Pawpi.Api.Dtos.Specialty;
 using Pri.Pawpi.Api.Dtos.Veterinarian;
 using Pri.Pawpi.Core.Entities;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Pri.Pawpi.Api.Extensions
 {
@@ -40,7 +41,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = vet.Email,
                 Phone = vet.Phone,
                 Postal = vet.Postal,
-                Specialties = vet.Specialties.MapSpecialtiesDto(),
+                Specialties = vet.Specialties.MapSpecialtiesDto()
             };
         }
         #endregion
@@ -72,7 +73,10 @@ namespace Pri.Pawpi.Api.Extensions
         #region specialty dto mapper
         public static IEnumerable<SpecialtyResponseDto> MapSpecialtiesDto(this IEnumerable<Specialty> specs)
         {
-            return specs.Select(s => s.MapSpecialtyDto());
+            if (specs is null)
+                return new List<SpecialtyResponseDto>();
+            else
+                return specs.Select(s => s.MapSpecialtyDto());
         }
 
         public static SpecialtyResponseDto MapSpecialtyDto(this Specialty spec)
@@ -107,7 +111,10 @@ namespace Pri.Pawpi.Api.Extensions
         #region pet dto mapper
         public static IEnumerable<PetResponseDto> MapPetsDto(this IEnumerable<Pet> pets)
         {
-            return pets.Select(p => p.MapPetDto());
+            if (pets is null)
+                return new List<PetResponseDto>();
+            else
+                return pets.Select(s => s.MapPetDto());
         }
 
         public static PetResponseDto MapPetDto(this Pet pet)
