@@ -31,6 +31,8 @@ builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
 builder.Services.AddScoped<IVeterinarianService, VeterinarianService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IPracticeService, PracticeService>();
+builder.Services.AddScoped<IConsultationService, ConsultationService>();
 
 var app = builder.Build();
 
