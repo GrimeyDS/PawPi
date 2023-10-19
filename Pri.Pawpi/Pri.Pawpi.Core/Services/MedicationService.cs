@@ -9,7 +9,7 @@ namespace Pri.Pawpi.Core.Services
 {
     public class MedicationService : ServiceBase<Medication>, IMedicationService
     {
-        public MedicationService(IMedicationRepository medRepo) : base(medRepo)
+        public MedicationService(IMedicationRepository medicationRepository) : base(medicationRepository)
         {
         }
 
