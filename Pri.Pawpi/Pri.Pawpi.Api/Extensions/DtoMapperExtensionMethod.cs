@@ -1,5 +1,6 @@
 ﻿using Pri.Pawpi.Api.Dtos.Customer;
 using Pri.Pawpi.Api.Dtos.Medication;
+using Pri.Pawpi.Api.Dtos.Pet;
 using Pri.Pawpi.Api.Dtos.Specialty;
 using Pri.Pawpi.Api.Dtos.Veterinarian;
 using Pri.Pawpi.Core.Entities;
@@ -88,6 +89,28 @@ namespace Pri.Pawpi.Api.Extensions
                 Name = med.Name,
                 Notes = med.Notes,
                 SideEffects = med.SideEffects
+            };
+        }
+        #endregion
+
+        #region pet dto mapper
+        public static IEnumerable<PetResponseDto> MapPetsDto(this IEnumerable<Pet> pets)
+        {
+            return pets.Select(m => m.MapPetDto());
+        }
+
+        public static PetResponseDto MapPetDto(this Pet pet)
+        {
+            return new PetResponseDto
+            {
+                Id = pet.Id,
+                Name = pet.Name,
+                CallName = pet.CallName,
+                Breed = pet.Breed,
+                Color = pet.Color,
+                AnimalType = pet.AnimalType,
+                Weight = (double)pet.Weight,
+                // Add consultations
             };
         }
         #endregion
