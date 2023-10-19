@@ -7,39 +7,15 @@ using Pri.Pawpi.Core.Services.Models.Customer;
 
 namespace Pri.Pawpi.Core.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService : ServiceBase<Customer>, ICustomerService
     {
-        private readonly ICustomerRepository _customerRepository;
-
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository) : base(customerRepository)
         {
-            _customerRepository = customerRepository;
         }
 
         public Task<ResultModel<Customer>> AddAsync(CustomerAddModel addModel)
         {
             throw new NotImplementedException();
-        }
-
-        public Task<ResultModel<Customer>> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ResultModel<Customer>> GetAllAsync()
-        {
-            var customers = await _customerRepository.GetAllAsync();
-            return customers.ToResultModel();
-        }
-
-        public async Task<ResultModel<Customer>> GetByIdAsync(int id)
-        {
-            var customer = await _customerRepository.GetByIdAsync(id);
-
-            if (customer == null)
-                return customer.ToErrorModel("Customer not found");
-
-            return customer.ToResultModel();
         }
 
         public Task<ResultModel<Customer>> UpdateAsync(CustomerUpdateModel updateModel)

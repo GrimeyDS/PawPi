@@ -7,39 +7,15 @@ using Pri.Pawpi.Core.Services.Models.Pet;
 
 namespace Pri.Pawpi.Core.Services
 {
-    public class PetService : IPetService
+    public class PetService : ServiceBase<Pet>, IPetService
     {
-        private readonly IPetRepository _petRepository;
-
-        public PetService(IPetRepository petRepository)
+        public PetService(IPetRepository petRepository) : base(petRepository)
         {
-            _petRepository = petRepository;
         }
 
         public Task<ResultModel<Pet>> AddAsync(PetAddModel addModel)
         {
             throw new NotImplementedException();
-        }
-
-        public Task<ResultModel<Pet>> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ResultModel<Pet>> GetAllAsync()
-        {
-            var pets = await _petRepository.GetAllAsync();
-            return pets.ToResultModel();
-        }
-
-        public async Task<ResultModel<Pet>> GetByIdAsync(int id)
-        {
-            var pet = await _petRepository.GetByIdAsync(id);
-
-            if (pet == null)
-                return pet.ToErrorModel("Pet not found");
-
-            return pet.ToResultModel();
         }
 
         public Task<ResultModel<Pet>> UpdateAsync(PetUpdateModel updateModel)
@@ -49,10 +25,10 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Pet>> SearchByNameAsync(string name)
         {
-            var pets = await _petRepository.SearchByNameAsync(name);
+            var pets = await _repository.SearchByNameAsync(name);
 
             if (pets == null)
-                return pets.ToErrorModel("Medication not found");
+                return pets.ToErrorModel("Pet not found");
 
             return pets.ToResultModel();
         }
