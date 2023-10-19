@@ -19,7 +19,7 @@ namespace Pri.Pawpi.Api.Controllers
             var result = await _service.DeleteAsync(id);
 
             if (!result.IsSuccess)
-                return BadRequest(result.Errors);
+                return NotFound(result.Errors);
 
             return Ok();
         }
