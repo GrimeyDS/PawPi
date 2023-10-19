@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pri.Pawpi.Api.Dtos.Specialty
+namespace Pri.Pawpi.Api.Dtos.Specialty.Request
 {
-    public class SpecialtyRequestDto : BaseDto
+    public class SpecialtyCreateDto
     {
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
