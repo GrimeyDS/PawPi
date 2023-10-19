@@ -3,25 +3,14 @@ using Pri.Pawpi.Api.Dtos.Customer;
 using Pri.Pawpi.Api.Dtos.Medication;
 using Pri.Pawpi.Api.Dtos.Pet;
 using Pri.Pawpi.Api.Dtos.Practice;
-using Pri.Pawpi.Api.Dtos.Specialty;
+using Pri.Pawpi.Api.Dtos.Specialty.Response;
 using Pri.Pawpi.Api.Dtos.Veterinarian;
 using Pri.Pawpi.Core.Entities;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Pri.Pawpi.Api.Extensions
 {
     public static class DtoMapperExtensionMethod
     {
-        //public static IEnumerable<T> MapDtos<T>(this ResultModel<T> resultModel)
-        //{
-        //    var items = resultModel.Items;
-        //    string itemName = items.GetType().Name;
-
-        //    IEnumerable<T> result = new List<T>();
-
-        //    return result;
-        //}
-
         #region veterinarian dto mapper
         public static IEnumerable<VeterinarianResponseDto> MapVeterinariansDto(this IEnumerable<Veterinarian> vets)
         {
@@ -41,7 +30,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = vet.Email,
                 Phone = vet.Phone,
                 Postal = vet.Postal,
-                Specialties = vet.Specialties.MapSpecialtiesDto()
+                //Specialties = vet.Specialties.MapDto()
             };
         }
         #endregion
@@ -71,17 +60,17 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region specialty dto mapper
-        public static IEnumerable<SpecialtyResponseDto> MapSpecialtiesDto(this IEnumerable<Specialty> specs)
+        public static SpecialtyGetAllDto MapDto(this IEnumerable<Specialty> specs)
         {
-            if (specs is null)
-                return new List<SpecialtyResponseDto>();
-            else
-                return specs.Select(s => s.MapSpecialtyDto());
+            return new SpecialtyGetAllDto
+            {
+                Specialties = specs.Select(s => s.MapDto())
+            };
         }
 
-        public static SpecialtyResponseDto MapSpecialtyDto(this Specialty spec)
+        public static SpecialtyGetDto MapDto(this Specialty spec)
         {
-            return new SpecialtyResponseDto
+            return new SpecialtyGetDto
             {
                 Id = spec.Id,
                 Name = spec.Name,
