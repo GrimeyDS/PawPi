@@ -4,9 +4,9 @@ using Pri.Pawpi.Core.Interfaces.Services;
 
 namespace Pri.Pawpi.Api.Controllers
 {
-    public abstract class BaseController<T> : Controller where T : BaseEntity
+    public abstract class BaseController<T> : ControllerBase where T : BaseEntity
     {
-        protected readonly IServiceBase<T> _service;
+        private readonly IServiceBase<T> _service;
 
         public BaseController(IServiceBase<T> service) 
         {
@@ -14,7 +14,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
             var result = await _service.DeleteAsync(id);
 
