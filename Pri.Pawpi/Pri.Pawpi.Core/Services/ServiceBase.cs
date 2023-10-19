@@ -9,7 +9,7 @@ namespace Pri.Pawpi.Core.Services
     public class ServiceBase<T> : IServiceBase<T> where T : BaseEntity
     {
         protected readonly IBaseRepository<T> _repository;
-        private readonly string NameOfEntity = typeof(T).Name;
+        private readonly string _nameOfEntity = typeof(T).Name;
 
         public ServiceBase(IBaseRepository<T> repository) 
         { 
@@ -21,10 +21,10 @@ namespace Pri.Pawpi.Core.Services
             var entityToDelete = await _repository.GetByIdAsync(id);
 
             if (entityToDelete == null)
-                return entityToDelete.ToErrorModel($"{NameOfEntity} not found");
+                return entityToDelete.ToErrorModel($"{_nameOfEntity} not found");
 
             if (!await _repository.DeleteAsync(entityToDelete))
-                return entityToDelete.ToErrorModel($"Something went wrong while deleting {NameOfEntity}");
+                return entityToDelete.ToErrorModel($"Something went wrong while deleting {_nameOfEntity}");
 
             return entityToDelete.ToResultModel();
         }
@@ -40,7 +40,7 @@ namespace Pri.Pawpi.Core.Services
             var entity = await _repository.GetByIdAsync(id);
 
             if (entity == null)
-                return entity.ToErrorModel($"{NameOfEntity} not found");
+                return entity.ToErrorModel($"{_nameOfEntity} not found");
 
             return entity.ToResultModel();
         }
