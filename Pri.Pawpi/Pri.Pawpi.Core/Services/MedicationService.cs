@@ -9,9 +9,6 @@ namespace Pri.Pawpi.Core.Services
 {
     public class MedicationService : ServiceBase<Medication>, IMedicationService
     {
-        private readonly IMedicationRepository _medicationRepository;
-        //private readonly IPetRepository _petRepository;
-
         public MedicationService(IMedicationRepository medRepo) : base(medRepo)
         {
         }
