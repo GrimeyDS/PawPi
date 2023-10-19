@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Medication;
 using Pri.Pawpi.Api.Extensions;
+using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services.Models.Medication;
 
@@ -8,11 +9,11 @@ namespace Pri.Pawpi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MedicationController : Controller
+    public class MedicationController : BaseController<Medication>
     {
-        protected readonly IMedicationService _medicationService;
+        private readonly IMedicationService _medicationService;
 
-        public MedicationController(IMedicationService medicationService)
+        public MedicationController(IMedicationService medicationService) : base(medicationService)
         {
             _medicationService = medicationService;
         }
@@ -81,17 +82,6 @@ namespace Pri.Pawpi.Api.Controllers
             };
 
             var result = await _medicationService.UpdateAsync(medicationModel);
-
-            if (!result.IsSuccess)
-                return BadRequest(result.Errors);
-
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var result = await _medicationService.DeleteAsync(id);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Errors);

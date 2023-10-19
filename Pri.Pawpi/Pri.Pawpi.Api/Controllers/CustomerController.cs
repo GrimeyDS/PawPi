@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Extensions;
+using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
-using Pri.Pawpi.Core.Services;
 
 namespace Pri.Pawpi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : Controller
+    public class CustomerController : BaseController<Customer>
     {
-        protected readonly ICustomerService _customerService;
+        private readonly ICustomerService _customerService;
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService) : base(customerService)
         {
             _customerService = customerService;
         }

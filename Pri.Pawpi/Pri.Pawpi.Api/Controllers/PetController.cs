@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Extensions;
+using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
 
 namespace Pri.Pawpi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PetController : Controller
+    public class PetController : BaseController<Pet>
     {
-        protected readonly IPetService _petService;
+        private readonly IPetService _petService;
 
-        public PetController(IPetService petService)
+        public PetController(IPetService petService) : base(petService)
         {
             _petService = petService;
         }

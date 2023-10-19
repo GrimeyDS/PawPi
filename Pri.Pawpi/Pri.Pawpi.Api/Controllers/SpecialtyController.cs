@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Specialty;
-using Pri.Pawpi.Api.Dtos.Veterinarian;
 using Pri.Pawpi.Api.Extensions;
+using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services.Models.Specialty;
 
@@ -9,15 +9,15 @@ namespace Pri.Pawpi.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SpecialtyController : Controller
+    public class SpecialtyController : BaseController<Specialty>
     {
-        protected readonly ISpecialtyService _specialtyService;
 
-        public SpecialtyController(ISpecialtyService specialtyService)
+        private readonly ISpecialtyService _specialtyService;
+
+        public SpecialtyController(ISpecialtyService specialtyService) : base(specialtyService)
         {
             _specialtyService = specialtyService;
         }
-
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -76,17 +76,6 @@ namespace Pri.Pawpi.Api.Controllers
             };
 
             var result = await _specialtyService.UpdateAsync(specialtyModel);
-
-            if (!result.IsSuccess)
-                return BadRequest(result.Errors);
-
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var result = await _specialtyService.DeleteAsync(id);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Errors);
