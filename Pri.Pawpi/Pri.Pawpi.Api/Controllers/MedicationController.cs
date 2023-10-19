@@ -11,12 +11,10 @@ namespace Pri.Pawpi.Api.Controllers
     public class MedicationController : Controller
     {
         protected readonly IMedicationService _medicationService;
-        protected readonly IPetService _petService;
 
-        public MedicationController(IMedicationService medicationService, IPetService petService)
+        public MedicationController(IMedicationService medicationService)
         {
             _medicationService = medicationService;
-            _petService = petService;
         }
 
         [HttpGet]
