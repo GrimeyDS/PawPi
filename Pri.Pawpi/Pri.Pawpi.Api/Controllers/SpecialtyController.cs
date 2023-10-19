@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pri.Pawpi.Api.Dtos.Specialty;
+using Pri.Pawpi.Api.Dtos.Specialty.Request;
+using Pri.Pawpi.Api.Dtos.Specialty.Response;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
@@ -22,12 +23,12 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var specialties = await _specialtyService.GetAllAsync();
-            var specialtyResponseDto = specialties.Items.MapSpecialtiesDto();
+            var specialtyResponseDto = specialties.Items.MapDto();
 
             return Ok(specialtyResponseDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
             var specialty = await _specialtyService.GetByIdAsync(id);
@@ -35,52 +36,48 @@ namespace Pri.Pawpi.Api.Controllers
             if (!specialty.IsSuccess)
                 return BadRequest(specialty.Errors);
 
-            var specialtyResponseDto = specialty.Item.MapSpecialtyDto();
+            var specialtyResponseDto = specialty.Item.MapDto();
+
+            return Ok(specialtyResponseDto);
+        }
+
+        [HttpGet("search/{name}")]
+        public async Task<IActionResult> Get(string name)
+        {
+            var specialties = await _specialtyService.SearchByNameAsync(name);
+
+            if (!specialties.IsSuccess)
+                return NotFound(specialties.Errors);
+
+            var specialtyResponseDto = new SpecialtySearchByNameDto { Specialties = specialties.Items.Select(s => s.MapDto()) };
 
             return Ok(specialtyResponseDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(SpecialtyRequestDto specialtyRequestDto)
+        public async Task<IActionResult> Create(SpecialtyCreateDto specialtyCreateDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.Values);
-
-            var specialtyModel = new SpecialtyAddModel
-            {
-                Name = specialtyRequestDto.Name,
-                Description = specialtyRequestDto.Description,
-                VeterinarianIds = specialtyRequestDto.VeterinarianIds,
-            };
+            var specialtyModel = specialtyCreateDto.MapModel();
 
             var result = await _specialtyService.AddAsync(specialtyModel);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Errors);
 
-            return Ok();
+            return Ok("Added");
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(SpecialtyRequestDto specialtyRequestDto)
+        public async Task<IActionResult> Update(SpecialtyUpdateDto specialtyUpdateDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.Values);
+            var specialtyUpdateModel = specialtyUpdateDto.MapModel();
 
-            var specialtyModel = new SpecialtyUpdateModel
-            {
-                Id = specialtyRequestDto.Id,
-                Name = specialtyRequestDto.Name,
-                Description = specialtyRequestDto.Description,
-                VeterinarianIds = specialtyRequestDto.VeterinarianIds
-            };
-
-            var result = await _specialtyService.UpdateAsync(specialtyModel);
+            var result = await _specialtyService.UpdateAsync(specialtyUpdateModel);
 
             if (!result.IsSuccess)
-                return BadRequest(result.Errors);
+                return NotFound(result.Errors);
 
-            return Ok();
+            return Ok("Updated");
         }
     }
 }
