@@ -20,17 +20,24 @@ namespace Pri.Pawpi.Core.Services
         {
             var vets = _veterinarianRepository.GetAll();
             var specialties = _repository.GetAll();
+            var modelVeterinarianIds = addModel.VeterinarianIds;
 
             var specialtyToAdd = new Specialty();
 
-            if (!vets.CheckIfIdsExist(addModel.VeterinarianIds))
-                return specialtyToAdd.ToErrorModel("Invalid veterinarians");
+            // Input checks
+            if (!vets.CheckIfIdsExist(modelVeterinarianIds))
+                return specialtyToAdd.ToErrorModel("Unknown veterinarians!");
+
+            if (!vets.CheckIdsInput(modelVeterinarianIds))
+                return specialtyToAdd.ToErrorModel("Please provide a veterinarian");
 
             if (specialties.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
                 return specialtyToAdd.ToErrorModel("Name already exists");
 
-            var vetsToLink = vets.Where(p => addModel.VeterinarianIds.Contains(p.Id)).ToList();
+            // Get veterinarians to attach
+            var vetsToLink = vets.Where(v => addModel.VeterinarianIds.Contains(v.Id)).ToList();
 
+            // Update new specialty entity
             specialtyToAdd.Name = addModel.Name;
             specialtyToAdd.Description = addModel.Description;
             specialtyToAdd.Veterinarians = vetsToLink;
@@ -44,18 +51,30 @@ namespace Pri.Pawpi.Core.Services
         public async Task<ResultModel<Specialty>> UpdateAsync(SpecialtyUpdateModel updateModel)
         {
             var vets = _veterinarianRepository.GetAll();
+            var specialties = _repository.GetAll();
             var specialtyToUpdate = await _repository.GetByIdAsync(updateModel.Id);
+            var modelVeterinarianIds = updateModel.VeterinarianIds;
 
             if (specialtyToUpdate == null)
                 return specialtyToUpdate.ToErrorModel("Specialty not found");
 
-            if (!vets.CheckIfIdsExist(updateModel.VeterinarianIds))
-                return specialtyToUpdate.ToErrorModel("Invalid veterinarians");
+            // Input checks
+            if (!vets.CheckIfIdsExist(modelVeterinarianIds))
+                return specialtyToUpdate.ToErrorModel("Unknown veterinarians!");
 
+            if (!vets.CheckIdsInput(modelVeterinarianIds))
+                return specialtyToUpdate.ToErrorModel("Please provide a veterinarian");
 
-            // TO UPDATE, THROWS ERROR WITH DUPLICATE PETS
+            if (specialtyToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
+            {
+                if (specialties.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
+                    return specialtyToUpdate.ToErrorModel("Name already exists");
+            }
+
+            // Get veterinarians to attach
             var vetsToLink = vets.Where(p => updateModel.VeterinarianIds.Contains(p.Id)).ToList();
 
+            // Update found specialty entity
             specialtyToUpdate.Name = updateModel.Name;
             specialtyToUpdate.Description = updateModel.Description;
             specialtyToUpdate.Veterinarians = vetsToLink;
@@ -64,6 +83,16 @@ namespace Pri.Pawpi.Core.Services
                 return specialtyToUpdate.ToErrorModel("Something went wrong while updating specialty");
 
             return specialtyToUpdate.ToResultModel();
+        }
+
+        public async Task<ResultModel<Specialty>> SearchByNameAsync(string name)
+        {
+            var specialties = await _repository.SearchByNameAsync(name);
+
+            if (specialties.Count() == 0)
+                return specialties.ToErrorModel("No specialties found");
+
+            return specialties.ToResultModel();
         }
     }
 }
