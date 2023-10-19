@@ -7,21 +7,19 @@ using Pri.Pawpi.Core.Services.Models.Specialty;
 
 namespace Pri.Pawpi.Core.Services
 {
-    public class SpecialtyService : ISpecialtyService
+    public class SpecialtyService : ServiceBase<Specialty>, ISpecialtyService
     {
-        private readonly ISpecialtyRepository _specialtyRepository;
         private readonly IVeterinarianRepository _veterinarianRepository;
 
-        public SpecialtyService(ISpecialtyRepository specialtyRepository, IVeterinarianRepository veterinarianRepository)
+        public SpecialtyService(ISpecialtyRepository specialtyRepository, IVeterinarianRepository veterinarianRepository)  : base(specialtyRepository) 
         {
-            _specialtyRepository = specialtyRepository;
             _veterinarianRepository = veterinarianRepository;
         }
 
         public async Task<ResultModel<Specialty>> AddAsync(SpecialtyAddModel addModel)
         {
             var vets = _veterinarianRepository.GetAll();
-            var specialties = _specialtyRepository.GetAll();
+            var specialties = _repository.GetAll();
 
             var specialtyToAdd = new Specialty();
 
@@ -37,45 +35,16 @@ namespace Pri.Pawpi.Core.Services
             specialtyToAdd.Description = addModel.Description;
             specialtyToAdd.Veterinarians = vetsToLink;
 
-            if (!await _specialtyRepository.CreateAsync(specialtyToAdd))
+            if (!await _repository.CreateAsync(specialtyToAdd))
                 return specialtyToAdd.ToErrorModel("Something went wrong while adding specialty");
 
             return specialtyToAdd.ToResultModel();
         }
 
-        public async Task<ResultModel<Specialty>> DeleteAsync(int id)
-        {
-            var specialtyToDelete = await _specialtyRepository.GetByIdAsync(id);
-
-            if (specialtyToDelete == null)
-                return specialtyToDelete.ToErrorModel("Specialty not found");
-
-            if (!await _specialtyRepository.DeleteAsync(specialtyToDelete))
-                return specialtyToDelete.ToErrorModel("Something went wrong while deleting medication");
-
-            return specialtyToDelete.ToResultModel();
-        }
-
-        public async Task<ResultModel<Specialty>> GetAllAsync()
-        {
-            var specialties = await _specialtyRepository.GetAllAsync();
-            return specialties.ToResultModel();
-        }
-
-        public async Task<ResultModel<Specialty>> GetByIdAsync(int id)
-         {
-            var specialty = await _specialtyRepository.GetByIdAsync(id);
-
-            if (specialty == null)
-                return specialty.ToErrorModel("Specialty not found");
-
-            return specialty.ToResultModel();
-        }
-
         public async Task<ResultModel<Specialty>> UpdateAsync(SpecialtyUpdateModel updateModel)
         {
             var vets = _veterinarianRepository.GetAll();
-            var specialtyToUpdate = await _specialtyRepository.GetByIdAsync(updateModel.Id);
+            var specialtyToUpdate = await _repository.GetByIdAsync(updateModel.Id);
 
             if (specialtyToUpdate == null)
                 return specialtyToUpdate.ToErrorModel("Specialty not found");
@@ -91,7 +60,7 @@ namespace Pri.Pawpi.Core.Services
             specialtyToUpdate.Description = updateModel.Description;
             specialtyToUpdate.Veterinarians = vetsToLink;
 
-            if (!await _specialtyRepository.UpdateAsync(specialtyToUpdate))
+            if (!await _repository.UpdateAsync(specialtyToUpdate))
                 return specialtyToUpdate.ToErrorModel("Something went wrong while updating specialty");
 
             return specialtyToUpdate.ToResultModel();
