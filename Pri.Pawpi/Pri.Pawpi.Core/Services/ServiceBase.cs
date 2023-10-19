@@ -6,7 +6,7 @@ using Pri.Pawpi.Core.Services.Models;
 
 namespace Pri.Pawpi.Core.Services
 {
-    public class ServiceBase<T> : IServiceBase<T> where T : BaseEntity
+    public abstract class ServiceBase<T> : IServiceBase<T> where T : BaseEntity
     {
         protected readonly IBaseRepository<T> _repository;
         private readonly string _nameOfEntity = typeof(T).Name;
