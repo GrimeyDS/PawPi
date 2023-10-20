@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pri.Pawpi.Api.Dtos.Consultation.Request;
+using Pri.Pawpi.Api.Dtos.Specialty.Request;
+using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
@@ -83,6 +86,32 @@ namespace Pri.Pawpi.Api.Controllers
             var veterinarianResponseDto = consultations.Items.MapDto(name);
 
             return Ok(veterinarianResponseDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(VeterinarianCreateDto veterinarianCreateDto)
+        {
+            var veterinarianModel = veterinarianCreateDto.MapModel();
+
+            var result = await _veterinarianService.AddAsync(veterinarianModel);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Errors);
+
+            return Ok("Added");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(VeterinarianUpdateDto veterinarianUpdateDto)
+        {
+            var veterinarianModel = veterinarianUpdateDto.MapModel();
+
+            var result = await _veterinarianService.UpdateAsync(veterinarianModel);
+
+            if (!result.IsSuccess)
+                return NotFound(result.Errors);
+
+            return Ok("Updated");
         }
     }
 }
