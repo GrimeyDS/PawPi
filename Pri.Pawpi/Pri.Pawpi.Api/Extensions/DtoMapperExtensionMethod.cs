@@ -1,7 +1,8 @@
 ﻿using Pri.Pawpi.Api.Dtos.Consultation;
 using Pri.Pawpi.Api.Dtos.Customer;
-using Pri.Pawpi.Api.Dtos.Medication;
+using Pri.Pawpi.Api.Dtos.Medication.Response;
 using Pri.Pawpi.Api.Dtos.Pet;
+using Pri.Pawpi.Api.Dtos.Pet.Response;
 using Pri.Pawpi.Api.Dtos.Practice;
 using Pri.Pawpi.Api.Dtos.Specialty.Response;
 using Pri.Pawpi.Api.Dtos.Veterinarian;
@@ -56,7 +57,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = customer.Email,
                 Phone = customer.Phone,
                 Postal = customer.Postal,
-                Pets = customer.Pets.MapPetsDto()
+                //Pets = customer.Pets.MapPetsDto()
             };
         }
         #endregion
@@ -91,35 +92,49 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region medication dto mapper
-        public static IEnumerable<MedicationResponseDto> MapMedicineDto(this IEnumerable<Medication> meds)
+        public static MedicationGetAllDto MapDto(this IEnumerable<Medication> meds)
         {
-            return meds.Select(m => m.MapMedicationDto());
+            return new MedicationGetAllDto
+            {
+                Medicine = meds.Select(m => m.MapDto())
+            };
         }
 
-        public static MedicationResponseDto MapMedicationDto(this Medication med)
+        public static MedicationGetDto MapDto(this Medication med)
         {
-            return new MedicationResponseDto
+            return new MedicationGetDto
             {
                 Id = med.Id,
                 Name = med.Name,
                 Notes = med.Notes,
-                SideEffects = med.SideEffects
+                SideEffects = med.SideEffects,
+                Pets = med.Pets.MapBaseDto()
             };
         }
+
+        public static MedicationSearchDto MapDto(this IEnumerable<Medication> meds, string name)
+        {
+            return new MedicationSearchDto
+            {
+                SearchInfo = $"{meds.Count()} Results were found for {name}",
+                Medicine = meds.Select(m => m.MapDto())
+            };
+        }
+
         #endregion
 
         #region pet dto mapper
-        public static IEnumerable<PetResponseDto> MapPetsDto(this IEnumerable<Pet> pets)
+        public static PetGetAllDto MapDto(this IEnumerable<Pet> pets)
         {
-            if (pets is null)
-                return new List<PetResponseDto>();
-            else
-                return pets.Select(s => s.MapPetDto());
+            return new PetGetAllDto
+            {
+                Pets = pets.Select(p => p.MapDto())
+            };
         }
 
-        public static PetResponseDto MapPetDto(this Pet pet)
+        public static PetGetDto MapDto(this Pet pet)
         {
-            return new PetResponseDto
+            return new PetGetDto
             {
                 Id = pet.Id,
                 Name = pet.Name,
@@ -128,7 +143,30 @@ namespace Pri.Pawpi.Api.Extensions
                 Color = pet.Color,
                 AnimalType = pet.AnimalType,
                 Weight = (double)pet.Weight,
-                Consultations = pet.Consultations.MapConsultationsDto()
+            };
+        }
+
+        public static PetSearchDto MapDto(this IEnumerable<Pet> pets, string name)
+        {
+            return new PetSearchDto
+            {
+                SearchInfo = $"{pets.Count()} Results were found for {name}",
+                Pets = pets.Select(p => p.MapDto())
+            };
+        }
+
+        public static IEnumerable<PetBaseDto> MapBaseDto(this IEnumerable<Pet> pets)
+        {
+            return pets.Select(p => p.MapBaseDto());
+        }
+
+        public static PetBaseDto MapBaseDto(this Pet pet)
+        {
+            return new PetBaseDto
+            {
+                Id = pet.Id,
+                Name = pet.Name,
+                AnimalType = pet.AnimalType,
             };
         }
         #endregion

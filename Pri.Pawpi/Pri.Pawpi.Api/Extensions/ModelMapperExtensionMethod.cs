@@ -1,4 +1,6 @@
-﻿using Pri.Pawpi.Api.Dtos.Specialty.Request;
+﻿using Pri.Pawpi.Api.Dtos.Medication.Request;
+using Pri.Pawpi.Api.Dtos.Specialty.Request;
+using Pri.Pawpi.Core.Services.Models.Medication;
 using Pri.Pawpi.Core.Services.Models.Specialty;
 
 namespace Pri.Pawpi.Api.Extensions
@@ -24,6 +26,35 @@ namespace Pri.Pawpi.Api.Extensions
                 Name = specialtyUpdateDto.Name,
                 Description = specialtyUpdateDto.Description,
                 VeterinarianIds = specialtyUpdateDto.VeterinarianIds
+            };
+        }
+        #endregion
+
+        #region medication model mapper
+        public static MedicationAddModel MapModel(this MedicationCreateDto medicationCreateDto)
+        {
+            return new MedicationAddModel
+            {
+                Name = medicationCreateDto.Name,
+                Notes = medicationCreateDto.Notes,
+                SideEffects = medicationCreateDto.SideEffects,
+                PetIds = medicationCreateDto.PetIds,
+                Dosage = medicationCreateDto.Dosage,
+                Frequency = medicationCreateDto.Frequency
+            };
+        }
+
+        public static MedicationUpdateModel MapModel(this MedicationUpdateDto medicationUpdateDto)
+        {
+            return new MedicationUpdateModel
+            {
+                Id = medicationUpdateDto.Id,
+                Name = medicationUpdateDto.Name,
+                Notes = medicationUpdateDto.Notes,
+                SideEffects = medicationUpdateDto.SideEffects,
+                PetIds = medicationUpdateDto.PetIds,
+                Dosage = medicationUpdateDto.Dosage,
+                Frequency = medicationUpdateDto.Frequency
             };
         }
         #endregion
