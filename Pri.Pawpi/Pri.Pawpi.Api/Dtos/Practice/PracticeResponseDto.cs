@@ -1,5 +1,5 @@
 ﻿using Pri.Pawpi.Api.Dtos.Customer;
-using Pri.Pawpi.Api.Dtos.Veterinarian;
+using Pri.Pawpi.Api.Dtos.Veterinarian.Response;
 
 namespace Pri.Pawpi.Api.Dtos.Practice
 {
@@ -13,7 +13,7 @@ namespace Pri.Pawpi.Api.Dtos.Practice
         public string Postal { get; set; }
         public DateTime? OpenTime { get; set; }
         public DateTime? CloseTime { get; set; }
-        public IEnumerable<VeterinarianResponseDto> Veterinarians { get; set; }
+        public IEnumerable<VeterinarianGetDto> Veterinarians { get; set; }
         public IEnumerable<CustomerResponseDto> Customers { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Pri.Pawpi.Api.Dtos
 {
-    public class PersonRequestDto : BaseDto
+    public class PersonRequestDto
     {
         [Required(ErrorMessage = "First name is required")]
         public string FirstName { get; set; }

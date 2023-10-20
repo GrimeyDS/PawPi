@@ -1,28 +1,28 @@
 ﻿using Pri.Pawpi.Api.Dtos.Consultation;
 using Pri.Pawpi.Api.Dtos.Customer;
 using Pri.Pawpi.Api.Dtos.Medication.Response;
-using Pri.Pawpi.Api.Dtos.Pet;
 using Pri.Pawpi.Api.Dtos.Pet.Response;
 using Pri.Pawpi.Api.Dtos.Practice;
 using Pri.Pawpi.Api.Dtos.Specialty.Response;
-using Pri.Pawpi.Api.Dtos.Veterinarian;
+using Pri.Pawpi.Api.Dtos.Veterinarian.Response;
 using Pri.Pawpi.Core.Entities;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 
 namespace Pri.Pawpi.Api.Extensions
 {
     public static class DtoMapperExtensionMethod
     {
         #region veterinarian dto mapper
-        public static IEnumerable<VeterinarianResponseDto> MapVeterinariansDto(this IEnumerable<Veterinarian> vets)
+        public static VeterinarianGetAllDto MapDto(this IEnumerable<Veterinarian> vets)
         {
-            return vets.Select(v => v.MapVeterinarianDto());
+            return new VeterinarianGetAllDto
+            {
+                Veterinarians = vets.Select(v => v.MapDto())
+            };
         }
 
-        public static VeterinarianResponseDto MapVeterinarianDto(this Veterinarian vet)
+        public static VeterinarianGetDto MapDto(this Veterinarian vet)
         {
-            return new VeterinarianResponseDto
+            return new VeterinarianGetDto
             {
                 Id = vet.Id,
                 FirstName = vet.FirstName,
@@ -33,7 +33,32 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = vet.Email,
                 Phone = vet.Phone,
                 Postal = vet.Postal,
-                //Specialties = vet.Specialties.MapDto()
+                Specialties = vet.Specialties.MapBaseDto(),
+            };
+        }
+
+        public static VeterinarianSearchDto MapDto(this IEnumerable<Veterinarian> vets, string name)
+        {
+            return new VeterinarianSearchDto
+            {
+                SearchInfo = $"{vets.Count()} Results were found for {name}",
+                Veterinarians = vets.Select(v => v.MapDto())
+            };
+        }
+
+        public static IEnumerable<VeterinarianBaseDto> MapBaseDto(this IEnumerable<Veterinarian> vets)
+        {
+            return vets.Select(v => v.MapBaseDto());
+        }
+
+        public static VeterinarianBaseDto MapBaseDto(this Veterinarian vet)
+        {
+            return new VeterinarianBaseDto
+            {
+                Id = vet.Id,
+                FirstName = vet.FirstName,
+                LastName = vet.LastName,
+                Email = vet.Email
             };
         }
         #endregion
@@ -87,6 +112,20 @@ namespace Pri.Pawpi.Api.Extensions
             {
                 SearchInfo = $"{specs.Count()} Results were found for {name}",
                 Specialties = specs.Select(s => s.MapDto())
+            };
+        }
+
+        public static IEnumerable<SpecialtyBaseDto> MapBaseDto(this IEnumerable<Specialty> specs)
+        {
+            return specs.Select(s => s.MapBaseDto());
+        }
+
+        public static SpecialtyBaseDto MapBaseDto(this Specialty spec)
+        {
+            return new SpecialtyBaseDto
+            {
+                Id = spec.Id,
+                Name = spec.Name,
             };
         }
         #endregion
@@ -189,8 +228,8 @@ namespace Pri.Pawpi.Api.Extensions
                 Postal = practice.Postal,
                 OpenTime = practice.OpenTime,
                 CloseTime = practice.CloseTime,
-                Veterinarians = practice.Veterinarians.MapVeterinariansDto(),
-                Customers = practice.Customers.MapCustomersDto()
+                //Veterinarians = practice.Veterinarians.MapBaseDto(),
+                //Customers = practice.Customers.MapCustomersDto()
             };
         }
         #endregion
