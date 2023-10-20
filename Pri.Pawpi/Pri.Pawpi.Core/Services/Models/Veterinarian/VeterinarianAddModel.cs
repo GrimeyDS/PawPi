@@ -4,7 +4,8 @@ namespace Pri.Pawpi.Core.Services.Models.Veterinarian
 {
     public class VeterinarianAddModel : Person
     {
-        public List<int> SpecialtyIds { get; set; }
-        public List<int> PracticeIds { get; set; }
+        public IEnumerable<int> SpecialtyIds { get; set; }
+        public IEnumerable<int> PracticeIds { get; set; }
+        public IEnumerable<int> ConsultationIds { get; set; }
     }
 }
