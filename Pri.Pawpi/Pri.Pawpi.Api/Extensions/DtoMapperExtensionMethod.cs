@@ -1,4 +1,4 @@
-﻿using Pri.Pawpi.Api.Dtos.Consultation;
+﻿using Pri.Pawpi.Api.Dtos.Consultation.Response;
 using Pri.Pawpi.Api.Dtos.Customer;
 using Pri.Pawpi.Api.Dtos.Medication.Response;
 using Pri.Pawpi.Api.Dtos.Pet.Response;
@@ -235,20 +235,50 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region consultation dto mapper
-        public static IEnumerable<ConsultationResponseDto> MapConsultationsDto(this IEnumerable<Consultation> consultations)
+        public static ConsultationGetAllDto MapDto(this IEnumerable<Consultation> cons)
         {
-            return consultations.Select(c => c.MapConsultationDto());
+            return new ConsultationGetAllDto
+            {
+                Consultations = cons.Select(c => c.MapDto())
+            };
         }
 
-        public static ConsultationResponseDto MapConsultationDto(this Consultation consultation)
+        public static ConsultationGetDto MapDto(this Consultation con)
         {
-            return new ConsultationResponseDto
+            return new ConsultationGetDto
             {
-                Title = consultation.Title,
-                Diagnosis = consultation.Diagnosis,
-                Treatment = consultation.Treatment,
-                Notes = consultation.Notes,
-                DateOfConsultation = consultation.DateOfConsultation,
+                Id = con.Id,
+                Title = con.Title,
+                Diagnosis = con.Diagnosis,
+                Treatment = con.Treatment,
+                Notes = con.Notes,
+                DateOfConsultation = con.DateOfConsultation,
+                VeterinarianName = con.Veterinarian.FirstName + " " + con.Veterinarian.LastName,
+                PetName = con.Pet.Name
+            };
+        }
+
+        public static ConsultationSearchDto MapDto(this IEnumerable<Consultation> cons, string name)
+        {
+            return new ConsultationSearchDto
+            {
+                SearchInfo = $"{cons.Count()} Results were found for {name}",
+                Consultations = cons.Select(c => c.MapDto())
+            };
+        }
+
+        public static IEnumerable<ConsultationBaseDto> MapBaseDto(this IEnumerable<Consultation> cons)
+        {
+            return cons.Select(c => c.MapBaseDto());
+        }
+
+        public static ConsultationBaseDto MapBaseDto(this Consultation con)
+        {
+            return new ConsultationBaseDto
+            {
+                Id = con.Id,
+                Title = con.Title,
+                DateOfConsultation = con.DateOfConsultation,
             };
         }
         #endregion
