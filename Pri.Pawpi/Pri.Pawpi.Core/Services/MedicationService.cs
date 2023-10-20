@@ -9,88 +9,115 @@ namespace Pri.Pawpi.Core.Services
 {
     public class MedicationService : ServiceBase<Medication>, IMedicationService
     {
-        public MedicationService(IMedicationRepository medicationRepository) : base(medicationRepository)
+        private readonly IPetRepository _petRepository;
+        private readonly IMedicationRepository _medicationRepository;
+
+        public MedicationService(IMedicationRepository medicationRepository, IPetRepository petRepository) : base(medicationRepository)
         {
+            _petRepository = petRepository;
+            _medicationRepository = medicationRepository;
         }
 
-        public Task<ResultModel<Medication>> AddAsync(MedicationAddModel addModel)
+        public async Task<ResultModel<Medication>> AddAsync(MedicationAddModel addModel)
         {
-            throw new NotImplementedException();
+            var medicine = _medicationRepository.GetAll();
+            var pets = _petRepository.GetAll();
+            var modelPetIds = addModel.PetIds;
+
+            var medicationToAdd = new Medication();
+
+            // Input checks
+            if (!pets.CheckIfIdsExist(modelPetIds))
+                return medicationToAdd.ToErrorModel("Unknown pets!");
+
+            if (medicine.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
+                return medicationToAdd.ToErrorModel("Name already exists");
+
+            // Get veterinarians to attach
+            var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
+
+            // Update new medication entity
+            medicationToAdd.Name = addModel.Name;
+            medicationToAdd.Dosage = addModel.Dosage;
+            medicationToAdd.Frequency = addModel.Frequency;
+            medicationToAdd.Notes = addModel.Notes;
+            medicationToAdd.SideEffects = addModel.SideEffects;
+            medicationToAdd.Pets = petsToLink;
+
+            if (!await _medicationRepository.CreateAsync(medicationToAdd))
+                return medicationToAdd.ToErrorModel("Something went wrong while adding medication");
+
+            return medicationToAdd.ToResultModel();
         }
 
-        public Task<ResultModel<Medication>> SearchByNameAsync(string name)
+        public async Task<ResultModel<Medication>> SearchByNameAsync(string name)
         {
-            throw new NotImplementedException();
+            var medicine = await _medicationRepository.SearchByNameAsync(name);
+
+            if (medicine.Count() == 0)
+                return medicine.ToErrorModel("No medicine found");
+
+            return medicine.ToResultModel();
         }
 
-        public Task<ResultModel<Medication>> UpdateAsync(MedicationUpdateModel updateModel)
+        public async Task<ResultModel<Medication>> SearchBySideEffectAsync(string sideEffect)
         {
-            throw new NotImplementedException();
+            var medicine = await _medicationRepository.SearchBySideEffectAsync(sideEffect);
+
+            if (medicine.Count() == 0)
+                return medicine.ToErrorModel("No medicine found");
+
+            return medicine.ToResultModel();
         }
 
-        //public async Task<ResultModel<Medication>> AddAsync(MedicationAddModel addModel)
-        //{
-        //    var pets =  _petRepository.GetAll();
-        //    var medicine = _repository.GetAll();
-        //    var medicationToAdd = new Medication();
+        public async Task<ResultModel<Pet>> GetPetsByMedicationIdAsync(int id)
+        {
+            var pets = await _petRepository.GetAllAsync();
 
-        //    if (!pets.CheckIfIdsExist(addModel.PetIds))
-        //        return medicationToAdd.ToErrorModel("Invalid pets");
+            var PetsByMedication = pets.Where(p => p.Medications.Any(m => m.Id == id));
 
-        //    if (medicine.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
-        //        return medicationToAdd.ToErrorModel("Name already exists");
+            if (PetsByMedication.Count() == 0)
+                return PetsByMedication.ToErrorModel("No pets found");
 
-        //    var petsToLink = pets.Where(p => addModel.PetIds.Contains(p.Id)).ToList();
+            return PetsByMedication.ToResultModel();
+        }
 
-        //    medicationToAdd.Name = addModel.Name;
-        //    medicationToAdd.Notes = addModel.Notes;
-        //    medicationToAdd.SideEffects = addModel.SideEffects;
-        //    medicationToAdd.Pets = petsToLink;
-        //    medicationToAdd.Frequency = addModel.Frequency;
-        //    medicationToAdd.Dosage = addModel.Dosage;
+        public async Task<ResultModel<Medication>> UpdateAsync(MedicationUpdateModel updateModel)
+        {
+            var medicine = _medicationRepository.GetAll();
+            var pets = _petRepository.GetAll();
+            var modelPetIds = updateModel.PetIds;
 
-        //    if (!await _medicationRepository.CreateAsync(medicationToAdd))
-        //        return medicationToAdd.ToErrorModel("Something went wrong while adding medication");
+            var medicationToUpdate = await _medicationRepository.GetByIdAsync(updateModel.Id);
 
-        //    return medicationToAdd.ToResultModel();
-        //}
+            if (medicationToUpdate == null)
+                return medicationToUpdate.ToErrorModel("Medication not found");
 
-        //public async Task<ResultModel<Medication>> UpdateAsync(MedicationUpdateModel updateModel)
-        //{
-        //    var pets = _petRepository.GetAll();
-        //    var medicationToUpdate = await _medicationRepository.GetByIdAsync(updateModel.Id);
+            // Input checks
+            if (!pets.CheckIfIdsExist(modelPetIds))
+                return medicationToUpdate.ToErrorModel("Unknown pets!");
 
-        //    if (medicationToUpdate == null)
-        //        return medicationToUpdate.ToErrorModel("Medication not found");
+            if (medicationToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
+            {
+                if (medicine.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
+                    return medicationToUpdate.ToErrorModel("Name already exists");
+            }
 
-        //    if (!pets.CheckIfIdsExist(updateModel.PetIds))
-        //        return medicationToUpdate.ToErrorModel("Invalid pets");
+            // Get veterinarians to attach
+            var petsToLink = pets.Where(p => modelPetIds.Contains(p.Id)).ToList();
 
+            // Update new medication entity
+            medicationToUpdate.Name = updateModel.Name;
+            medicationToUpdate.Dosage = updateModel.Dosage;
+            medicationToUpdate.Frequency = updateModel.Frequency;
+            medicationToUpdate.Notes = updateModel.Notes;
+            medicationToUpdate.SideEffects = updateModel.SideEffects;
+            medicationToUpdate.Pets = petsToLink;
 
-        //    // TO UPDATE, THROWS ERROR WITH DUPLICATE PETS
-        //    var petsToLink = pets.Where(p => updateModel.PetIds.Contains(p.Id)).ToList();
+            if (!await _medicationRepository.UpdateAsync(medicationToUpdate))
+                return medicationToUpdate.ToErrorModel("Something went wrong while updating medication");
 
-        //    medicationToUpdate.Name = updateModel.Name;
-        //    medicationToUpdate.Notes = updateModel.Notes;
-        //    medicationToUpdate.SideEffects = updateModel.SideEffects;
-        //    medicationToUpdate.Pets = petsToLink;
-        //    medicationToUpdate.Frequency = updateModel.Frequency;
-        //    medicationToUpdate.Dosage = updateModel.Dosage;
-
-        //    if (!await _medicationRepository.UpdateAsync(medicationToUpdate))
-        //        return medicationToUpdate.ToErrorModel("Something went wrong while updating medication");
-
-        //    return medicationToUpdate.ToResultModel();
-        //}
-
-        //public async Task<ResultModel<Medication>> SearchByNameAsync(string name)
-        //{
-        //    var medicine = await _medicationRepository.SearchByNameAsync(name);
-
-        //    if (medicine == null)
-        //        return medicine.ToErrorModel("Medication not found");
-
-        //    return medicine.ToResultModel();
-        //}
+            return medicationToUpdate.ToResultModel();
+        }
     }
 }
