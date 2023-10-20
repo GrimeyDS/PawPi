@@ -6,6 +6,8 @@ using Pri.Pawpi.Api.Dtos.Practice;
 using Pri.Pawpi.Api.Dtos.Specialty.Response;
 using Pri.Pawpi.Api.Dtos.Veterinarian;
 using Pri.Pawpi.Core.Entities;
+using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 namespace Pri.Pawpi.Api.Extensions
 {
@@ -75,6 +77,15 @@ namespace Pri.Pawpi.Api.Extensions
                 Id = spec.Id,
                 Name = spec.Name,
                 Description = spec.Description,
+            };
+        }
+
+        public static SpecialtySearchByNameDto MapDto(this IEnumerable<Specialty> specs, string name)
+        {
+            return new SpecialtySearchByNameDto
+            {
+                SearchInfo = $"{specs.Count()} Results were found for {name}",
+                Specialties = specs.Select(s => s.MapDto())
             };
         }
         #endregion

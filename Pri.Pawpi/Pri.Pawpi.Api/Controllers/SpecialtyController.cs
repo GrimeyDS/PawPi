@@ -48,7 +48,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!specialties.IsSuccess)
                 return NotFound(specialties.Errors);
 
-            var specialtyResponseDto = new SpecialtySearchByNameDto { Specialties = specialties.Items.Select(s => s.MapDto()) };
+            var specialtyResponseDto = specialties.Items.MapDto(name);
 
             return Ok(specialtyResponseDto);
         }
