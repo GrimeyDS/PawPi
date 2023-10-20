@@ -35,7 +35,7 @@ namespace Pri.Pawpi.Core.Services
                 return specialtyToAdd.ToErrorModel("Name already exists");
 
             // Get veterinarians to attach
-            var vetsToLink = vets.Where(v => addModel.VeterinarianIds.Contains(v.Id)).ToList();
+            var vetsToLink = vets.Where(v => modelVeterinarianIds.Contains(v.Id)).ToList();
 
             // Update new specialty entity
             specialtyToAdd.Name = addModel.Name;
@@ -72,7 +72,7 @@ namespace Pri.Pawpi.Core.Services
             }
 
             // Get veterinarians to attach
-            var vetsToLink = vets.Where(p => updateModel.VeterinarianIds.Contains(p.Id)).ToList();
+            var vetsToLink = vets.Where(p => modelVeterinarianIds.Contains(p.Id)).ToList();
 
             // Update found specialty entity
             specialtyToUpdate.Name = updateModel.Name;
