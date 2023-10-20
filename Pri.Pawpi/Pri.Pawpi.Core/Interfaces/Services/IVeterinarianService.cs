@@ -8,5 +8,8 @@ namespace Pri.Pawpi.Core.Interfaces.Services
     {
         Task<ResultModel<Veterinarian>> AddAsync(VeterinarianAddModel addModel);
         Task<ResultModel<Veterinarian>> UpdateAsync(VeterinarianUpdateModel updateModel);
+        Task<ResultModel<Veterinarian>> SearchByNameAsync(string name);
+        Task<ResultModel<Specialty>> GetSpecialtiesFromVeterinariansAsync(int id);
+        Task<ResultModel<Consultation>> GetConsultationsFromVeterinariansAsync(int id);
     }
 }

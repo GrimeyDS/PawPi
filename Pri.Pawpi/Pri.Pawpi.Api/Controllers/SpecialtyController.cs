@@ -3,7 +3,6 @@ using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
-using Pri.Pawpi.Core.Services;
 
 namespace Pri.Pawpi.Api.Controllers
 {
@@ -18,6 +17,7 @@ namespace Pri.Pawpi.Api.Controllers
         {
             _specialtyService = specialtyService;
         }
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
