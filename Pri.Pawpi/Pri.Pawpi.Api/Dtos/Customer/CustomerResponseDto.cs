@@ -1,9 +1,9 @@
-﻿using Pri.Pawpi.Api.Dtos.Pet;
+﻿using Pri.Pawpi.Api.Dtos.Pet.Response;
 
 namespace Pri.Pawpi.Api.Dtos.Customer
 {
     public class CustomerResponseDto : PersonResponseDto
     {
-        public IEnumerable<PetResponseDto> Pets { get; set; }
+        public IEnumerable<PetGetDto> Pets { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pri.Pawpi.Api.Dtos.Medication
+namespace Pri.Pawpi.Api.Dtos.Medication.Request
 {
-    public class MedicationRequestDto : BaseDto
+    public class MedicationCreateDto
     {
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
@@ -14,8 +14,6 @@ namespace Pri.Pawpi.Api.Dtos.Medication
 
         [Required(ErrorMessage = "Frequency is required")]
         public string Frequency { get; set; }
-
-        [Required(ErrorMessage = "{0} is required")]
         public IEnumerable<int> PetIds { get; set; }
     }
 }

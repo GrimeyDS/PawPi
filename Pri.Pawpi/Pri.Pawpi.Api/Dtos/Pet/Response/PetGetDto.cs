@@ -1,8 +1,7 @@
-﻿using Pri.Pawpi.Api.Dtos.Consultation;
-
-namespace Pri.Pawpi.Api.Dtos.Pet
+﻿
+namespace Pri.Pawpi.Api.Dtos.Pet.Response
 {
-    public class PetResponseDto : BaseDto
+    public class PetGetDto : BaseDto
     {
         public string Name { get; set; }
         public string CallName { get; set; }
@@ -10,6 +9,6 @@ namespace Pri.Pawpi.Api.Dtos.Pet
         public string Color { get; set; }
         public string AnimalType { get; set; }
         public double Weight { get; set; }
-        public IEnumerable<ConsultationResponseDto> Consultations { get; set; }
+        //public IEnumerable<ConsultationResponseDto> Consultations { get; set; }
     }
 }
