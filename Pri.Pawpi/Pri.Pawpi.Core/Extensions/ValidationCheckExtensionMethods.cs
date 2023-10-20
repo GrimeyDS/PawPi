@@ -1,5 +1,4 @@
 ﻿using Pri.Pawpi.Core.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace Pri.Pawpi.Core.Extensions
 {
