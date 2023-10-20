@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Specialty.Request;
-using Pri.Pawpi.Api.Dtos.Specialty.Response;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
+using Pri.Pawpi.Core.Services;
 
 namespace Pri.Pawpi.Api.Controllers
 {
@@ -40,8 +40,8 @@ namespace Pri.Pawpi.Api.Controllers
             return Ok(specialtyResponseDto);
         }
 
-        [HttpGet("search/{name}")]
-        public async Task<IActionResult> Get(string name)
+        [HttpGet("searchName/{name}")]
+        public async Task<IActionResult> SearchByName(string name)
         {
             var specialties = await _specialtyService.SearchByNameAsync(name);
 
@@ -49,6 +49,22 @@ namespace Pri.Pawpi.Api.Controllers
                 return NotFound(specialties.Errors);
 
             var specialtyResponseDto = specialties.Items.MapDto(name);
+
+            return Ok(specialtyResponseDto);
+        }
+
+        [HttpGet("{id}/Veterinarians")]
+        public async Task<IActionResult> GetVetsFromSpecialty(int id)
+        {
+            var vets = await _specialtyService.GetVetsFromSpecialtyAsync(id);
+            var specialty = await _specialtyService.GetByIdAsync(id);
+
+            if (!vets.IsSuccess)
+                return BadRequest(vets.Errors);
+
+            var name = specialty.Item.Name;
+
+            var specialtyResponseDto = vets.Items.MapDto(name);
 
             return Ok(specialtyResponseDto);
         }

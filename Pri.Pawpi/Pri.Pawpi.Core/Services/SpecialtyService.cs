@@ -94,5 +94,17 @@ namespace Pri.Pawpi.Core.Services
 
             return specialties.ToResultModel();
         }
+
+        public async Task<ResultModel<Veterinarian>> GetVetsFromSpecialtyAsync(int id)
+        {
+            var vets = await _veterinarianRepository.GetAllAsync();
+
+            var vetsBySpecialty = vets.Where(v => v.Specialties.Any(s => s.Id == id));
+
+            if (vetsBySpecialty.Count() == 0)
+                return vetsBySpecialty.ToErrorModel("No veterinarians found");
+
+            return vetsBySpecialty.ToResultModel();
+        }
     }
 }

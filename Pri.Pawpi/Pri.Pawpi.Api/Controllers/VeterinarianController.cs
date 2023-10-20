@@ -22,9 +22,9 @@ namespace Pri.Pawpi.Api.Controllers
         {
             var veterinarians = await _veterinarianService.GetAllAsync();
 
-            var vetResponseDto = veterinarians.Items.MapVeterinariansDto();
+            //var vetResponseDto = veterinarians.Items.MapVeterinariansDto();
 
-            return Ok(vetResponseDto);
+            return Ok();
         }
 
         [HttpGet("{id}")]
@@ -35,9 +35,9 @@ namespace Pri.Pawpi.Api.Controllers
             if (!veterinarians.IsSuccess)
                 return BadRequest(veterinarians.Errors);
 
-            var veterinarianResponseDto = veterinarians.Item.MapVeterinarianDto();
+            //var veterinarianResponseDto = veterinarians.Item.MapVeterinarianDto();
 
-            return Ok(veterinarianResponseDto);
+            return Ok();
         }
     }
 }
