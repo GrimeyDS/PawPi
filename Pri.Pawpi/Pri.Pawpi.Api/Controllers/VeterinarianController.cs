@@ -69,7 +69,7 @@ namespace Pri.Pawpi.Api.Controllers
             return Ok(veterinarianResponseDto);
         }
 
-        [HttpGet("{id}/Specialties")]
+        [HttpGet("{id}/Consultations")]
         public async Task<IActionResult> GetConsultationsFromVeterinarians(int id)
         {
             var consultations = await _veterinarianService.GetConsultationsFromVeterinariansAsync(id);
