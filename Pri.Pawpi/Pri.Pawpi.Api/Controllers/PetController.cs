@@ -21,9 +21,9 @@ namespace Pri.Pawpi.Api.Controllers
         {
             var pets = await _petService.GetAllAsync();
 
-            var petResponseDto = pets.Items.MapPetsDto();
+            //var petResponseDto = pets.Items.MapPetsDto();
 
-            return Ok(petResponseDto);
+            return Ok();
         }
 
         [HttpGet("{id}")]
@@ -34,9 +34,9 @@ namespace Pri.Pawpi.Api.Controllers
             if (!pet.IsSuccess)
                 return BadRequest(pet.Errors);
 
-            var customerResponseDto = pet.Item.MapPetDto();
+            //var customerResponseDto = pet.Item.MapPetDto();
 
-            return Ok(customerResponseDto);
+            return Ok();
         }
     }
 }
