@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pri.Pawpi.Api.Dtos.Medication;
+using Pri.Pawpi.Api.Dtos.Medication.Request;
+using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
+using Pri.Pawpi.Core.Services;
 using Pri.Pawpi.Core.Services.Models.Medication;
 
 namespace Pri.Pawpi.Api.Controllers
@@ -22,71 +24,92 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var medicine = await _medicationService.GetAllAsync();
-            var medicineResponseDto = medicine.Items.MapMedicineDto();
+            var medicationResponseDto = medicine.Items.MapDto();
 
-            return Ok(medicineResponseDto);
+            return Ok(medicationResponseDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
-            var medicine = await _medicationService.GetByIdAsync(id);
+            var medication = await _medicationService.GetByIdAsync(id);
+
+            if (!medication.IsSuccess)
+                return BadRequest(medication.Errors);
+
+            var medicationResponseDto = medication.Item.MapDto();
+
+            return Ok(medicationResponseDto);
+        }
+
+        [HttpGet("{id}/Pets")]
+        public async Task<IActionResult> GetPetsFromMedication(int id)
+        {
+            var pets = await _medicationService.GetPetsByMedicationIdAsync(id);
+            var medication = await _medicationService.GetByIdAsync(id);
+
+            if (!pets.IsSuccess)
+                return BadRequest(pets.Errors);
+
+            var name = medication.Item.Name;
+
+            var medicationResponseDto = pets.Items.MapDto(name);
+
+            return Ok(medicationResponseDto);
+        }
+
+        [HttpGet("searchName/{name}")]
+        public async Task<IActionResult> SearchByName(string name)
+        {
+            var medicine = await _medicationService.SearchByNameAsync(name);
 
             if (!medicine.IsSuccess)
-                return BadRequest(medicine.Errors);
+                return NotFound(medicine.Errors);
 
-            var medicineResponseDto = medicine.Item.MapMedicationDto();
+            var medicationResponseDto = medicine.Items.MapDto(name);
 
-            return Ok(medicineResponseDto);
+            return Ok(medicationResponseDto);
+        }
+
+        [HttpGet("searchSideEffect/{sideEffect}")]
+        public async Task<IActionResult> SearchBySideEffect(string sideEffect)
+        {
+            var medicine = await _medicationService.SearchBySideEffectAsync(sideEffect);
+
+            if (!medicine.IsSuccess)
+                return NotFound(medicine.Errors);
+
+            var medicationResponseDto = medicine.Items.MapDto(sideEffect);
+
+            return Ok(medicationResponseDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(MedicationRequestDto medicationRequestDto)
+        public async Task<IActionResult> Create(MedicationCreateDto medicationCreateDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.Values);
-
-            var medicationModel = new MedicationAddModel
-            {
-                Name = medicationRequestDto.Name,
-                Notes = medicationRequestDto.Notes,
-                SideEffects = medicationRequestDto.SideEffects,
-                PetIds = medicationRequestDto.PetIds,
-                Dosage = medicationRequestDto.Dosage,
-                Frequency = medicationRequestDto.Frequency
-            };
+            var medicationModel = medicationCreateDto.MapModel();
 
             var result = await _medicationService.AddAsync(medicationModel);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Errors);
 
-            return Ok();
+            return Ok("Added");
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(MedicationRequestDto medicationRequestDto)
+        public async Task<IActionResult> Update(MedicationUpdateDto medicationUpdateDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.Values);
+            var medicationUpdateModel = medicationUpdateDto.MapModel();
 
-            var medicationModel = new MedicationUpdateModel
-            {
-                Id = medicationRequestDto.Id,
-                Name = medicationRequestDto.Name,
-                Notes = medicationRequestDto.Notes,
-                SideEffects = medicationRequestDto.SideEffects,
-                PetIds = medicationRequestDto.PetIds,
-                Dosage = medicationRequestDto.Dosage,
-                Frequency = medicationRequestDto.Frequency
-            };
-
-            var result = await _medicationService.UpdateAsync(medicationModel);
+            var result = await _medicationService.UpdateAsync(medicationUpdateModel);
 
             if (!result.IsSuccess)
-                return BadRequest(result.Errors);
+                return NotFound(result.Errors);
 
-            return Ok();
+            return Ok("Updated");
         }
+
+
     }
 }
