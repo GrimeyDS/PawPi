@@ -1,9 +1,9 @@
 ﻿using Pri.Pawpi.Api.Dtos.Customer;
 using Pri.Pawpi.Api.Dtos.Veterinarian.Response;
 
-namespace Pri.Pawpi.Api.Dtos.Practice
+namespace Pri.Pawpi.Api.Dtos.Practice.Response
 {
-    public class PracticeResponseDto : BaseDto
+    public class PracticeGetDto : BaseDto
     {
         public string Name { get; set; }
         public string Address { get; set; }

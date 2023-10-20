@@ -1,4 +1,6 @@
-﻿namespace Pri.Pawpi.Api.Dtos.Consultation.Response
+﻿using Pri.Pawpi.Api.Dtos.Practice.Response;
+
+namespace Pri.Pawpi.Api.Dtos.Consultation.Response
 {
     public class ConsultationGetDto : BaseDto
     {
@@ -9,5 +11,6 @@
         public DateTime DateOfConsultation { get; set; }
         public string VeterinarianName { get; set; }
         public string PetName { get; set; }
+        public IEnumerable<PracticeBaseDto> Practice { get; set; }
     }
 }

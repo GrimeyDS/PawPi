@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pri.Pawpi.Api.Dtos.Practice
+namespace Pri.Pawpi.Api.Dtos.Practice.Request
 {
-    public class PracticeRequestDto : BaseDto
+    public class PracticeCreateDto : BaseDto
     {
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
@@ -16,7 +16,7 @@ namespace Pri.Pawpi.Api.Dtos.Practice
         public string Phone { get; set; }
         [Required(ErrorMessage = "Postal code is required")]
         public string Postal { get; set; }
-        public DateTime? OpenTime { get; set; }
-        public DateTime? CloseTime { get; set; }
+        public DateTime OpenTime { get; set; }
+        public DateTime CloseTime { get; set; }
     }
 }
