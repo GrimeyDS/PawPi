@@ -2,7 +2,7 @@
 using Pri.Pawpi.Api.Dtos.Customer;
 using Pri.Pawpi.Api.Dtos.Medication.Response;
 using Pri.Pawpi.Api.Dtos.Pet.Response;
-using Pri.Pawpi.Api.Dtos.Practice;
+using Pri.Pawpi.Api.Dtos.Practice.Response;
 using Pri.Pawpi.Api.Dtos.Specialty.Response;
 using Pri.Pawpi.Api.Dtos.Veterinarian.Response;
 using Pri.Pawpi.Core.Entities;
@@ -27,13 +27,15 @@ namespace Pri.Pawpi.Api.Extensions
                 Id = vet.Id,
                 FirstName = vet.FirstName,
                 LastName = vet.LastName,
-                Birth = vet.Birth,
+                Birth = vet.Birth.Date,
                 Address = vet.Address,
                 City = vet.City,
                 Email = vet.Email,
                 Phone = vet.Phone,
                 Postal = vet.Postal,
                 Specialties = vet.Specialties.MapBaseDto(),
+                Practices = vet.Practices.MapBaseDto(),
+                Consultations = vet.Consultations.MapBaseDto()
             };
         }
 
@@ -76,7 +78,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Id = customer.Id,
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
-                Birth = customer.Birth,
+                Birth = customer.Birth.Date,
                 Address = customer.Address,
                 City = customer.City,
                 Email = customer.Email,
@@ -211,14 +213,14 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region practice dto mapper
-        public static IEnumerable<PracticeResponseDto> MapPracticesDto(this IEnumerable<Practice> practices)
+        public static IEnumerable<PracticeGetDto> MapPracticesDto(this IEnumerable<Practice> practices)
         {
             return practices.Select(p => p.MapPracticeDto());
         }
 
-        public static PracticeResponseDto MapPracticeDto(this Practice practice)
+        public static PracticeGetDto MapPracticeDto(this Practice practice)
         {
-            return new PracticeResponseDto
+            return new PracticeGetDto
             {
                 Name = practice.Name,
                 Address = practice.Address,
@@ -230,6 +232,24 @@ namespace Pri.Pawpi.Api.Extensions
                 CloseTime = practice.CloseTime,
                 //Veterinarians = practice.Veterinarians.MapBaseDto(),
                 //Customers = practice.Customers.MapCustomersDto()
+            };
+        }
+
+        public static IEnumerable<PracticeBaseDto> MapBaseDto(this IEnumerable<Practice> practices)
+        {
+            return practices.Select(c => c.MapBaseDto());
+        }
+
+        public static PracticeBaseDto MapBaseDto(this Practice practice)
+        {
+            return new PracticeBaseDto
+            {
+                Id = practice.Id,
+                Name = practice.Name,
+                Address = practice.Address,
+                City = practice.City,
+                OpenTime = practice.OpenTime,
+                CloseTime = practice.CloseTime,
             };
         }
         #endregion
@@ -252,7 +272,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Diagnosis = con.Diagnosis,
                 Treatment = con.Treatment,
                 Notes = con.Notes,
-                DateOfConsultation = con.DateOfConsultation,
+                DateOfConsultation = con.DateOfConsultation.Date,
                 VeterinarianName = con.Veterinarian.FirstName + " " + con.Veterinarian.LastName,
                 PetName = con.Pet.Name
             };

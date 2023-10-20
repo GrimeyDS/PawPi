@@ -1,7 +1,9 @@
 ﻿using Pri.Pawpi.Api.Dtos.Medication.Request;
 using Pri.Pawpi.Api.Dtos.Specialty.Request;
+using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Core.Services.Models.Medication;
 using Pri.Pawpi.Core.Services.Models.Specialty;
+using Pri.Pawpi.Core.Services.Models.Veterinarian;
 
 namespace Pri.Pawpi.Api.Extensions
 {
@@ -55,6 +57,45 @@ namespace Pri.Pawpi.Api.Extensions
                 PetIds = medicationUpdateDto.PetIds,
                 Dosage = medicationUpdateDto.Dosage,
                 Frequency = medicationUpdateDto.Frequency
+            };
+        }
+        #endregion
+
+        #region veterinarian model mapper
+        public static VeterinarianAddModel MapModel(this VeterinarianCreateDto veterinarianCreateDto)
+        {
+            return new VeterinarianAddModel
+            {
+                FirstName = veterinarianCreateDto.FirstName,
+                LastName = veterinarianCreateDto.LastName,
+                Birth = veterinarianCreateDto.Birth,
+                Address = veterinarianCreateDto.Address,
+                City = veterinarianCreateDto.City,
+                Email = veterinarianCreateDto.Email,
+                Phone = veterinarianCreateDto.Phone,
+                Postal = veterinarianCreateDto.Postal,
+                SpecialtyIds = veterinarianCreateDto.SpecialtyIds,
+                ConsultationIds = veterinarianCreateDto.ConsultationIds,
+                PracticeIds = veterinarianCreateDto.PracticeIds
+            };
+        }
+
+        public static VeterinarianUpdateModel MapModel(this VeterinarianUpdateDto veterinarianUpdateDto)
+        {
+            return new VeterinarianUpdateModel
+            {
+                Id = veterinarianUpdateDto.Id,
+                FirstName = veterinarianUpdateDto.FirstName,
+                LastName = veterinarianUpdateDto.LastName,
+                Birth = veterinarianUpdateDto.Birth,
+                Address = veterinarianUpdateDto.Address,
+                City = veterinarianUpdateDto.City,
+                Email = veterinarianUpdateDto.Email,
+                Phone = veterinarianUpdateDto.Phone,
+                Postal = veterinarianUpdateDto.Postal,
+                SpecialtyIds = veterinarianUpdateDto.SpecialtyIds,
+                ConsultationIds = veterinarianUpdateDto.ConsultationIds,
+                PracticeIds = veterinarianUpdateDto.PracticeIds
             };
         }
         #endregion
