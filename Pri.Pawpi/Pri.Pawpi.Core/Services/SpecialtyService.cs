@@ -40,7 +40,7 @@ namespace Pri.Pawpi.Core.Services
             // Update new specialty entity
             specialtyToAdd.Name = addModel.Name;
             specialtyToAdd.Description = addModel.Description;
-            specialtyToAdd.Veterinarians = vetsToLink;
+            specialtyToAdd.Veterinarians.AddRange(vetsToLink);
 
             if (!await _repository.CreateAsync(specialtyToAdd))
                 return specialtyToAdd.ToErrorModel("Something went wrong while adding specialty");
