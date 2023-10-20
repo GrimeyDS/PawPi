@@ -74,12 +74,12 @@ namespace Pri.Pawpi.Core.Services
         {
             var pets = await _petRepository.GetAllAsync();
 
-            var PetsByMedication = pets.Where(p => p.Medications.Any(m => m.Id == id));
+            var petsByMedication = pets.Where(p => p.Medications.Any(m => m.Id == id));
 
-            if (PetsByMedication.Count() == 0)
-                return PetsByMedication.ToErrorModel("No pets found");
+            if (petsByMedication.Count() == 0)
+                return petsByMedication.ToErrorModel("No pets found");
 
-            return PetsByMedication.ToResultModel();
+            return petsByMedication.ToResultModel();
         }
 
         public async Task<ResultModel<Medication>> UpdateAsync(MedicationUpdateModel updateModel)
