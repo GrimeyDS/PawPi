@@ -213,15 +213,19 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region practice dto mapper
-        public static IEnumerable<PracticeGetDto> MapPracticesDto(this IEnumerable<Practice> practices)
+        public static PracticeGetAllDto MapDto(this IEnumerable<Practice> practices)
         {
-            return practices.Select(p => p.MapPracticeDto());
+            return new PracticeGetAllDto
+            {
+                Practices = practices.Select(c => c.MapDto())
+            };
         }
 
-        public static PracticeGetDto MapPracticeDto(this Practice practice)
+        public static PracticeGetDto MapDto(this Practice practice)
         {
             return new PracticeGetDto
             {
+                Id = practice.Id,
                 Name = practice.Name,
                 Address = practice.Address,
                 City = practice.City,
@@ -230,8 +234,16 @@ namespace Pri.Pawpi.Api.Extensions
                 Postal = practice.Postal,
                 OpenTime = practice.OpenTime,
                 CloseTime = practice.CloseTime,
-                //Veterinarians = practice.Veterinarians.MapBaseDto(),
-                //Customers = practice.Customers.MapCustomersDto()
+                Veterinarians = practice.Veterinarians.MapBaseDto()
+            };
+        }
+
+        public static PracticeSearchDto MapDto(this IEnumerable<Practice> practices, string name)
+        {
+            return new PracticeSearchDto
+            {
+                SearchInfo = $"{practices.Count()} Results were found for {name}",
+                Practices = practices.Select(c => c.MapDto())
             };
         }
 
