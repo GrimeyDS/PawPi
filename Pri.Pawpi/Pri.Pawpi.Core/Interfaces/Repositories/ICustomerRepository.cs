@@ -4,5 +4,6 @@ namespace Pri.Pawpi.Core.Interfaces.Repositories
 {
     public interface ICustomerRepository : IBaseRepository<Customer>
     {
+        Task<IEnumerable<Customer>> SearchByAddressAsync(string address);
     }
 }

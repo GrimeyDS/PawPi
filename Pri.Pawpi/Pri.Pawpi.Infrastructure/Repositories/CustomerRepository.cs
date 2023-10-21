@@ -39,5 +39,14 @@ namespace Pri.Pawpi.Infrastructure.Repositories
             var people = GetAll();
             return await people.Where(p => p.FirstName.ToUpper().Contains(name.ToUpper()) || p.LastName.ToUpper().Contains(name.ToUpper())).ToListAsync();
         }
+
+        public async Task<IEnumerable<Customer>> SearchByAddressAsync(string address)
+        {
+            var people = GetAll();
+            return await people.Where(p => p.Address.ToUpper().Contains(address.ToUpper()) || 
+                                           p.City.ToUpper().Contains(address.ToUpper()) ||
+                                           p.Postal.ToUpper().Contains(address.ToUpper()))
+                                           .ToListAsync();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Pri.Pawpi.Core.Services.Models;
+﻿using Pri.Pawpi.Core.Entities;
+using Pri.Pawpi.Core.Services.Models;
 
 namespace Pri.Pawpi.Core.Extensions
 {
@@ -46,6 +47,18 @@ namespace Pri.Pawpi.Core.Extensions
             };
 
             return result;
+        }
+
+        public static void MapEntity(this Person person, PersonModel personModel)
+        {
+            person.FirstName = personModel.FirstName;
+            person.LastName = personModel.LastName;
+            person.Birth = personModel.Birth;
+            person.Address = personModel.Address;
+            person.City = personModel.City;
+            person.Postal = personModel.Postal;
+            person.Phone = personModel.Phone;
+            person.Email = personModel.Email;
         }
     }
 }
