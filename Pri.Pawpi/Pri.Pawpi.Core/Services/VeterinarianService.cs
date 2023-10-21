@@ -57,6 +57,18 @@ namespace Pri.Pawpi.Core.Services
             return consultationsByVets.ToResultModel();
         }
 
+        public async Task<ResultModel<Practice>> GetPracticesFromVeterinariansAsync(int id)
+        {
+            var practices = await _practiceRepository.GetAllAsync();
+
+            var practicesByVet = practices.Where(s => s.Veterinarians.Any(v => v.Id == id));
+
+            if (practicesByVet.Count() == 0)
+                return practicesByVet.ToErrorModel("No practices found");
+
+            return practicesByVet.ToResultModel();
+        }
+
         public async Task<ResultModel<Veterinarian>> AddAsync(VeterinarianAddModel addModel)
         {
             var vets = _repository.GetAll();

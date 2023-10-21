@@ -88,6 +88,22 @@ namespace Pri.Pawpi.Api.Controllers
             return Ok(veterinarianResponseDto);
         }
 
+        [HttpGet("{id}/Practices")]
+        public async Task<IActionResult> GetPracticesFromVeterinarians(int id)
+        {
+            var practices = await _veterinarianService.GetPracticesFromVeterinariansAsync(id);
+            var vet = await _veterinarianService.GetByIdAsync(id);
+
+            if (!practices.IsSuccess)
+                return BadRequest(practices.Errors);
+
+            var name = $"{vet.Item.FirstName} {vet.Item.LastName}";
+
+            var veterinarianResponseDto = practices.Items.MapDto(name);
+
+            return Ok(veterinarianResponseDto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(VeterinarianCreateDto veterinarianCreateDto)
         {

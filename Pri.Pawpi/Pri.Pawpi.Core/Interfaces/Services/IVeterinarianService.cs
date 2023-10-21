@@ -11,5 +11,6 @@ namespace Pri.Pawpi.Core.Interfaces.Services
         Task<ResultModel<Veterinarian>> SearchByNameAsync(string name);
         Task<ResultModel<Specialty>> GetSpecialtiesFromVeterinariansAsync(int id);
         Task<ResultModel<Consultation>> GetConsultationsFromVeterinariansAsync(int id);
+        Task<ResultModel<Practice>> GetPracticesFromVeterinariansAsync(int id);
     }
 }
