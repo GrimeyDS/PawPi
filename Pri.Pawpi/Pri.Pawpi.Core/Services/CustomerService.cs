@@ -32,21 +32,21 @@ namespace Pri.Pawpi.Core.Services
 
             // Input checks
             if (!pets.CheckIfIdsExist(modelPetIds))
-                return customerToAdd.ToErrorModel("Unknown pets!");
-            if (practices.All(p => p.Id != addModel.PracticeId))
-                return customerToAdd.ToErrorModel("Unknown practice!");
+                return customerToAdd.ToErrorModel(Constants.UnknownCustomerMessage);
+            if (!practices.CheckIfIdExists(addModel.PracticeId))
+                return customerToAdd.ToErrorModel(Constants.UnknownCustomerMessage);
 
             if (!pets.CheckIdsInput(modelPetIds))
-                return customerToAdd.ToErrorModel("Please provide a pet");
+                return customerToAdd.ToErrorModel(Constants.NoPetMessage);
             if (addModel.PracticeId == 0)
-                return customerToAdd.ToErrorModel("Please provide a practice");
+                return customerToAdd.ToErrorModel(Constants.NoPracticeMessage);
 
             if (customers.Any(m => m.FirstName.ToUpper().Equals(addModel.FirstName.ToUpper())
                                 && m.LastName.ToUpper().Equals(addModel.LastName.ToUpper())))
-                return customerToAdd.ToErrorModel("Name already exists");
+                return customerToAdd.ToErrorModel(Constants.NameExistsMessage);
 
             if (addModel.Birth >= DateTime.Now)
-                return customerToAdd.ToErrorModel("Birth date cannot be in the future");
+                return customerToAdd.ToErrorModel(Constants.FutureDateMessage);
 
             // Get ids to attach as entities
             var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
@@ -59,7 +59,7 @@ namespace Pri.Pawpi.Core.Services
 
 
             if (!await _repository.CreateAsync(customerToAdd))
-                return customerToAdd.ToErrorModel("Something went wrong while adding customer");
+                return customerToAdd.ToErrorModel(Constants.DBCreateMessage);
 
             return customerToAdd.ToResultModel();
         }
@@ -71,7 +71,7 @@ namespace Pri.Pawpi.Core.Services
             var petsByCustomer = pets.Where(c => c.CustomerId.Equals(id));
 
             if (petsByCustomer.Count() == 0)
-                return petsByCustomer.ToErrorModel("No pets found");
+                return petsByCustomer.ToErrorModel(Constants.NoPetMessage);
 
             return petsByCustomer.ToResultModel();
         }
@@ -81,7 +81,7 @@ namespace Pri.Pawpi.Core.Services
             var customers = await _customerRepository.SearchByNameAsync(name);
 
             if (customers.Count() == 0)
-                return customers.ToErrorModel("No customers found");
+                return customers.ToErrorModel(Constants.NoCustomerMessage);
 
             return customers.ToResultModel();
         }
@@ -91,7 +91,7 @@ namespace Pri.Pawpi.Core.Services
             var customers = await _customerRepository.SearchByAddressAsync(address);
 
             if (customers.Count() == 0)
-                return customers.ToErrorModel("No customers found");
+                return customers.ToErrorModel(Constants.NoCustomerMessage);
 
             return customers.ToResultModel();
         }
@@ -107,25 +107,25 @@ namespace Pri.Pawpi.Core.Services
             var customerToUpdate = await _repository.GetByIdAsync(updateModel.Id);
 
             if (customerToUpdate == null)
-                return customerToUpdate.ToErrorModel("Customer not found");
+                return customerToUpdate.ToErrorModel(Constants.NoCustomerMessage);
 
             // Input checks
             if (!pets.CheckIfIdsExist(modelPetIds))
-                return customerToUpdate.ToErrorModel("Unknown pets!");
-            if (practices.All(p => p.Id != updateModel.PracticeId))
-                return customerToUpdate.ToErrorModel("Unknown practice!");
+                return customerToUpdate.ToErrorModel(Constants.UnknownPetMessage);
+            if (!practices.CheckIfIdExists(updateModel.PracticeId))
+                return customerToUpdate.ToErrorModel(Constants.UnknownCustomerMessage);
 
             if (!pets.CheckIdsInput(modelPetIds))
-                return customerToUpdate.ToErrorModel("Please provide a pet");
+                return customerToUpdate.ToErrorModel(Constants.NoPetMessage);
             if (customerToUpdate.PracticeId == 0)
-                return customerToUpdate.ToErrorModel("Please provide a practice");
+                return customerToUpdate.ToErrorModel(Constants.NoCustomerMessage);
 
             if (customers.Any(m => m.FirstName.ToUpper().Equals(updateModel.FirstName.ToUpper())
                                 && m.LastName.ToUpper().Equals(updateModel.LastName.ToUpper())))
-                return customerToUpdate.ToErrorModel("Name already exists");
+                return customerToUpdate.ToErrorModel(Constants.NameExistsMessage);
 
             if (updateModel.Birth >= DateTime.Now)
-                return customerToUpdate.ToErrorModel("Birth date cannot be in the future");
+                return customerToUpdate.ToErrorModel(Constants.FutureDateMessage);
 
             // Get ids to attach as entities
             var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
@@ -138,7 +138,7 @@ namespace Pri.Pawpi.Core.Services
 
 
             if (!await _repository.UpdateAsync(customerToUpdate))
-                return customerToUpdate.ToErrorModel("Something went wrong while updating customer");
+                return customerToUpdate.ToErrorModel(Constants.DBUpdateMessage);
 
             return customerToUpdate.ToResultModel();
         }

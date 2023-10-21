@@ -13,14 +13,6 @@ namespace Pri.Pawpi.Core.Services
         private readonly IPetRepository _petRepository;
         private readonly IVeterinarianRepository _veterinarianRepository;
 
-        private const string UnknownVeterinarianMessage = "Unknown veterinarian!";
-        private const string UnknownPetMessage = "Unknown pet!";
-        private const string UnknownConsultationMessage = "Unknown consultation!";
-        private const string NoVeterinarianMessage = "Please provide a veterinarian";
-        private const string NoPetMessage = "Please provide a practice";
-        private const string FutureDateMessage = "Birth date cannot be in the future";
-        private const string SomethingWentWrongMessage = "Something went wrong while adding/updating consultation";
-
         public ConsultationService(IConsultationRepository consultationRepository, IPetRepository petRepository, IVeterinarianRepository veterinarianRepository) : base(consultationRepository)
         {
             _consultationRepository = consultationRepository;
@@ -38,17 +30,17 @@ namespace Pri.Pawpi.Core.Services
 
             // Input checks
             if (!vets.CheckIfIdExists(addModel.VeterinarianId))
-                return consultationToAdd.ToErrorModel(UnknownVeterinarianMessage);
+                return consultationToAdd.ToErrorModel(Constants.UnknownVeterinarianMessage);
             if (!pets.CheckIfIdExists(addModel.PetId))
-                return consultationToAdd.ToErrorModel(UnknownPetMessage);
+                return consultationToAdd.ToErrorModel(Constants.UnknownPetMessage);
 
             if (addModel.VeterinarianId == 0)
-                return consultationToAdd.ToErrorModel(NoVeterinarianMessage);
+                return consultationToAdd.ToErrorModel(Constants.NoVeterinarianMessage);
             if (addModel.PetId == 0)
-                return consultationToAdd.ToErrorModel(NoPetMessage);
+                return consultationToAdd.ToErrorModel(Constants.NoPetMessage);
 
             if (addModel.DateOfConsultation >= DateTime.Now)
-                return consultationToAdd.ToErrorModel(FutureDateMessage);
+                return consultationToAdd.ToErrorModel(Constants.FutureDateMessage);
 
             // Get ids to attach as entities
             var veterinarianToLink = vets.FirstOrDefault(p => p.Id == addModel.VeterinarianId);
@@ -61,7 +53,7 @@ namespace Pri.Pawpi.Core.Services
 
 
             if (!await _repository.CreateAsync(consultationToAdd))
-                return consultationToAdd.ToErrorModel(SomethingWentWrongMessage);
+                return consultationToAdd.ToErrorModel(Constants.DBCreateMessage);
 
             return consultationToAdd.ToResultModel();
         }
@@ -76,21 +68,21 @@ namespace Pri.Pawpi.Core.Services
             var consultationToUpdate = await _consultationRepository.GetByIdAsync(updateModel.Id);
 
             if (consultationToUpdate == null)
-                return consultationToUpdate.ToErrorModel(UnknownConsultationMessage);
+                return consultationToUpdate.ToErrorModel(Constants.UnknownConsultationMessage);
 
             // Input checks
             if (!vets.CheckIfIdExists(updateModel.VeterinarianId))
-                return consultationToUpdate.ToErrorModel(UnknownVeterinarianMessage);
+                return consultationToUpdate.ToErrorModel(Constants.UnknownVeterinarianMessage);
             if (!pets.CheckIfIdExists(updateModel.PetId))
-                return consultationToUpdate.ToErrorModel(UnknownPetMessage);
+                return consultationToUpdate.ToErrorModel(Constants.UnknownPetMessage);
 
             if (updateModel.VeterinarianId == 0)
-                return consultationToUpdate.ToErrorModel(NoVeterinarianMessage);
+                return consultationToUpdate.ToErrorModel(Constants.NoVeterinarianMessage);
             if (updateModel.PetId == 0)
-                return consultationToUpdate.ToErrorModel(NoPetMessage);
+                return consultationToUpdate.ToErrorModel(Constants.NoPetMessage);
 
             if (updateModel.DateOfConsultation >= DateTime.Now)
-                return consultationToUpdate.ToErrorModel(FutureDateMessage);
+                return consultationToUpdate.ToErrorModel(Constants.FutureDateMessage);
 
             // Get ids to attach as entities
             var veterinarianToLink = vets.FirstOrDefault(p => p.Id == updateModel.VeterinarianId);
@@ -102,7 +94,7 @@ namespace Pri.Pawpi.Core.Services
             consultationToUpdate.Pet = petToLink;
 
             if (!await _repository.UpdateAsync(consultationToUpdate))
-                return consultationToUpdate.ToErrorModel(SomethingWentWrongMessage);
+                return consultationToUpdate.ToErrorModel(Constants.DBUpdateMessage);
 
             return consultationToUpdate.ToResultModel();
         }
@@ -112,7 +104,7 @@ namespace Pri.Pawpi.Core.Services
             var consultations = await _consultationRepository.SearchByTitleAsync(title);
 
             if (consultations == null)
-                return consultations.ToErrorModel(UnknownConsultationMessage);
+                return consultations.ToErrorModel(Constants.UnknownConsultationMessage);
 
             return consultations.ToResultModel();
         }
@@ -122,7 +114,7 @@ namespace Pri.Pawpi.Core.Services
             var consultations = await _consultationRepository.SearchByDiagnoseAsync(diagnose);
 
             if (consultations == null)
-                return consultations.ToErrorModel(UnknownConsultationMessage);
+                return consultations.ToErrorModel(Constants.UnknownConsultationMessage);
 
             return consultations.ToResultModel();
         }
