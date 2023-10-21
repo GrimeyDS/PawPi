@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pri.Pawpi.Api.Dtos.Consultation.Request;
-using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
-using Pri.Pawpi.Core.Services;
 
 namespace Pri.Pawpi.Api.Controllers
 {
@@ -57,7 +54,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Specialties")]
-        public async Task<IActionResult> GetSpecialtiesFromVeterinariansAsync(int id)
+        public async Task<IActionResult> GetSpecialtiesFromVeterinarians(int id)
         {
             var specialties = await _veterinarianService.GetSpecialtiesFromVeterinariansAsync(id);
             var vet = await _veterinarianService.GetByIdAsync(id);
@@ -105,7 +102,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CustomerCreateDto veterinarianCreateDto)
+        public async Task<IActionResult> Create(VeterinarianCreateDto veterinarianCreateDto)
         {
             var veterinarianModel = veterinarianCreateDto.MapModel();
 
@@ -118,7 +115,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(CustomerUpdateDto veterinarianUpdateDto)
+        public async Task<IActionResult> Update(VeterinarianUpdateDto veterinarianUpdateDto)
         {
             var veterinarianModel = veterinarianUpdateDto.MapModel();
 
