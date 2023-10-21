@@ -2,7 +2,7 @@
 
 namespace Pri.Pawpi.Api.Dtos.Practice.Request
 {
-    public class PracticeCreateDto : BaseDto
+    public class PracticeCreateDto
     {
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
