@@ -62,7 +62,7 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region veterinarian model mapper
-        public static VeterinarianAddModel MapModel(this VeterinarianCreateDto veterinarianCreateDto)
+        public static VeterinarianAddModel MapModel(this CustomerCreateDto veterinarianCreateDto)
         {
             return new VeterinarianAddModel
             {
@@ -80,7 +80,7 @@ namespace Pri.Pawpi.Api.Extensions
             };
         }
 
-        public static VeterinarianUpdateModel MapModel(this VeterinarianUpdateDto veterinarianUpdateDto)
+        public static VeterinarianUpdateModel MapModel(this CustomerUpdateDto veterinarianUpdateDto)
         {
             return new VeterinarianUpdateModel
             {

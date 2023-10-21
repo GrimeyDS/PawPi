@@ -21,7 +21,7 @@ namespace Pri.Pawpi.Api.Controllers
         {
             var practices = await _practiceService.GetAllAsync();
 
-            var practicesResponseDto = practices.Items.MapPracticesDto();
+            var practicesResponseDto = practices.Items.MapDto();
 
             return Ok(practicesResponseDto);
         }
@@ -34,7 +34,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!practice.IsSuccess)
                 return BadRequest(practice.Errors);
 
-            var practiceResponseDto = practice.Item.MapPracticeDto();
+            var practiceResponseDto = practice.Item.MapDto();
 
             return Ok(practiceResponseDto);
         }

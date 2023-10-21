@@ -1,5 +1,6 @@
 ﻿using Pri.Pawpi.Api.Dtos.Consultation.Response;
 using Pri.Pawpi.Api.Dtos.Customer;
+using Pri.Pawpi.Api.Dtos.Customer.Response;
 using Pri.Pawpi.Api.Dtos.Medication.Response;
 using Pri.Pawpi.Api.Dtos.Pet.Response;
 using Pri.Pawpi.Api.Dtos.Practice.Response;
@@ -66,14 +67,17 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region customer dto mapper
-        public static IEnumerable<CustomerResponseDto> MapCustomersDto(this IEnumerable<Customer> customers)
+        public static CustomerGetAllDto MapDto(this IEnumerable<Customer> customers)
         {
-            return customers.Select(c => c.MapCustomerDto());
+            return new CustomerGetAllDto
+            {
+                Customers = customers.Select(c => c.MapDto())
+            };
         }
 
-        public static CustomerResponseDto MapCustomerDto(this Customer customer)
+        public static CustomerGetDto MapDto(this Customer customer)
         {
-            return new CustomerResponseDto
+            return new CustomerGetDto
             {
                 Id = customer.Id,
                 FirstName = customer.FirstName,
@@ -84,7 +88,32 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = customer.Email,
                 Phone = customer.Phone,
                 Postal = customer.Postal,
-                //Pets = customer.Pets.MapPetsDto()
+                Pets = customer.Pets.MapBaseDto(),
+            };
+        }
+
+        public static CustomerSearchDto MapDto(this IEnumerable<Customer> customers, string name)
+        {
+            return new CustomerSearchDto
+            {
+                SearchInfo = $"{customers.Count()} Results were found for {name}",
+                Customers = customers.Select(c => c.MapDto())
+            };
+        }
+
+        public static IEnumerable<CustomerBaseDto> MapBaseDto(this IEnumerable<Customer> customers)
+        {
+            return customers.Select(c => c.MapBaseDto());
+        }
+
+        public static CustomerBaseDto MapBaseDto(this Customer customer)
+        {
+            return new CustomerBaseDto
+            {
+                Id = customer.Id,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email
             };
         }
         #endregion
