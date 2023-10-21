@@ -1,5 +1,4 @@
 ﻿using Pri.Pawpi.Api.Dtos.Consultation.Response;
-using Pri.Pawpi.Api.Dtos.Customer;
 using Pri.Pawpi.Api.Dtos.Customer.Response;
 using Pri.Pawpi.Api.Dtos.Medication.Response;
 using Pri.Pawpi.Api.Dtos.Pet.Response;
@@ -89,6 +88,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Phone = customer.Phone,
                 Postal = customer.Postal,
                 Pets = customer.Pets.MapBaseDto(),
+                Practice = customer.Practice.MapBaseDto()
             };
         }
 

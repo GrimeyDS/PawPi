@@ -1,6 +1,7 @@
 ﻿using Pri.Pawpi.Api.Dtos.Medication.Request;
 using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
+using Pri.Pawpi.Core.Services.Models.Customer;
 using Pri.Pawpi.Core.Services.Models.Medication;
 using Pri.Pawpi.Core.Services.Models.Specialty;
 using Pri.Pawpi.Core.Services.Models.Veterinarian;
@@ -62,7 +63,7 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region veterinarian model mapper
-        public static VeterinarianAddModel MapModel(this CustomerCreateDto veterinarianCreateDto)
+        public static VeterinarianAddModel MapModel(this VeterinarianCreateDto veterinarianCreateDto)
         {
             return new VeterinarianAddModel
             {
@@ -80,7 +81,7 @@ namespace Pri.Pawpi.Api.Extensions
             };
         }
 
-        public static VeterinarianUpdateModel MapModel(this CustomerUpdateDto veterinarianUpdateDto)
+        public static VeterinarianUpdateModel MapModel(this VeterinarianUpdateDto veterinarianUpdateDto)
         {
             return new VeterinarianUpdateModel
             {
@@ -96,6 +97,43 @@ namespace Pri.Pawpi.Api.Extensions
                 SpecialtyIds = veterinarianUpdateDto.SpecialtyIds,
                 ConsultationIds = veterinarianUpdateDto.ConsultationIds,
                 PracticeIds = veterinarianUpdateDto.PracticeIds
+            };
+        }
+        #endregion
+
+        #region customer model mapper
+        public static CustomerAddModel MapModel(this CustomerCreateDto customerCreateDto)
+        {
+            return new CustomerAddModel
+            {
+                FirstName = customerCreateDto.FirstName,
+                LastName = customerCreateDto.LastName,
+                Birth = customerCreateDto.Birth,
+                Address = customerCreateDto.Address,
+                City = customerCreateDto.City,
+                Email = customerCreateDto.Email,
+                Phone = customerCreateDto.Phone,
+                Postal = customerCreateDto.Postal,
+                PracticeId = customerCreateDto.PracticeId,
+                PetIds = customerCreateDto.PetIds
+            };
+        }
+
+        public static CustomerUpdateModel MapModel(this CustomerUpdateDto customerUpdateDto)
+        {
+            return new CustomerUpdateModel
+            {
+                Id = customerUpdateDto.Id,
+                FirstName = customerUpdateDto.FirstName,
+                LastName = customerUpdateDto.LastName,
+                Birth = customerUpdateDto.Birth,
+                Address = customerUpdateDto.Address,
+                City = customerUpdateDto.City,
+                Email = customerUpdateDto.Email,
+                Phone = customerUpdateDto.Phone,
+                Postal = customerUpdateDto.Postal,
+                PracticeId = customerUpdateDto.PracticeId,
+                PetIds = customerUpdateDto.PetIds
             };
         }
         #endregion
