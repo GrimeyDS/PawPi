@@ -1,5 +1,6 @@
 ﻿using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Services.Models;
+using Pri.Pawpi.Core.Services.Models.Consultations;
 
 namespace Pri.Pawpi.Core.Extensions
 {
@@ -59,6 +60,15 @@ namespace Pri.Pawpi.Core.Extensions
             person.Postal = personModel.Postal;
             person.Phone = personModel.Phone;
             person.Email = personModel.Email;
+        }
+
+        public static void MapEntity(this Consultation consultation, ConsultationAddModel consultationModel)
+        {
+            consultation.Title = consultationModel.Title;
+            consultation.Diagnosis = consultationModel.Diagnosis;
+            consultation.Treatment = consultationModel.Treatment;
+            consultation.Notes = consultationModel.Notes;
+            consultation.DateOfConsultation = consultationModel.DateOfConsultation;
         }
     }
 }

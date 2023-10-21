@@ -12,5 +12,7 @@ namespace Pri.Pawpi.Api.Dtos.Consultation.Request
         public string Notes { get; set; }
         [Required(ErrorMessage = "Date is required")]
         public DateTime DateOfConsultation { get; set; }
+        public int VeterinarianId { get; set; }
+        public int PetId { get; set; }
     }
 }

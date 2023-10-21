@@ -11,6 +11,5 @@ namespace Pri.Pawpi.Api.Dtos.Consultation.Response
         public DateTime DateOfConsultation { get; set; }
         public string VeterinarianName { get; set; }
         public string PetName { get; set; }
-        public IEnumerable<PracticeBaseDto> Practice { get; set; }
     }
 }
