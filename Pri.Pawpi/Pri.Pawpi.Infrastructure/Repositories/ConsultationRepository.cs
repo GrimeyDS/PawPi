@@ -34,28 +34,16 @@ namespace Pri.Pawpi.Infrastructure.Repositories
                          .AsQueryable();
         }
 
-        public async Task<IEnumerable<Consultation>> SearchByDateAsync(DateTime date)
+        public async Task<IEnumerable<Consultation>> SearchByTitleAsync(string title)
         {
             var consultations = GetAll();
-            return await consultations.Where(c => c.DateOfConsultation.Date == date.Date).ToListAsync();
+            return await consultations.Where(c => c.Title.ToUpper() == title.ToUpper()).ToListAsync();
         }
 
-        public override async Task<IEnumerable<Consultation>> SearchByNameAsync(string name)
+        public async Task<IEnumerable<Consultation>> SearchByDiagnoseAsync(string diagnose)
         {
             var consultations = GetAll();
-            return await consultations.Where(c => c.Title.ToUpper() == name.ToUpper()).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Consultation>> SearchByPetIdAsync(int petId)
-        {
-            var consultations = GetAll();
-            return await consultations.Where(c => c.PetId == petId).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Consultation>> SearchByVeterinarianIdAsync(int vetId)
-        {
-            var consultations = GetAll();
-            return await consultations.Where(c => c.VeterinarianId == vetId).ToListAsync();
+            return await consultations.Where(c => c.Diagnosis.ToUpper() == diagnose.ToUpper()).ToListAsync();
         }
     }
 }
