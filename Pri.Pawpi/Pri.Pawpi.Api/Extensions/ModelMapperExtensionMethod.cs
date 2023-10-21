@@ -1,6 +1,8 @@
-﻿using Pri.Pawpi.Api.Dtos.Medication.Request;
+﻿using Pri.Pawpi.Api.Dtos.Consultation.Request;
+using Pri.Pawpi.Api.Dtos.Medication.Request;
 using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
+using Pri.Pawpi.Core.Services.Models.Consultations;
 using Pri.Pawpi.Core.Services.Models.Customer;
 using Pri.Pawpi.Core.Services.Models.Medication;
 using Pri.Pawpi.Core.Services.Models.Specialty;
@@ -134,6 +136,37 @@ namespace Pri.Pawpi.Api.Extensions
                 Postal = customerUpdateDto.Postal,
                 PracticeId = customerUpdateDto.PracticeId,
                 PetIds = customerUpdateDto.PetIds
+            };
+        }
+        #endregion
+
+        #region consultation model mapper
+        public static ConsultationAddModel MapModel(this ConsultationCreateDto consultationCreateDto)
+        {
+            return new ConsultationAddModel
+            {
+                Title = consultationCreateDto.Title,
+                Diagnosis = consultationCreateDto.Diagnosis,
+                Treatment = consultationCreateDto.Treatment,
+                Notes = consultationCreateDto.Notes,
+                DateOfConsultation = consultationCreateDto.DateOfConsultation,
+                VeterinarianId = consultationCreateDto.VeterinarianId,
+                PetId = consultationCreateDto.PetId
+            };
+        }
+
+        public static ConsultationUpdateModel MapModel(this ConsultationUpdateDto consultationUpdateDto)
+        {
+            return new ConsultationUpdateModel
+            {
+                Id = consultationUpdateDto.Id,
+                Title = consultationUpdateDto.Title,
+                Diagnosis = consultationUpdateDto.Diagnosis,
+                Treatment = consultationUpdateDto.Treatment,
+                Notes = consultationUpdateDto.Notes,
+                DateOfConsultation = consultationUpdateDto.DateOfConsultation,
+                VeterinarianId = consultationUpdateDto.VeterinarianId,
+                PetId = consultationUpdateDto.PetId
             };
         }
         #endregion
