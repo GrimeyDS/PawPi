@@ -18,5 +18,12 @@ namespace Pri.Pawpi.Core.Extensions
                 return false;
             return true;
         }
+
+        public static bool CheckIfIdExists(this IQueryable<BaseEntity> list, int idToCheck)
+        {
+            if (list.Where(p => p.Id == idToCheck).Count() == 0)
+                return false;
+            return true;
+        }
     }
 }
