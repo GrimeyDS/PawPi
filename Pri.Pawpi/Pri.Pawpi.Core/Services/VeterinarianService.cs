@@ -109,14 +109,7 @@ namespace Pri.Pawpi.Core.Services
             var practicesToLink = practices.Where(v => modelPracticeIds.Contains(v.Id)).ToList();
 
             // Update new specialty entity
-            veterinarianToAdd.FirstName = addModel.FirstName;
-            veterinarianToAdd.LastName = addModel.LastName;
-            veterinarianToAdd.Birth = addModel.Birth;
-            veterinarianToAdd.Address = addModel.Address;
-            veterinarianToAdd.City = addModel.City;
-            veterinarianToAdd.Postal = addModel.Postal;
-            veterinarianToAdd.Phone = addModel.Phone;
-            veterinarianToAdd.Email = addModel.Email;
+            veterinarianToAdd.MapEntity(addModel);
             veterinarianToAdd.Specialties = specialtiesToLink;
             veterinarianToAdd.Consultations = consultationsToLink;
             veterinarianToAdd.Practices = practicesToLink;
@@ -177,14 +170,7 @@ namespace Pri.Pawpi.Core.Services
 
 
             // Update specialty entity
-            veterinarianToUpdate.FirstName = updateModel.FirstName;
-            veterinarianToUpdate.LastName = updateModel.LastName;
-            veterinarianToUpdate.Birth = updateModel.Birth;
-            veterinarianToUpdate.Address = updateModel.Address;
-            veterinarianToUpdate.City = updateModel.City;
-            veterinarianToUpdate.Postal = updateModel.Postal;
-            veterinarianToUpdate.Phone = updateModel.Phone;
-            veterinarianToUpdate.Email = updateModel.Email;
+            veterinarianToUpdate.MapEntity(updateModel);
             veterinarianToUpdate.Specialties.AddRange(specialtiesToLink);
             veterinarianToUpdate.Consultations.AddRange(consultationsToLink);
             veterinarianToUpdate.Practices.AddRange(practicesToLink);

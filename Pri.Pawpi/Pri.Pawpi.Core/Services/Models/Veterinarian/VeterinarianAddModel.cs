@@ -2,7 +2,7 @@
 
 namespace Pri.Pawpi.Core.Services.Models.Veterinarian
 {
-    public class VeterinarianAddModel : Person
+    public class VeterinarianAddModel : PersonModel
     {
         public IEnumerable<int> SpecialtyIds { get; set; }
         public IEnumerable<int> PracticeIds { get; set; }
