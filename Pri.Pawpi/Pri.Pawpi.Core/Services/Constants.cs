@@ -21,6 +21,16 @@ namespace Pri.Pawpi.Core.Services
         internal const string NoSpecialtyMessage = "Please provide a specialty";
         internal const string NoMedicineMessage = "Please provide a medicine";
 
+        // Not found error messages
+        internal const string NoVeterinarianFoundMessage = "No veterinarian found";
+        internal const string NoPetFoundMessage = "No pet found";
+        internal const string NoConsultationFoundMessage = "No consultation found";
+        internal const string NoPracticeFoundMessage = "No practice found";
+        internal const string NoCustomerFoundMessage = "No customer found";
+        internal const string NoSpecialtyFoundMessage = "No specialty found";
+        internal const string NoMedicineFoundMessage = "No medicine found";
+        internal const string NotFoundMessage = "Not found";
+
         // Other error messages
         internal const string FutureDateMessage = "Dates cannot be in the future";
         internal const string NameExistsMessage = "Name already exists";
@@ -28,5 +38,6 @@ namespace Pri.Pawpi.Core.Services
         // DB error messages
         internal const string DBUpdateMessage = "Something went wrong while updating";
         internal const string DBCreateMessage = "Something went wrong while adding";
+        internal const string DBDeleteMessage = "Something went wrong while deleting";
     }
 }

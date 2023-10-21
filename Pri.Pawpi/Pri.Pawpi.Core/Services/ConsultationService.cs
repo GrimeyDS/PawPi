@@ -104,7 +104,7 @@ namespace Pri.Pawpi.Core.Services
             var consultations = await _consultationRepository.SearchByTitleAsync(title);
 
             if (consultations == null)
-                return consultations.ToErrorModel(Constants.UnknownConsultationMessage);
+                return consultations.ToErrorModel(Constants.NoConsultationFoundMessage);
 
             return consultations.ToResultModel();
         }
@@ -114,7 +114,7 @@ namespace Pri.Pawpi.Core.Services
             var consultations = await _consultationRepository.SearchByDiagnoseAsync(diagnose);
 
             if (consultations == null)
-                return consultations.ToErrorModel(Constants.UnknownConsultationMessage);
+                return consultations.ToErrorModel(Constants.NoConsultationFoundMessage);
 
             return consultations.ToResultModel();
         }

@@ -28,24 +28,20 @@ namespace Pri.Pawpi.Core.Services
 
             // Input checks
             if (!pets.CheckIfIdsExist(modelPetIds))
-                return medicationToAdd.ToErrorModel("Unknown pets!");
+                return medicationToAdd.ToErrorModel(Constants.NoPetMessage);
 
             if (medicine.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
-                return medicationToAdd.ToErrorModel("Name already exists");
+                return medicationToAdd.ToErrorModel(Constants.NameExistsMessage);
 
             // Get veterinarians to attach
             var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
 
             // Update new medication entity
-            medicationToAdd.Name = addModel.Name;
-            medicationToAdd.Dosage = addModel.Dosage;
-            medicationToAdd.Frequency = addModel.Frequency;
-            medicationToAdd.Notes = addModel.Notes;
-            medicationToAdd.SideEffects = addModel.SideEffects;
+            medicationToAdd.MapEntity(addModel);
             medicationToAdd.Pets = petsToLink;
 
             if (!await _medicationRepository.CreateAsync(medicationToAdd))
-                return medicationToAdd.ToErrorModel("Something went wrong while adding medication");
+                return medicationToAdd.ToErrorModel(Constants.DBCreateMessage);
 
             return medicationToAdd.ToResultModel();
         }
@@ -55,7 +51,7 @@ namespace Pri.Pawpi.Core.Services
             var medicine = await _medicationRepository.SearchByNameAsync(name);
 
             if (medicine.Count() == 0)
-                return medicine.ToErrorModel("No medicine found");
+                return medicine.ToErrorModel(Constants.NoMedicineFoundMessage);
 
             return medicine.ToResultModel();
         }
@@ -65,7 +61,7 @@ namespace Pri.Pawpi.Core.Services
             var medicine = await _medicationRepository.SearchBySideEffectAsync(sideEffect);
 
             if (medicine.Count() == 0)
-                return medicine.ToErrorModel("No medicine found");
+                return medicine.ToErrorModel(Constants.NoMedicineFoundMessage);
 
             return medicine.ToResultModel();
         }
@@ -77,7 +73,7 @@ namespace Pri.Pawpi.Core.Services
             var petsByMedication = pets.Where(p => p.Medications.Any(m => m.Id == id));
 
             if (petsByMedication.Count() == 0)
-                return petsByMedication.ToErrorModel("No pets found");
+                return petsByMedication.ToErrorModel(Constants.NoPetFoundMessage);
 
             return petsByMedication.ToResultModel();
         }
@@ -91,16 +87,16 @@ namespace Pri.Pawpi.Core.Services
             var medicationToUpdate = await _medicationRepository.GetByIdAsync(updateModel.Id);
 
             if (medicationToUpdate == null)
-                return medicationToUpdate.ToErrorModel("Medication not found");
+                return medicationToUpdate.ToErrorModel(Constants.UnknownMedicineMessage);
 
             // Input checks
             if (!pets.CheckIfIdsExist(modelPetIds))
-                return medicationToUpdate.ToErrorModel("Unknown pets!");
+                return medicationToUpdate.ToErrorModel(Constants.UnknownPetMessage);
 
             if (medicationToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
             {
                 if (medicine.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
-                    return medicationToUpdate.ToErrorModel("Name already exists");
+                    return medicationToUpdate.ToErrorModel(Constants.NameExistsMessage);
             }
 
             // Get veterinarians to attach
@@ -115,7 +111,7 @@ namespace Pri.Pawpi.Core.Services
             medicationToUpdate.Pets.AddRange(petsToLink);
 
             if (!await _medicationRepository.UpdateAsync(medicationToUpdate))
-                return medicationToUpdate.ToErrorModel("Something went wrong while updating medication");
+                return medicationToUpdate.ToErrorModel(Constants.DBUpdateMessage);
 
             return medicationToUpdate.ToResultModel();
         }

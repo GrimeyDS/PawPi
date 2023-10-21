@@ -52,7 +52,7 @@ namespace Pri.Pawpi.Core.Services
             var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
             var practiceToLink = practices.FirstOrDefault(p => p.Id == addModel.PracticeId);
 
-            // Update new specialty entity
+            // Update new customer entity
             customerToAdd.MapEntity(addModel);
             customerToAdd.Pets = petsToLink;
             customerToAdd.Practice = practiceToLink;
@@ -71,7 +71,7 @@ namespace Pri.Pawpi.Core.Services
             var petsByCustomer = pets.Where(c => c.CustomerId.Equals(id));
 
             if (petsByCustomer.Count() == 0)
-                return petsByCustomer.ToErrorModel(Constants.NoPetMessage);
+                return petsByCustomer.ToErrorModel(Constants.NoPetFoundMessage);
 
             return petsByCustomer.ToResultModel();
         }
@@ -81,7 +81,7 @@ namespace Pri.Pawpi.Core.Services
             var customers = await _customerRepository.SearchByNameAsync(name);
 
             if (customers.Count() == 0)
-                return customers.ToErrorModel(Constants.NoCustomerMessage);
+                return customers.ToErrorModel(Constants.NoCustomerFoundMessage);
 
             return customers.ToResultModel();
         }
@@ -91,7 +91,7 @@ namespace Pri.Pawpi.Core.Services
             var customers = await _customerRepository.SearchByAddressAsync(address);
 
             if (customers.Count() == 0)
-                return customers.ToErrorModel(Constants.NoCustomerMessage);
+                return customers.ToErrorModel(Constants.NoCustomerFoundMessage);
 
             return customers.ToResultModel();
         }
@@ -131,7 +131,7 @@ namespace Pri.Pawpi.Core.Services
             var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
             var practiceToLink = practices.FirstOrDefault(p => p.Id == updateModel.PracticeId);
 
-            // Update specialty entity
+            // Update customer entity
             customerToUpdate.MapEntity(updateModel);
             customerToUpdate.Pets.AddRange(petsToLink);
             customerToUpdate.Practice = practiceToLink;

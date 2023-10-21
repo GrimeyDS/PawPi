@@ -26,24 +26,23 @@ namespace Pri.Pawpi.Core.Services
 
             // Input checks
             if (!vets.CheckIfIdsExist(modelVeterinarianIds))
-                return specialtyToAdd.ToErrorModel("Unknown veterinarians!");
+                return specialtyToAdd.ToErrorModel(Constants.UnknownVeterinarianMessage);
 
             if (!vets.CheckIdsInput(modelVeterinarianIds))
-                return specialtyToAdd.ToErrorModel("Please provide a veterinarian");
+                return specialtyToAdd.ToErrorModel(Constants.NoVeterinarianMessage);
 
             if (specialties.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
-                return specialtyToAdd.ToErrorModel("Name already exists");
+                return specialtyToAdd.ToErrorModel(Constants.NameExistsMessage);
 
             // Get veterinarians to attach
             var vetsToLink = vets.Where(v => modelVeterinarianIds.Contains(v.Id)).ToList();
 
             // Update new specialty entity
-            specialtyToAdd.Name = addModel.Name;
-            specialtyToAdd.Description = addModel.Description;
-            specialtyToAdd.Veterinarians.AddRange(vetsToLink);
+            specialtyToAdd.MapEntity(addModel);
+            specialtyToAdd.Veterinarians = vetsToLink;
 
             if (!await _repository.CreateAsync(specialtyToAdd))
-                return specialtyToAdd.ToErrorModel("Something went wrong while adding specialty");
+                return specialtyToAdd.ToErrorModel(Constants.DBCreateMessage);
 
             return specialtyToAdd.ToResultModel();
         }
@@ -56,31 +55,30 @@ namespace Pri.Pawpi.Core.Services
             var modelVeterinarianIds = updateModel.VeterinarianIds;
 
             if (specialtyToUpdate == null)
-                return specialtyToUpdate.ToErrorModel("Specialty not found");
+                return specialtyToUpdate.ToErrorModel(Constants.NoSpecialtyFoundMessage);
 
             // Input checks
             if (!vets.CheckIfIdsExist(modelVeterinarianIds))
-                return specialtyToUpdate.ToErrorModel("Unknown veterinarians!");
+                return specialtyToUpdate.ToErrorModel(Constants.UnknownVeterinarianMessage);
 
             if (!vets.CheckIdsInput(modelVeterinarianIds))
-                return specialtyToUpdate.ToErrorModel("Please provide a veterinarian");
+                return specialtyToUpdate.ToErrorModel(Constants.NoVeterinarianMessage);
 
             if (specialtyToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
             {
                 if (specialties.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
-                    return specialtyToUpdate.ToErrorModel("Name already exists");
+                    return specialtyToUpdate.ToErrorModel(Constants.NameExistsMessage);
             }
 
             // Get veterinarians to attach
             var vetsToLink = vets.Where(p => modelVeterinarianIds.Contains(p.Id)).ToList();
 
             // Update found specialty entity
-            specialtyToUpdate.Name = updateModel.Name;
-            specialtyToUpdate.Description = updateModel.Description;
-            specialtyToUpdate.Veterinarians = vetsToLink;
+            specialtyToUpdate.MapEntity(updateModel);
+            specialtyToUpdate.Veterinarians.AddRange(vetsToLink);
 
             if (!await _repository.UpdateAsync(specialtyToUpdate))
-                return specialtyToUpdate.ToErrorModel("Something went wrong while updating specialty");
+                return specialtyToUpdate.ToErrorModel(Constants.DBUpdateMessage);
 
             return specialtyToUpdate.ToResultModel();
         }
@@ -90,7 +88,7 @@ namespace Pri.Pawpi.Core.Services
             var specialties = await _repository.SearchByNameAsync(name);
 
             if (specialties.Count() == 0)
-                return specialties.ToErrorModel("No specialties found");
+                return specialties.ToErrorModel(Constants.NoSpecialtyFoundMessage);
 
             return specialties.ToResultModel();
         }
@@ -102,7 +100,7 @@ namespace Pri.Pawpi.Core.Services
             var vetsBySpecialty = vets.Where(v => v.Specialties.Any(s => s.Id == id));
 
             if (vetsBySpecialty.Count() == 0)
-                return vetsBySpecialty.ToErrorModel("No veterinarians found");
+                return vetsBySpecialty.ToErrorModel(Constants.NoVeterinarianFoundMessage);
 
             return vetsBySpecialty.ToResultModel();
         }

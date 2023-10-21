@@ -1,6 +1,8 @@
 ﻿using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Services.Models;
 using Pri.Pawpi.Core.Services.Models.Consultations;
+using Pri.Pawpi.Core.Services.Models.Medication;
+using Pri.Pawpi.Core.Services.Models.Specialty;
 
 namespace Pri.Pawpi.Core.Extensions
 {
@@ -69,6 +71,21 @@ namespace Pri.Pawpi.Core.Extensions
             consultation.Treatment = consultationModel.Treatment;
             consultation.Notes = consultationModel.Notes;
             consultation.DateOfConsultation = consultationModel.DateOfConsultation;
+        }
+
+        public static void MapEntity(this Medication medication, MedicationAddModel medicationModel)
+        {
+            medication.Name = medicationModel.Name;
+            medication.Dosage = medicationModel.Dosage;
+            medication.Frequency = medicationModel.Frequency;
+            medication.Notes = medicationModel.Notes;
+            medication.SideEffects = medicationModel.SideEffects;
+        }
+
+        public static void MapEntity(this Specialty specialty, SpecialtyAddModel specialtyModel)
+        {
+            specialty.Name = specialtyModel.Name;
+            specialty.Description = specialtyModel.Description;
         }
     }
 }

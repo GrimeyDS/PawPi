@@ -21,10 +21,10 @@ namespace Pri.Pawpi.Core.Services
             var entityToDelete = await _repository.GetByIdAsync(id);
 
             if (entityToDelete == null)
-                return entityToDelete.ToErrorModel($"{_nameOfEntity} not found");
+                return entityToDelete.ToErrorModel($"{_nameOfEntity} {Constants.NotFoundMessage}");
 
             if (!await _repository.DeleteAsync(entityToDelete))
-                return entityToDelete.ToErrorModel($"Something went wrong while deleting {_nameOfEntity}");
+                return entityToDelete.ToErrorModel($"{Constants.DBDeleteMessage} {_nameOfEntity}");
 
             return entityToDelete.ToResultModel();
         }
@@ -40,7 +40,7 @@ namespace Pri.Pawpi.Core.Services
             var entity = await _repository.GetByIdAsync(id);
 
             if (entity == null)
-                return entity.ToErrorModel($"{_nameOfEntity} not found");
+                return entity.ToErrorModel($"{_nameOfEntity} {Constants.NotFoundMessage}");
 
             return entity.ToResultModel();
         }
