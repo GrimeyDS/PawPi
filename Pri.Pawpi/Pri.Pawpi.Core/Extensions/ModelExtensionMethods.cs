@@ -3,6 +3,7 @@ using Pri.Pawpi.Core.Services.Models;
 using Pri.Pawpi.Core.Services.Models.Consultations;
 using Pri.Pawpi.Core.Services.Models.Medication;
 using Pri.Pawpi.Core.Services.Models.Pet;
+using Pri.Pawpi.Core.Services.Models.Practice;
 using Pri.Pawpi.Core.Services.Models.Specialty;
 
 namespace Pri.Pawpi.Core.Extensions
@@ -97,6 +98,18 @@ namespace Pri.Pawpi.Core.Extensions
             pet.AnimalType = petModel.AnimalType;
             pet.Color = petModel.Color;
             pet.Weight = petModel.Weight;
+        }
+
+        public static void MapEntity(this Practice practice, PracticeAddModel practiceModel)
+        {
+            practice.Name = practiceModel.Name;
+            practice.Address = practiceModel.Address;
+            practice.City = practiceModel.City;
+            practice.Postal = practiceModel.Postal;
+            practice.Phone = practiceModel.Phone;
+            practice.Email = practiceModel.Email;
+            practice.OpenTime = practiceModel.OpenTime;
+            practice.CloseTime = practiceModel.CloseTime;
         }
     }
 }
