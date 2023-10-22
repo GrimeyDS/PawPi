@@ -9,28 +9,169 @@ namespace Pri.Pawpi.Core.Services
 {
     public class PetService : ServiceBase<Pet>, IPetService
     {
-        public PetService(IPetRepository petRepository) : base(petRepository)
+        private readonly IPetRepository _petRepository;
+        private readonly IConsultationRepository _consultationRepository;
+        private readonly IMedicationRepository _medicationRepository;
+        private readonly ICustomerRepository _customerRepository;
+
+        public PetService(IPetRepository petRepository, 
+            IConsultationRepository consultationRepository, 
+            IMedicationRepository medicationRepository, 
+            ICustomerRepository customerRepository) : base(petRepository)
         {
+            _petRepository = petRepository;
+            _consultationRepository = consultationRepository;
+            _medicationRepository = medicationRepository;
+            _customerRepository = customerRepository;
         }
 
-        public Task<ResultModel<Pet>> AddAsync(PetAddModel addModel)
+        public async Task<ResultModel<Pet>> AddAsync(PetAddModel addModel)
         {
-            throw new NotImplementedException();
+            var pets = _petRepository.GetAll();
+
+            var customers = _customerRepository.GetAll();
+            var consultations = _consultationRepository.GetAll();
+            var medicine = _medicationRepository.GetAll();
+
+            var modelConsultationIds = addModel.ConsultationIds;
+            var modelMedicineIds = addModel.MedicationIds;
+
+            var petToAdd = new Pet();
+
+            // Input checks
+            if (!consultations.CheckIfIdsExist(modelConsultationIds))
+                return petToAdd.ToErrorModel(Constants.UnknownConsultationMessage);
+            if (!medicine.CheckIfIdsExist(modelMedicineIds))
+                return petToAdd.ToErrorModel(Constants.UnknownMedicineMessage);
+            if (!customers.CheckIfIdExists(addModel.CustomerId))
+                return petToAdd.ToErrorModel(Constants.UnknownCustomerMessage);
+
+            if (addModel.CustomerId == 0)
+                return petToAdd.ToErrorModel(Constants.NoCustomerMessage);
+
+            if (pets.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
+                return petToAdd.ToErrorModel(Constants.NameExistsMessage);
+
+            // Get ids to attach as entities
+            var medicineToLink = medicine.Where(v => modelMedicineIds.Contains(v.Id)).ToList();
+            var consultationsToLink = consultations.Where(c => modelConsultationIds.Contains(c.Id)).ToList();
+            var customerToLink = customers.FirstOrDefault(c => c.Id == addModel.CustomerId);
+
+            // Update new pet entity
+            petToAdd.MapEntity(addModel);
+            petToAdd.Medications = medicineToLink;
+            petToAdd.Consultations = consultationsToLink;
+            petToAdd.Customer = customerToLink;
+
+
+            if (!await _repository.CreateAsync(petToAdd))
+                return petToAdd.ToErrorModel(Constants.DBCreateMessage);
+
+            return petToAdd.ToResultModel();
         }
 
-        public Task<ResultModel<Pet>> UpdateAsync(PetUpdateModel updateModel)
+        public async Task<ResultModel<Pet>> UpdateAsync(PetUpdateModel updateModel)
         {
-            throw new NotImplementedException();
+            var pets = _petRepository.GetAll();
+
+            var customers = _customerRepository.GetAll();
+            var consultations = _consultationRepository.GetAll();
+            var medicine = _medicationRepository.GetAll();
+
+            var modelConsultationIds = updateModel.ConsultationIds;
+            var modelMedicineIds = updateModel.MedicationIds;
+
+            var petToUpdate = await _petRepository.GetByIdAsync(updateModel.Id);
+
+            if (petToUpdate == null)
+                return petToUpdate.ToErrorModel(Constants.NoPetFoundMessage);
+
+            // Input checks
+            if (!consultations.CheckIfIdsExist(modelConsultationIds))
+                return petToUpdate.ToErrorModel(Constants.UnknownConsultationMessage);
+            if (!medicine.CheckIfIdsExist(modelMedicineIds))
+                return petToUpdate.ToErrorModel(Constants.UnknownMedicineMessage);
+            if (!customers.CheckIfIdExists(updateModel.CustomerId))
+                return petToUpdate.ToErrorModel(Constants.UnknownCustomerMessage);
+
+            if (updateModel.CustomerId == 0)
+                return petToUpdate.ToErrorModel(Constants.NoCustomerMessage);
+
+            if (petToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
+            {
+                if (pets.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
+                    return petToUpdate.ToErrorModel(Constants.NameExistsMessage);
+            }
+
+            // Get ids to attach as entities
+            var medicineToLink = medicine.Where(v => modelMedicineIds.Contains(v.Id)).ToList();
+            var consultationsToLink = consultations.Where(c => modelConsultationIds.Contains(c.Id)).ToList();
+            var customerToLink = customers.FirstOrDefault(c => c.Id == updateModel.CustomerId);
+
+            // Update veterinarian entity
+            petToUpdate.MapEntity(updateModel);
+            petToUpdate.Medications.AddRange(medicineToLink);
+            petToUpdate.Consultations.AddRange(consultationsToLink);
+            petToUpdate.Customer = customerToLink;
+
+            if (!await _repository.UpdateAsync(petToUpdate))
+                return petToUpdate.ToErrorModel(Constants.DBUpdateMessage);
+
+            return petToUpdate.ToResultModel();
         }
 
         public async Task<ResultModel<Pet>> SearchByNameAsync(string name)
         {
-            var pets = await _repository.SearchByNameAsync(name);
+            var pets = await _petRepository.SearchByNameAsync(name);
 
             if (pets == null)
-                return pets.ToErrorModel("Pet not found");
+                return pets.ToErrorModel(Constants.NoPetFoundMessage);
 
             return pets.ToResultModel();
+        }
+
+        public async Task<ResultModel<Pet>> SearchByAnimalTypeAsync(string animalType)
+        {
+            var pets = await _petRepository.SearchByAnimalTypeAsync(animalType);
+
+            if (pets == null)
+                return pets.ToErrorModel(Constants.NoPetFoundMessage);
+
+            return pets.ToResultModel();
+        }
+
+        public async Task<ResultModel<Pet>> SearchByBreedAsync(string breed)
+        {
+            var pets = await _petRepository.SearchByBreedAsync(breed);
+
+            if (pets == null)
+                return pets.ToErrorModel(Constants.NoPetFoundMessage);
+
+            return pets.ToResultModel();
+        }
+
+        public async Task<ResultModel<Medication>> GetMedicineFromPetAsync(int id)
+        {
+            var medicine = await _medicationRepository.GetAllAsync();
+
+            var medicineByPets = medicine.Where(s => s.Pets.Any(v => v.Id == id));
+
+            if (medicineByPets.Count() == 0)
+                return medicineByPets.ToErrorModel(Constants.NoMedicineFoundMessage);
+
+            return medicineByPets.ToResultModel();
+        }
+
+        public async Task<ResultModel<Consultation>> GetConsultationsFromPetAsync(int id)
+        {
+            var consultations = await _consultationRepository.GetAllAsync();
+
+            var consultationsByPet = consultations.Where(c => c.PetId.Equals(id));
+
+            if (consultationsByPet.Count() == 0)
+                return consultationsByPet.ToErrorModel(Constants.NoConsultationFoundMessage);
+
+            return consultationsByPet.ToResultModel();
         }
     }
 }

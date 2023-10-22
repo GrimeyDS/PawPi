@@ -9,5 +9,9 @@ namespace Pri.Pawpi.Core.Interfaces.Services
         Task<ResultModel<Pet>> AddAsync(PetAddModel addModel);
         Task<ResultModel<Pet>> UpdateAsync(PetUpdateModel updateModel);
         Task<ResultModel<Pet>> SearchByNameAsync(string name);
+        Task<ResultModel<Pet>> SearchByAnimalTypeAsync(string animalType);
+        Task<ResultModel<Pet>> SearchByBreedAsync(string breed);
+        Task<ResultModel<Medication>> GetMedicineFromPetAsync(int id);
+        Task<ResultModel<Consultation>> GetConsultationsFromPetAsync(int id);
     }
 }

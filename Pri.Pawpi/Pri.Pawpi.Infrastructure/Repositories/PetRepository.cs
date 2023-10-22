@@ -37,13 +37,13 @@ namespace Pri.Pawpi.Infrastructure.Repositories
                          .AsQueryable();
         }
 
-        public async Task<IEnumerable<Pet>> SearchByAnimalType(string type)
+        public async Task<IEnumerable<Pet>> SearchByAnimalTypeAsync(string type)
         {
             var pets = GetAll();
             return await pets.Where(p => p.AnimalType.ToUpper().Contains(type.ToUpper())).ToListAsync();
         }
 
-        public async Task<IEnumerable<Pet>> SearchByBreed(string breed)
+        public async Task<IEnumerable<Pet>> SearchByBreedAsync(string breed)
         {
             var pets = GetAll();
             return await pets.Where(p => p.Breed.ToUpper().Contains(breed.ToUpper())).ToListAsync();
