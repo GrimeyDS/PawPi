@@ -14,5 +14,7 @@ namespace Pri.Pawpi.Api.Dtos.Pet.Request
         public string AnimalType { get; set; }
         public double? Weight { get; set; }
         public List<int> Consultations { get; set; }
+        public List<int> Medications { get; set; }
+        public int CustomerId { get; set; }
     }
 }

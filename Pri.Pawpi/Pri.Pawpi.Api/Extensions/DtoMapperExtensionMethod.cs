@@ -213,6 +213,8 @@ namespace Pri.Pawpi.Api.Extensions
                 Color = pet.Color,
                 AnimalType = pet.AnimalType,
                 Weight = (double)pet.Weight,
+                Customer= pet.Customer.MapBaseDto(),
+                LastConsultation = pet.Consultations.LastOrDefault().MapBaseDto()
             };
         }
 

@@ -1,4 +1,5 @@
 ﻿using Pri.Pawpi.Core.Entities;
+using Pri.Pawpi.Core.Interfaces.Repositories;
 
 namespace Pri.Pawpi.Core.Extensions
 {
