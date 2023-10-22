@@ -9,28 +9,143 @@ namespace Pri.Pawpi.Core.Services
 {
     public class PracticeService : ServiceBase<Practice>, IPracticeService
     {
-        public PracticeService(IPracticeRepository practiceRepository) : base(practiceRepository)
+        private readonly IPracticeRepository _practiceRepository;
+        private readonly IVeterinarianRepository _veterinarianRepository;
+        private readonly ICustomerRepository _customerRepository;
+
+        public PracticeService(IPracticeRepository practiceRepository, IVeterinarianRepository veterinarianRepository, ICustomerRepository customerRepository) : base(practiceRepository)
         {
+            _practiceRepository = practiceRepository;
+            _veterinarianRepository = veterinarianRepository;
+            _customerRepository = customerRepository;
         }
 
-        public Task<ResultModel<Practice>> AddAsync(PracticeAddModel addModel)
+        public async Task<ResultModel<Practice>> AddAsync(PracticeAddModel addModel)
         {
-            throw new NotImplementedException();
+            var practices = _practiceRepository.GetAll();
+
+            var customers = _customerRepository.GetAll();
+            var vets = _veterinarianRepository.GetAll();
+
+            var modelCustomerIds = addModel.CustomerIds;
+            var modelVetsIds = addModel.VeterinarianIds;
+
+            var practiceToAdd = new Practice();
+
+            // Input checks
+            if (!vets.CheckIfIdsExist(modelVetsIds))
+                return practiceToAdd.ToErrorModel(Constants.UnknownVeterinarianMessage);
+            if (!customers.CheckIfIdsExist(modelCustomerIds))
+                return practiceToAdd.ToErrorModel(Constants.UnknownCustomerMessage);
+
+            if (!vets.CheckIdsInput(modelVetsIds))
+                return practiceToAdd.ToErrorModel(Constants.NoVeterinarianMessage);
+
+            if (practices.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
+                return practiceToAdd.ToErrorModel(Constants.NameExistsMessage);
+
+            // Get ids to attach as entities
+            var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
+            var vetsToLink = vets.Where(v => modelVetsIds.Contains(v.Id)).ToList();
+
+            // Update new pet entity
+            practiceToAdd.MapEntity(addModel);
+            practiceToAdd.Customers = customersToLink;
+            practiceToAdd.Veterinarians = vetsToLink;
+
+            if (!await _repository.CreateAsync(practiceToAdd))
+                return practiceToAdd.ToErrorModel(Constants.DBCreateMessage);
+
+            return practiceToAdd.ToResultModel();
         }
 
-        public Task<ResultModel<Practice>> UpdateAsync(PracticeUpdateModel updateModel)
+        public async Task<ResultModel<Practice>> UpdateAsync(PracticeUpdateModel updateModel)
         {
-            throw new NotImplementedException();
+            var practices = _practiceRepository.GetAll();
+
+            var customers = _customerRepository.GetAll();
+            var vets = _veterinarianRepository.GetAll();
+
+            var modelCustomerIds = updateModel.CustomerIds;
+            var modelVetsIds = updateModel.VeterinarianIds;
+
+            var practiceToUpdate = await _practiceRepository.GetByIdAsync(updateModel.Id);
+
+            if (practiceToUpdate == null)
+                return practiceToUpdate.ToErrorModel(Constants.NoPracticeFoundMessage);
+
+            // Input checks
+            if (!vets.CheckIfIdsExist(modelVetsIds))
+                return practiceToUpdate.ToErrorModel(Constants.UnknownVeterinarianMessage);
+            if (!customers.CheckIfIdsExist(modelCustomerIds))
+                return practiceToUpdate.ToErrorModel(Constants.UnknownCustomerMessage);
+
+            if (!vets.CheckIdsInput(modelVetsIds))
+                return practiceToUpdate.ToErrorModel(Constants.NoVeterinarianMessage);
+
+            if (practiceToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
+            {
+                if (practices.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
+                    return practiceToUpdate.ToErrorModel(Constants.NameExistsMessage);
+            }
+
+            // Get ids to attach as entities
+            var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
+            var vetsToLink = vets.Where(v => modelVetsIds.Contains(v.Id)).ToList();
+
+            // Update new pet entity
+            practiceToUpdate.MapEntity(updateModel);
+            practiceToUpdate.Customers.AddRange(customersToLink);
+            practiceToUpdate.Veterinarians.AddRange(vetsToLink);
+
+            if (!await _repository.UpdateAsync(practiceToUpdate))
+                return practiceToUpdate.ToErrorModel(Constants.DBUpdateMessage);
+
+            return practiceToUpdate.ToResultModel();
         }
 
         public async Task<ResultModel<Practice>> SearchByNameAsync(string name)
         {
-            var practices = await _repository.SearchByNameAsync(name);
+            var practices = await _practiceRepository.SearchByNameAsync(name);
 
             if (practices == null)
-                return practices.ToErrorModel("Practices not found");
+                return practices.ToErrorModel(Constants.NoPracticeFoundMessage);
 
             return practices.ToResultModel();
+        }
+
+        public async Task<ResultModel<Practice>> SearchByAddressAsync(string address)
+        {
+            var practices = await _practiceRepository.SearchByAddressAsync(address);
+
+            if (practices == null)
+                return practices.ToErrorModel(Constants.NoPracticeFoundMessage);
+
+            return practices.ToResultModel();
+        }
+
+        public async Task<ResultModel<Veterinarian>> GetVeterinariansFromPracticeAsync(int id)
+        {
+            var vets = await _veterinarianRepository.GetAllAsync();
+
+            var vetsByPractice = vets.Where(v => v.Practices.Any(p => p.Id == id));
+
+            if (vetsByPractice.Count() == 0)
+                return vetsByPractice.ToErrorModel(Constants.NoVeterinarianFoundMessage);
+
+            return vetsByPractice.ToResultModel();
+        }
+
+        public async Task<ResultModel<Customer>> GetCustomersByPracticeAsync(int id)
+        {
+            var customers = await _customerRepository.GetAllAsync();
+
+            var customersByPractice = customers.Where(c => c.PracticeId.Equals(id));
+
+            if (customersByPractice.Count() == 0)
+                return customersByPractice.ToErrorModel(Constants.NoCustomerFoundMessage);
+
+            return customersByPractice.ToResultModel();
         }
     }
 }

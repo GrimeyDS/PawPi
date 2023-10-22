@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Repositories;
+using Pri.Pawpi.Core.Services.Models;
 using Pri.Pawpi.Infrastructure.Data;
 using System.Xml.Linq;
 
@@ -35,22 +36,13 @@ namespace Pri.Pawpi.Infrastructure.Repositories
                          .AsQueryable();
         }
 
-        public async Task<DateTime?> GetClosureTime(int practiceId)
-        {
-            var practice = await GetByIdAsync(practiceId);
-            return practice.CloseTime;
-        }
-
-        public async Task<DateTime?> GetOpenTime(int practiceId)
-        {
-            var practice = await GetByIdAsync(practiceId);
-            return practice.OpenTime;
-        }
-
-        public async Task<IEnumerable<Practice>> SearchByCity(string city)
+        public async Task<IEnumerable<Practice>> SearchByAddressAsync(string address)
         {
             var practices = GetAll();
-            return await practices.Where(p => p.City.ToUpper().Contains(city.ToUpper())).ToListAsync();
+            return await practices.Where(p => p.Address.ToUpper().Contains(address.ToUpper()) ||
+                                              p.City.ToUpper().Contains(address.ToUpper()) ||
+                                              p.Postal.ToUpper().Contains(address.ToUpper()))
+                                              .ToListAsync();
         }
 
         public override async Task<IEnumerable<Practice>> SearchByNameAsync(string name)
