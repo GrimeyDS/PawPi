@@ -2,6 +2,7 @@
 using Pri.Pawpi.Core.Services.Models;
 using Pri.Pawpi.Core.Services.Models.Consultations;
 using Pri.Pawpi.Core.Services.Models.Medication;
+using Pri.Pawpi.Core.Services.Models.Pet;
 using Pri.Pawpi.Core.Services.Models.Specialty;
 
 namespace Pri.Pawpi.Core.Extensions
@@ -86,6 +87,16 @@ namespace Pri.Pawpi.Core.Extensions
         {
             specialty.Name = specialtyModel.Name;
             specialty.Description = specialtyModel.Description;
+        }
+
+        public static void MapEntity(this Pet pet, PetAddModel petModel)
+        {
+            pet.Name = petModel.Name;
+            pet.CallName = petModel.CallName;
+            pet.Breed = petModel.Breed;
+            pet.AnimalType = petModel.AnimalType;
+            pet.Color = petModel.Color;
+            pet.Weight = petModel.Weight;
         }
     }
 }

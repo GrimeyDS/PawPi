@@ -1,10 +1,12 @@
 ﻿using Pri.Pawpi.Api.Dtos.Consultation.Request;
 using Pri.Pawpi.Api.Dtos.Medication.Request;
+using Pri.Pawpi.Api.Dtos.Pet.Request;
 using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Core.Services.Models.Consultations;
 using Pri.Pawpi.Core.Services.Models.Customer;
 using Pri.Pawpi.Core.Services.Models.Medication;
+using Pri.Pawpi.Core.Services.Models.Pet;
 using Pri.Pawpi.Core.Services.Models.Specialty;
 using Pri.Pawpi.Core.Services.Models.Veterinarian;
 
@@ -169,6 +171,42 @@ namespace Pri.Pawpi.Api.Extensions
                 PetId = consultationUpdateDto.PetId
             };
         }
+        #endregion
+
+        #region pet model mapper
+        public static PetAddModel MapModel(this PetCreateDto petCreateDto)
+        {
+            return new PetAddModel
+            {
+                Name = petCreateDto.Name,
+                CallName = petCreateDto.CallName,
+                Breed = petCreateDto.Breed,
+                Color = petCreateDto.Color,
+                AnimalType = petCreateDto.AnimalType,
+                Weight = petCreateDto.Weight,
+                ConsultationIds = petCreateDto.ConsultationIds,
+                MedicationIds = petCreateDto.MedicationIds,
+                CustomerId = petCreateDto.CustomerId
+            };
+        }
+
+        public static PetUpdateModel MapModel(this PetUpdateDto petUpdateDto)
+        {
+            return new PetUpdateModel
+            {
+                Id = petUpdateDto.Id,
+                Name = petUpdateDto.Name,
+                CallName = petUpdateDto.CallName,
+                Breed = petUpdateDto.Breed,
+                Color = petUpdateDto.Color,
+                AnimalType = petUpdateDto.AnimalType,
+                Weight = petUpdateDto.Weight,
+                ConsultationIds = petUpdateDto.ConsultationIds,
+                MedicationIds = petUpdateDto.MedicationIds,
+                CustomerId = petUpdateDto.CustomerId
+            };
+        }
+
         #endregion
     }
 }
