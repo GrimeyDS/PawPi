@@ -214,7 +214,7 @@ namespace Pri.Pawpi.Api.Extensions
                 AnimalType = pet.AnimalType,
                 Weight = (double)pet.Weight,
                 Customer= pet.Customer.MapBaseDto(),
-                LastConsultation = pet.Consultations.LastOrDefault().MapBaseDto()
+                LastConsultation = pet.Consultations.MapBaseDto().LastOrDefault(),
             };
         }
 
