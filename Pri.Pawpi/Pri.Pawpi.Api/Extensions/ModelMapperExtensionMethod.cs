@@ -1,12 +1,14 @@
 ﻿using Pri.Pawpi.Api.Dtos.Consultation.Request;
 using Pri.Pawpi.Api.Dtos.Medication.Request;
 using Pri.Pawpi.Api.Dtos.Pet.Request;
+using Pri.Pawpi.Api.Dtos.Practice.Request;
 using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Core.Services.Models.Consultations;
 using Pri.Pawpi.Core.Services.Models.Customer;
 using Pri.Pawpi.Core.Services.Models.Medication;
 using Pri.Pawpi.Core.Services.Models.Pet;
+using Pri.Pawpi.Core.Services.Models.Practice;
 using Pri.Pawpi.Core.Services.Models.Specialty;
 using Pri.Pawpi.Core.Services.Models.Veterinarian;
 
@@ -206,7 +208,41 @@ namespace Pri.Pawpi.Api.Extensions
                 CustomerId = petUpdateDto.CustomerId
             };
         }
-
         #endregion
+
+        public static PracticeAddModel MapModel(this PracticeCreateDto practiceCreateDto)
+        {
+            return new PracticeAddModel
+            {
+                Name = practiceCreateDto.Name,
+                Address = practiceCreateDto.Address,
+                City = practiceCreateDto.City,
+                Email = practiceCreateDto.Email,
+                Phone = practiceCreateDto.Phone,
+                Postal = practiceCreateDto.Postal,
+                OpenTime = practiceCreateDto.OpenTime,
+                CloseTime = practiceCreateDto.CloseTime,
+                CustomerIds = practiceCreateDto.CustomerIds,
+                VeterinarianIds = practiceCreateDto.VeterinarianIds
+            };
+        }
+
+        public static PracticeUpdateModel MapModel(this PracticeUpdateDto practiceUpdateDto)
+        {
+            return new PracticeUpdateModel
+            {
+                Id = practiceUpdateDto.Id,
+                Name = practiceUpdateDto.Name,
+                Address = practiceUpdateDto.Address,
+                City = practiceUpdateDto.City,
+                Email = practiceUpdateDto.Email,
+                Phone = practiceUpdateDto.Phone,
+                Postal = practiceUpdateDto.Postal,
+                OpenTime = practiceUpdateDto.OpenTime,
+                CloseTime = practiceUpdateDto.CloseTime,
+                CustomerIds = practiceUpdateDto.CustomerIds,
+                VeterinarianIds = practiceUpdateDto.VeterinarianIds
+            };
+        }
     }
 }

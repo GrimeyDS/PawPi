@@ -18,5 +18,7 @@ namespace Pri.Pawpi.Api.Dtos.Practice.Request
         public string Postal { get; set; }
         public DateTime OpenTime { get; set; }
         public DateTime CloseTime { get; set; }
+        public IEnumerable<int> CustomerIds { get; set; }
+        public IEnumerable<int> VeterinarianIds { get; set; }
     }
 }
