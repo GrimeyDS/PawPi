@@ -9,6 +9,8 @@ namespace Pri.Pawpi.Api.Dtos
         [Required(ErrorMessage = "Last name is required")]
         public string LastName { get; set; }
         [Required(ErrorMessage = "Birthday is required")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Birth { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
