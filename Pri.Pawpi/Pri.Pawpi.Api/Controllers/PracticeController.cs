@@ -100,7 +100,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(PracticeCreateDto practiceCreateDto)
+        public async Task<IActionResult> Create([FromForm] PracticeCreateDto practiceCreateDto)
         {
             var practiceModel = practiceCreateDto.MapModel();
 
@@ -113,7 +113,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(PracticeUpdateDto PracticeUpdateDto)
+        public async Task<IActionResult> Update([FromForm] PracticeUpdateDto PracticeUpdateDto)
         {
             var practiceModel = PracticeUpdateDto.MapModel();
 

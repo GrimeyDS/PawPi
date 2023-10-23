@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Http;
+
 namespace Pri.Pawpi.Core.Services.Models.Practice
 {
     public class PracticeAddModel
@@ -11,6 +13,7 @@ namespace Pri.Pawpi.Core.Services.Models.Practice
         public string Postal { get; set; }
         public DateTime OpenTime { get; set; }
         public DateTime CloseTime { get; set; }
+        public IFormFile Logo { get; set; }
         public IEnumerable<int> CustomerIds { get; set; }
         public IEnumerable<int> VeterinarianIds { get; set; }
     }

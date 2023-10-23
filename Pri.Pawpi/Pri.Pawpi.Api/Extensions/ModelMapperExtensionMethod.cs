@@ -222,6 +222,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Postal = practiceCreateDto.Postal,
                 OpenTime = practiceCreateDto.OpenTime,
                 CloseTime = practiceCreateDto.CloseTime,
+                Logo = practiceCreateDto.Logo,
                 CustomerIds = practiceCreateDto.CustomerIds,
                 VeterinarianIds = practiceCreateDto.VeterinarianIds
             };
@@ -240,6 +241,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Postal = practiceUpdateDto.Postal,
                 OpenTime = practiceUpdateDto.OpenTime,
                 CloseTime = practiceUpdateDto.CloseTime,
+                Logo = practiceUpdateDto.Logo,
                 CustomerIds = practiceUpdateDto.CustomerIds,
                 VeterinarianIds = practiceUpdateDto.VeterinarianIds
             };

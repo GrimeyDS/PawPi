@@ -33,6 +33,7 @@ builder.Services.AddScoped<IVeterinarianService, VeterinarianService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IPracticeService, PracticeService>();
 builder.Services.AddScoped<IConsultationService, ConsultationService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 var app = builder.Build();
 

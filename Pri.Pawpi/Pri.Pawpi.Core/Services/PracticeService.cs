@@ -12,12 +12,14 @@ namespace Pri.Pawpi.Core.Services
         private readonly IPracticeRepository _practiceRepository;
         private readonly IVeterinarianRepository _veterinarianRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IFileService _fileService;
 
-        public PracticeService(IPracticeRepository practiceRepository, IVeterinarianRepository veterinarianRepository, ICustomerRepository customerRepository) : base(practiceRepository)
+        public PracticeService(IPracticeRepository practiceRepository, IVeterinarianRepository veterinarianRepository, ICustomerRepository customerRepository, IFileService fileservice) : base(practiceRepository)
         {
             _practiceRepository = practiceRepository;
             _veterinarianRepository = veterinarianRepository;
             _customerRepository = customerRepository;
+            _fileService = fileservice;
         }
 
         public async Task<ResultModel<Practice>> AddAsync(PracticeAddModel addModel)
@@ -38,6 +40,9 @@ namespace Pri.Pawpi.Core.Services
             if (!customers.CheckIfIdsExist(modelCustomerIds))
                 return practiceToAdd.ToErrorModel(Constants.UnknownCustomerMessage);
 
+
+            if (!customers.CheckIdsInput(modelCustomerIds))
+                return practiceToAdd.ToErrorModel(Constants.NoCustomerMessage);
             if (!vets.CheckIdsInput(modelVetsIds))
                 return practiceToAdd.ToErrorModel(Constants.NoVeterinarianMessage);
 
@@ -45,11 +50,17 @@ namespace Pri.Pawpi.Core.Services
                 return practiceToAdd.ToErrorModel(Constants.NameExistsMessage);
 
             // Get ids to attach as entities
-            var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
             var vetsToLink = vets.Where(v => modelVetsIds.Contains(v.Id)).ToList();
+            var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
+
+            // store logo
+            var fileResult = await _fileService.StoreFile<Practice>(addModel.Logo, "logos");
+            if (!fileResult.IsSuccess)
+                return practiceToAdd.ToErrorModel(fileResult.Error);
 
             // Update new pet entity
             practiceToAdd.MapEntity(addModel);
+            practiceToAdd.Logo = fileResult.FileName;
             practiceToAdd.Customers = customersToLink;
             practiceToAdd.Veterinarians = vetsToLink;
 
@@ -89,12 +100,18 @@ namespace Pri.Pawpi.Core.Services
                     return practiceToUpdate.ToErrorModel(Constants.NameExistsMessage);
             }
 
+            // store logo
+            var fileResult = await _fileService.StoreFile<Practice>(updateModel.Logo, "logos");
+            if (!fileResult.IsSuccess)
+                return practiceToUpdate.ToErrorModel(fileResult.Error);
+
             // Get ids to attach as entities
             var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
             var vetsToLink = vets.Where(v => modelVetsIds.Contains(v.Id)).ToList();
 
             // Update new pet entity
             practiceToUpdate.MapEntity(updateModel);
+            practiceToUpdate.Logo = fileResult.FileName;
             practiceToUpdate.Customers.AddRange(customersToLink);
             practiceToUpdate.Veterinarians.AddRange(vetsToLink);
 

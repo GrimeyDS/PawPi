@@ -265,6 +265,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Postal = practice.Postal,
                 OpenTime = practice.OpenTime,
                 CloseTime = practice.CloseTime,
+                LogoUrl = practice.Logo,
                 Veterinarians = practice.Veterinarians.MapBaseDto()
             };
         }
