@@ -66,7 +66,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ConsultationCreateDto consultationCreateDto)
+        public async Task<IActionResult> Create([FromForm] ConsultationCreateDto consultationCreateDto)
         {
             var consultationModel = consultationCreateDto.MapModel();
 
@@ -79,7 +79,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ConsultationUpdateDto consultationUpdateDto)
+        public async Task<IActionResult> Update([FromForm] ConsultationUpdateDto consultationUpdateDto)
         {
             var consultationModel = consultationUpdateDto.MapModel();
 

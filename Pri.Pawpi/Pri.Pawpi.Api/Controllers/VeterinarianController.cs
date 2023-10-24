@@ -102,7 +102,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(VeterinarianCreateDto veterinarianCreateDto)
+        public async Task<IActionResult> Create([FromForm] VeterinarianCreateDto veterinarianCreateDto)
         {
             var veterinarianModel = veterinarianCreateDto.MapModel();
 
@@ -115,7 +115,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(VeterinarianUpdateDto veterinarianUpdateDto)
+        public async Task<IActionResult> Update([FromForm] VeterinarianUpdateDto veterinarianUpdateDto)
         {
             var veterinarianModel = veterinarianUpdateDto.MapModel();
 
