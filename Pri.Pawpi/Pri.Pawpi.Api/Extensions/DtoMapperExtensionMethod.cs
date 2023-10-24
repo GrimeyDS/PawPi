@@ -33,6 +33,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = vet.Email,
                 Phone = vet.Phone,
                 Postal = vet.Postal,
+                ImageUrl = vet.ImageFile,
                 Specialties = vet.Specialties.MapBaseDto(),
                 Practices = vet.Practices.MapBaseDto(),
                 Consultations = vet.Consultations.MapBaseDto()
@@ -213,6 +214,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Color = pet.Color,
                 AnimalType = pet.AnimalType,
                 Weight = (double)pet.Weight,
+                ImageUrl = pet.ImageFile,
                 Customer= pet.Customer.MapBaseDto(),
                 LastConsultation = pet.Consultations.MapBaseDto().LastOrDefault(),
             };
@@ -318,7 +320,9 @@ namespace Pri.Pawpi.Api.Extensions
                 Notes = con.Notes,
                 DateOfConsultation = con.DateOfConsultation.Date,
                 VeterinarianName = con.Veterinarian.FirstName + " " + con.Veterinarian.LastName,
-                PetName = con.Pet.Name
+                PetName = con.Pet.Name,
+                ImageUrl = con.ImageFile,
+                DocumentUrl = con.DocumentFile
             };
         }
 
