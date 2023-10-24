@@ -81,6 +81,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = veterinarianCreateDto.Email,
                 Phone = veterinarianCreateDto.Phone,
                 Postal = veterinarianCreateDto.Postal,
+                Image = veterinarianCreateDto.Image,
                 SpecialtyIds = veterinarianCreateDto.SpecialtyIds,
                 ConsultationIds = veterinarianCreateDto.ConsultationIds,
                 PracticeIds = veterinarianCreateDto.PracticeIds
@@ -154,6 +155,8 @@ namespace Pri.Pawpi.Api.Extensions
                 Treatment = consultationCreateDto.Treatment,
                 Notes = consultationCreateDto.Notes,
                 DateOfConsultation = consultationCreateDto.DateOfConsultation,
+                Image = consultationCreateDto.Image,
+                Document = consultationCreateDto.Document,
                 VeterinarianId = consultationCreateDto.VeterinarianId,
                 PetId = consultationCreateDto.PetId
             };
@@ -169,6 +172,8 @@ namespace Pri.Pawpi.Api.Extensions
                 Treatment = consultationUpdateDto.Treatment,
                 Notes = consultationUpdateDto.Notes,
                 DateOfConsultation = consultationUpdateDto.DateOfConsultation,
+                Image = consultationUpdateDto.Image,
+                Document = consultationUpdateDto.Document,
                 VeterinarianId = consultationUpdateDto.VeterinarianId,
                 PetId = consultationUpdateDto.PetId
             };
@@ -186,6 +191,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Color = petCreateDto.Color,
                 AnimalType = petCreateDto.AnimalType,
                 Weight = petCreateDto.Weight,
+                Image = petCreateDto.Image,
                 ConsultationIds = petCreateDto.ConsultationIds,
                 MedicationIds = petCreateDto.MedicationIds,
                 CustomerId = petCreateDto.CustomerId
@@ -203,6 +209,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Color = petUpdateDto.Color,
                 AnimalType = petUpdateDto.AnimalType,
                 Weight = petUpdateDto.Weight,
+                Image = petUpdateDto.Image,
                 ConsultationIds = petUpdateDto.ConsultationIds,
                 MedicationIds = petUpdateDto.MedicationIds,
                 CustomerId = petUpdateDto.CustomerId
@@ -210,6 +217,7 @@ namespace Pri.Pawpi.Api.Extensions
         }
         #endregion
 
+        #region practice model mapper
         public static PracticeAddModel MapModel(this PracticeCreateDto practiceCreateDto)
         {
             return new PracticeAddModel
@@ -246,5 +254,6 @@ namespace Pri.Pawpi.Api.Extensions
                 VeterinarianIds = practiceUpdateDto.VeterinarianIds
             };
         }
+        #endregion
     }
 }
