@@ -8,6 +8,8 @@
         public string? Color { get; set; }
         public string AnimalType { get; set; }
         public double? Weight { get; set; }
+        public string ImageFile { get; set; }
+        public string PedigreeFile { get; set; }
         public List<Consultation> Consultations { get; set; }
         public List<Medication> Medications { get; set; }
 
