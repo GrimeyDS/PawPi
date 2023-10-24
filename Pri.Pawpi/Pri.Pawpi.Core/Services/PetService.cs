@@ -1,4 +1,5 @@
-﻿using Pri.Pawpi.Core.Entities;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Extensions;
 using Pri.Pawpi.Core.Interfaces.Repositories;
 using Pri.Pawpi.Core.Interfaces.Services;
@@ -13,16 +14,19 @@ namespace Pri.Pawpi.Core.Services
         private readonly IConsultationRepository _consultationRepository;
         private readonly IMedicationRepository _medicationRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IFileService _fileService;
 
         public PetService(IPetRepository petRepository, 
-            IConsultationRepository consultationRepository, 
-            IMedicationRepository medicationRepository, 
-            ICustomerRepository customerRepository) : base(petRepository)
+            IConsultationRepository consultationRepository,
+            IMedicationRepository medicationRepository,
+            ICustomerRepository customerRepository,
+            IFileService fileService) : base(petRepository)
         {
             _petRepository = petRepository;
             _consultationRepository = consultationRepository;
             _medicationRepository = medicationRepository;
             _customerRepository = customerRepository;
+            _fileService = fileService;
         }
 
         public async Task<ResultModel<Pet>> AddAsync(PetAddModel addModel)
@@ -52,6 +56,11 @@ namespace Pri.Pawpi.Core.Services
             if (pets.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
                 return petToAdd.ToErrorModel(Constants.NameExistsMessage);
 
+            // store image
+            var imageResult = await _fileService.StoreFile<Pet>(addModel.Image, "PetImages");
+            if (!imageResult.IsSuccess)
+                return petToAdd.ToErrorModel(imageResult.Error);
+
             // Get ids to attach as entities
             var medicineToLink = medicine.Where(v => modelMedicineIds.Contains(v.Id)).ToList();
             var consultationsToLink = consultations.Where(c => modelConsultationIds.Contains(c.Id)).ToList();
@@ -59,6 +68,7 @@ namespace Pri.Pawpi.Core.Services
 
             // Update new pet entity
             petToAdd.MapEntity(addModel);
+            petToAdd.ImageFile = imageResult.FileName;
             petToAdd.Medications = medicineToLink;
             petToAdd.Consultations = consultationsToLink;
             petToAdd.Customer = customerToLink;
@@ -103,6 +113,11 @@ namespace Pri.Pawpi.Core.Services
                     return petToUpdate.ToErrorModel(Constants.NameExistsMessage);
             }
 
+            // store image
+            var imageResult = await _fileService.StoreFile<Pet>(updateModel.Image, "PetImages");
+            if (!imageResult.IsSuccess)
+                return petToUpdate.ToErrorModel(imageResult.Error);
+
             // Get ids to attach as entities
             var medicineToLink = medicine.Where(v => modelMedicineIds.Contains(v.Id)).ToList();
             var consultationsToLink = consultations.Where(c => modelConsultationIds.Contains(c.Id)).ToList();
@@ -110,6 +125,7 @@ namespace Pri.Pawpi.Core.Services
 
             // Update veterinarian entity
             petToUpdate.MapEntity(updateModel);
+            petToUpdate.ImageFile = imageResult.FileName;
             petToUpdate.Medications.AddRange(medicineToLink);
             petToUpdate.Consultations.AddRange(consultationsToLink);
             petToUpdate.Customer = customerToLink;

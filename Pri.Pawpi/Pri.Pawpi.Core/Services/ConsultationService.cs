@@ -12,12 +12,15 @@ namespace Pri.Pawpi.Core.Services
         private readonly IConsultationRepository _consultationRepository;
         private readonly IPetRepository _petRepository;
         private readonly IVeterinarianRepository _veterinarianRepository;
+        private readonly IFileService _fileService;
 
-        public ConsultationService(IConsultationRepository consultationRepository, IPetRepository petRepository, IVeterinarianRepository veterinarianRepository) : base(consultationRepository)
+        public ConsultationService(IConsultationRepository consultationRepository, IPetRepository petRepository, 
+            IVeterinarianRepository veterinarianRepository, IFileService fileService) : base(consultationRepository)
         {
             _consultationRepository = consultationRepository;
             _petRepository = petRepository;
             _veterinarianRepository = veterinarianRepository;
+            _fileService = fileService;
         }
 
         public async Task<ResultModel<Consultation>> AddAsync(ConsultationAddModel addModel)
@@ -42,12 +45,23 @@ namespace Pri.Pawpi.Core.Services
             if (addModel.DateOfConsultation >= DateTime.Now)
                 return consultationToAdd.ToErrorModel(Constants.FutureDateMessage);
 
+            // store files
+            var imageResult = await _fileService.StoreFile<Consultation>(addModel.Image, "ConsultationImages");
+            if (!imageResult.IsSuccess)
+                return consultationToAdd.ToErrorModel(imageResult.Error);
+            var documentResult = await _fileService.StoreFile<Consultation>(addModel.Document, "ConsultationDocuments");
+            if (!documentResult.IsSuccess)
+                return consultationToAdd.ToErrorModel(documentResult.Error);
+
+
             // Get ids to attach as entities
             var veterinarianToLink = vets.FirstOrDefault(p => p.Id == addModel.VeterinarianId);
             var petToLink = pets.FirstOrDefault(p => p.Id == addModel.PetId);
 
             // Update new consultation entity
             consultationToAdd.MapEntity(addModel);
+            consultationToAdd.ImageFile = imageResult.FileName;
+            consultationToAdd.DocumentFile = documentResult.FileName;
             consultationToAdd.Veterinarian = veterinarianToLink;
             consultationToAdd.Pet = petToLink;
 
@@ -84,12 +98,22 @@ namespace Pri.Pawpi.Core.Services
             if (updateModel.DateOfConsultation >= DateTime.Now)
                 return consultationToUpdate.ToErrorModel(Constants.FutureDateMessage);
 
+            // store files
+            var imageResult = await _fileService.StoreFile<Consultation>(updateModel.Image, "ConsultationImages");
+            if (!imageResult.IsSuccess)
+                return consultationToUpdate.ToErrorModel(imageResult.Error);
+            var documentResult = await _fileService.StoreFile<Consultation>(updateModel.Document, "ConsultationDocuments");
+            if (!documentResult.IsSuccess)
+                return consultationToUpdate.ToErrorModel(documentResult.Error);
+
             // Get ids to attach as entities
             var veterinarianToLink = vets.FirstOrDefault(p => p.Id == updateModel.VeterinarianId);
             var petToLink = pets.FirstOrDefault(p => p.Id == updateModel.PetId);
 
             // Update consultation entity
             consultationToUpdate.MapEntity(updateModel);
+            consultationToUpdate.ImageFile = imageResult.FileName;
+            consultationToUpdate.DocumentFile = documentResult.FileName;
             consultationToUpdate.Veterinarian = veterinarianToLink;
             consultationToUpdate.Pet = petToLink;
 

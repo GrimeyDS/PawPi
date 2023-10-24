@@ -12,15 +12,18 @@ namespace Pri.Pawpi.Core.Services
         private readonly ISpecialtyRepository _specialtyRepository;
         private readonly IConsultationRepository _consultationRepository;
         private readonly IPracticeRepository _practiceRepository;
+        private readonly IFileService _fileService;
 
         public VeterinarianService(IVeterinarianRepository veterinarianRepository, 
-            ISpecialtyRepository specialtyRepository, 
+            ISpecialtyRepository specialtyRepository,
             IConsultationRepository consultationRepository,
-            IPracticeRepository practiceRepository) : base(veterinarianRepository)
+            IPracticeRepository practiceRepository,
+            IFileService fileService) : base(veterinarianRepository)
         {
             _specialtyRepository = specialtyRepository;
             _consultationRepository = consultationRepository;
             _practiceRepository = practiceRepository;
+            _fileService = fileService;
         }
 
         public async Task<ResultModel<Veterinarian>> SearchByNameAsync(string name)
@@ -103,6 +106,11 @@ namespace Pri.Pawpi.Core.Services
             if (addModel.Birth >= DateTime.Now)
                 return veterinarianToAdd.ToErrorModel(Constants.FutureDateMessage);
 
+            // store image
+            var imageResult = await _fileService.StoreFile<Veterinarian>(addModel.Image, "VeterinarianImages");
+            if (!imageResult.IsSuccess)
+                return veterinarianToAdd.ToErrorModel(imageResult.Error);
+
             // Get ids to attach as entities
             var specialtiesToLink = specialties.Where(v => modelSpecialtyIds.Contains(v.Id)).ToList();
             var consultationsToLink = consultations.Where(v => modelConsultationIds.Contains(v.Id)).ToList();
@@ -110,6 +118,7 @@ namespace Pri.Pawpi.Core.Services
 
             // Update new veterinarian entity
             veterinarianToAdd.MapEntity(addModel);
+            veterinarianToAdd.ImageFile = imageResult.FileName;
             veterinarianToAdd.Specialties = specialtiesToLink;
             veterinarianToAdd.Consultations = consultationsToLink;
             veterinarianToAdd.Practices = practicesToLink;
@@ -162,6 +171,11 @@ namespace Pri.Pawpi.Core.Services
                     return veterinarianToUpdate.ToErrorModel(Constants.NameExistsMessage);
             }
 
+            // store image
+            var imageResult = await _fileService.StoreFile<Veterinarian>(updateModel.Image, "VeterinarianImages");
+            if (!imageResult.IsSuccess)
+                return veterinarianToUpdate.ToErrorModel(imageResult.Error);
+
             // Get ids to attach as entities
             var specialtiesToLink = specialties.Where(v => modelSpecialtyIds.Contains(v.Id)).ToList();
             var consultationsToLink = consultations.Where(v => modelConsultationIds.Contains(v.Id)).ToList();
@@ -169,6 +183,7 @@ namespace Pri.Pawpi.Core.Services
 
             // Update veterinarian entity
             veterinarianToUpdate.MapEntity(updateModel);
+            veterinarianToUpdate.ImageFile = imageResult.FileName;
             veterinarianToUpdate.Specialties.AddRange(specialtiesToLink);
             veterinarianToUpdate.Consultations.AddRange(consultationsToLink);
             veterinarianToUpdate.Practices.AddRange(practicesToLink);
