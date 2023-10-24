@@ -9,6 +9,8 @@ namespace Pri.Pawpi.Api.Dtos.Consultation.Response
         public string Treatment { get; set; }
         public string Notes { get; set; }
         public DateTime DateOfConsultation { get; set; }
+        public string ImageUrl { get; set; }
+        public string DocumentUrl { get; set; }
         public string VeterinarianName { get; set; }
         public string PetName { get; set; }
     }

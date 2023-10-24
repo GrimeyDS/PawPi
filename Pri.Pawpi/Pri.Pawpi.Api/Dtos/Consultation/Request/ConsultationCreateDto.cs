@@ -14,6 +14,8 @@ namespace Pri.Pawpi.Api.Dtos.Consultation.Request
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateOfConsultation { get; set; }
+        public IFormFile Image { get; set; }
+        public IFormFile Document { get; set; }
         public int VeterinarianId { get; set; }
         public int PetId { get; set; }
     }
