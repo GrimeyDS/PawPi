@@ -76,53 +76,24 @@ namespace Pri.Pawpi.Core.Services
         {
             var vets = _repository.GetAll();
 
-            var specialties = _specialtyRepository.GetAll();
-            var consultations = _consultationRepository.GetAll();
-            var practices = _practiceRepository.GetAll();
-            
-            var modelSpecialtyIds = addModel.SpecialtyIds;
-            var modelConsultationIds = addModel.ConsultationIds;
-            var modelPracticeIds = addModel.PracticeIds;
-
             var veterinarianToAdd = new Veterinarian();
 
-            // Input checks
-            if (!specialties.CheckIfIdsExist(modelSpecialtyIds))
-                return veterinarianToAdd.ToErrorModel(Constants.UnknownSpecialtyMessage);
-            if (!consultations.CheckIfIdsExist(modelConsultationIds))
-                return veterinarianToAdd.ToErrorModel(Constants.UnknownConsultationMessage);
-            if (!practices.CheckIfIdsExist(modelPracticeIds))
-                return veterinarianToAdd.ToErrorModel(Constants.UnknownPracticeMessage);
+            string idSetSuccessMessage = SetIds(veterinarianToAdd, addModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return veterinarianToAdd.ToErrorModel(idSetSuccessMessage);
 
-            if (!specialties.CheckIdsInput(modelSpecialtyIds))
-                return veterinarianToAdd.ToErrorModel(Constants.NoSpecialtyMessage);
-            if (!practices.CheckIdsInput(modelPracticeIds))
-                return veterinarianToAdd.ToErrorModel(Constants.NoPracticeMessage);
+            string nameSetSuccessMessage = SetName(veterinarianToAdd, addModel);
+            if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                return veterinarianToAdd.ToErrorModel(nameSetSuccessMessage);
 
-            if (vets.Any(m => m.FirstName.ToUpper().Equals(addModel.FirstName.ToUpper())
-                                && m.LastName.ToUpper().Equals(addModel.LastName.ToUpper())))
-                return veterinarianToAdd.ToErrorModel(Constants.NameExistsMessage);
-
-            if (addModel.Birth >= DateTime.Now)
+            if (!addModel.Birth.CheckFutureDate())
                 return veterinarianToAdd.ToErrorModel(Constants.FutureDateMessage);
 
-            // store image
-            var imageResult = await _fileService.StoreFile<Veterinarian>(addModel.Image, "VeterinarianImages");
-            if (!imageResult.IsSuccess)
-                return veterinarianToAdd.ToErrorModel(imageResult.Error);
+            var imageSetSuccess = SetImage(veterinarianToAdd, addModel);
+            if (!string.IsNullOrEmpty(imageSetSuccess.Result))
+                return veterinarianToAdd.ToErrorModel(imageSetSuccess.Result);
 
-            // Get ids to attach as entities
-            var specialtiesToLink = specialties.Where(v => modelSpecialtyIds.Contains(v.Id)).ToList();
-            var consultationsToLink = consultations.Where(v => modelConsultationIds.Contains(v.Id)).ToList();
-            var practicesToLink = practices.Where(v => modelPracticeIds.Contains(v.Id)).ToList();
-
-            // Update new veterinarian entity
             veterinarianToAdd.MapEntity(addModel);
-            veterinarianToAdd.ImageFile = imageResult.FileName;
-            veterinarianToAdd.Specialties = specialtiesToLink;
-            veterinarianToAdd.Consultations = consultationsToLink;
-            veterinarianToAdd.Practices = practicesToLink;
-
 
             if (!await _repository.CreateAsync(veterinarianToAdd))
                 return veterinarianToAdd.ToErrorModel(Constants.DBCreateMessage);
@@ -134,64 +105,98 @@ namespace Pri.Pawpi.Core.Services
         {
             var vets = _repository.GetAll();
 
-            var specialties = _specialtyRepository.GetAll();
-            var consultations = _consultationRepository.GetAll();
-            var practices = _practiceRepository.GetAll();
-
-            var modelSpecialtyIds = updateModel.SpecialtyIds;
-            var modelConsultationIds = updateModel.ConsultationIds;
-            var modelPracticeIds = updateModel.PracticeIds;
-
             var veterinarianToUpdate = await _repository.GetByIdAsync(updateModel.Id);
 
             if (veterinarianToUpdate == null)
                 return veterinarianToUpdate.ToErrorModel(Constants.NoVeterinarianFoundMessage);
 
-            // Input checks
-            if (!specialties.CheckIfIdsExist(modelSpecialtyIds))
-                return veterinarianToUpdate.ToErrorModel(Constants.UnknownSpecialtyMessage);
-            if (!consultations.CheckIfIdsExist(modelConsultationIds))
-                return veterinarianToUpdate.ToErrorModel(Constants.UnknownConsultationMessage);
-            if (!practices.CheckIfIdsExist(modelPracticeIds))
-                return veterinarianToUpdate.ToErrorModel(Constants.UnknownPracticeMessage);
+            string idSetSuccessMessage = SetIds(veterinarianToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return veterinarianToUpdate.ToErrorModel(idSetSuccessMessage);
 
-            if (!specialties.CheckIdsInput(modelSpecialtyIds))
-                return veterinarianToUpdate.ToErrorModel(Constants.NoSpecialtyMessage);
-            if (!practices.CheckIdsInput(modelPracticeIds))
-                return veterinarianToUpdate.ToErrorModel(Constants.NoPracticeMessage);
-
-            if (updateModel.Birth >= DateTime.Now)
+            if (!updateModel.Birth.CheckFutureDate())
                 return veterinarianToUpdate.ToErrorModel(Constants.FutureDateMessage);
 
             if (veterinarianToUpdate.FirstName.ToUpper() != updateModel.FirstName.ToUpper() && 
                 veterinarianToUpdate.LastName.ToUpper() != updateModel.LastName.ToUpper())
             {
-                if (vets.Any(m => m.FirstName.ToUpper().Equals(updateModel.FirstName.ToUpper())
-                    && m.LastName.ToUpper().Equals(updateModel.LastName.ToUpper())))
-                    return veterinarianToUpdate.ToErrorModel(Constants.NameExistsMessage);
+                string nameSetSuccessMessage = SetName(veterinarianToUpdate, updateModel);
+                if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                    return veterinarianToUpdate.ToErrorModel(nameSetSuccessMessage);
             }
 
-            // store image
-            var imageResult = await _fileService.StoreFile<Veterinarian>(updateModel.Image, "VeterinarianImages");
-            if (!imageResult.IsSuccess)
-                return veterinarianToUpdate.ToErrorModel(imageResult.Error);
+            var imageSetSuccess = SetImage(veterinarianToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(imageSetSuccess.Result))
+                return veterinarianToUpdate.ToErrorModel(imageSetSuccess.Result);
 
-            // Get ids to attach as entities
-            var specialtiesToLink = specialties.Where(v => modelSpecialtyIds.Contains(v.Id)).ToList();
-            var consultationsToLink = consultations.Where(v => modelConsultationIds.Contains(v.Id)).ToList();
-            var practicesToLink = practices.Where(v => modelPracticeIds.Contains(v.Id)).ToList();
-
-            // Update veterinarian entity
             veterinarianToUpdate.MapEntity(updateModel);
-            veterinarianToUpdate.ImageFile = imageResult.FileName;
-            veterinarianToUpdate.Specialties.AddRange(specialtiesToLink);
-            veterinarianToUpdate.Consultations.AddRange(consultationsToLink);
-            veterinarianToUpdate.Practices.AddRange(practicesToLink);
 
             if (!await _repository.UpdateAsync(veterinarianToUpdate))
                 return veterinarianToUpdate.ToErrorModel(Constants.DBUpdateMessage);
 
             return veterinarianToUpdate.ToResultModel();
+        }
+
+        private string SetIds(Veterinarian vet, VeterinarianAddModel model)
+        {
+            var specialties = _specialtyRepository.GetAll();
+            var consultations = _consultationRepository.GetAll();
+            var practices = _practiceRepository.GetAll();
+
+            var modelSpecialtyIds = model.SpecialtyIds ?? new List<int>();
+            var modelConsultationIds = model.ConsultationIds ?? new List<int>();
+            var modelPracticeIds = model.PracticeIds ?? new List<int>();
+
+            // Input checks
+            if (!specialties.CheckIfIdsExist(modelSpecialtyIds))
+                return Constants.UnknownSpecialtyMessage;
+            if (!consultations.CheckIfIdsExist(modelConsultationIds))
+                return Constants.UnknownConsultationMessage;
+            if (!practices.CheckIfIdsExist(modelPracticeIds))
+                return Constants.UnknownPracticeMessage;
+
+            if (!specialties.CheckIdsInput(modelSpecialtyIds))
+                return Constants.NoSpecialtyMessage;
+            if (!consultations.CheckIdsInput(modelConsultationIds))
+                return Constants.NoConsultationMessage;
+            if (!practices.CheckIdsInput(modelPracticeIds))
+                return Constants.NoPracticeMessage;
+
+            var specialtiesToLink = specialties.Where(v => modelSpecialtyIds.Contains(v.Id)).ToList();
+            var consultationsToLink = consultations.Where(v => modelConsultationIds.Contains(v.Id)).ToList();
+            var practicesToLink = practices.Where(v => modelPracticeIds.Contains(v.Id)).ToList();
+
+            vet.Specialties = specialtiesToLink;
+            vet.Consultations = consultationsToLink;
+            vet.Practices = practicesToLink;
+
+            return string.Empty;
+        }
+
+        private string SetName(Veterinarian vet, VeterinarianAddModel model)
+        {
+            var vets = _repository.GetAll();
+
+            if (vets.Any(m => m.FirstName.ToUpper().Equals(model.FirstName.ToUpper())
+                    && m.LastName.ToUpper().Equals(model.LastName.ToUpper())))
+                return Constants.NameExistsMessage;
+
+            vet.FirstName = model.FirstName;
+            vet.LastName = model.LastName;
+            return string.Empty;
+        }
+
+        private async Task<string> SetImage(Veterinarian vet, VeterinarianAddModel model)
+        {
+            if (model.Image is null)
+                return string.Empty;
+
+            var imageResult = await _fileService.StoreFile<Veterinarian>(model.Image, "VeterinarianImages");
+            if (!imageResult.IsSuccess)
+                return imageResult.Error;
+
+            vet.ImageFile = imageResult.FileName;
+            return string.Empty;
         }
     }
 }
