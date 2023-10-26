@@ -75,7 +75,7 @@ namespace Pri.Pawpi.Core.Services
 
             // Update found specialty entity
             specialtyToUpdate.MapEntity(updateModel);
-            specialtyToUpdate.Veterinarians.AddRange(vetsToLink);
+            specialtyToUpdate.Veterinarians = vetsToLink;
 
             if (!await _repository.UpdateAsync(specialtyToUpdate))
                 return specialtyToUpdate.ToErrorModel(Constants.DBUpdateMessage);

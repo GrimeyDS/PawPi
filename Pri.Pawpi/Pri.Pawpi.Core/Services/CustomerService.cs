@@ -133,7 +133,7 @@ namespace Pri.Pawpi.Core.Services
 
             // Update customer entity
             customerToUpdate.MapEntity(updateModel);
-            customerToUpdate.Pets.AddRange(petsToLink);
+            customerToUpdate.Pets = petsToLink;
             customerToUpdate.Practice = practiceToLink;
 
 

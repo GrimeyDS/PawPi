@@ -112,8 +112,8 @@ namespace Pri.Pawpi.Core.Services
             // Update new pet entity
             practiceToUpdate.MapEntity(updateModel);
             practiceToUpdate.Logo = fileResult.FileName;
-            practiceToUpdate.Customers.AddRange(customersToLink);
-            practiceToUpdate.Veterinarians.AddRange(vetsToLink);
+            practiceToUpdate.Customers = customersToLink;
+            practiceToUpdate.Veterinarians = vetsToLink;
 
             if (!await _repository.UpdateAsync(practiceToUpdate))
                 return practiceToUpdate.ToErrorModel(Constants.DBUpdateMessage);

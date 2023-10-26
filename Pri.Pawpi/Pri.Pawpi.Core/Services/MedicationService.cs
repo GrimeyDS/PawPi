@@ -108,7 +108,7 @@ namespace Pri.Pawpi.Core.Services
             medicationToUpdate.Frequency = updateModel.Frequency;
             medicationToUpdate.Notes = updateModel.Notes;
             medicationToUpdate.SideEffects = updateModel.SideEffects;
-            medicationToUpdate.Pets.AddRange(petsToLink);
+            medicationToUpdate.Pets = petsToLink;
 
             if (!await _medicationRepository.UpdateAsync(medicationToUpdate))
                 return medicationToUpdate.ToErrorModel(Constants.DBUpdateMessage);

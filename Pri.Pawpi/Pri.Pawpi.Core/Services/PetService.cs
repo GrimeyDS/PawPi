@@ -126,8 +126,8 @@ namespace Pri.Pawpi.Core.Services
             // Update veterinarian entity
             petToUpdate.MapEntity(updateModel);
             petToUpdate.ImageFile = imageResult.FileName;
-            petToUpdate.Medications.AddRange(medicineToLink);
-            petToUpdate.Consultations.AddRange(consultationsToLink);
+            petToUpdate.Medications = medicineToLink;
+            petToUpdate.Consultations = consultationsToLink;
             petToUpdate.Customer = customerToLink;
 
             if (!await _repository.UpdateAsync(petToUpdate))
