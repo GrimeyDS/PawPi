@@ -36,7 +36,6 @@ namespace Pri.Pawpi.Api.Extensions
                 ImageUrl = vet.ImageFile,
                 Specialties = vet.Specialties.MapBaseDto(),
                 Practices = vet.Practices.MapBaseDto(),
-                Consultations = vet.Consultations.MapBaseDto()
             };
         }
 
