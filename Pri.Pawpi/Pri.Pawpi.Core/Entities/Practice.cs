@@ -13,8 +13,8 @@ namespace Pri.Pawpi.Core.Entities
         public DateTime? OpenTime { get; set; }
         public DateTime? CloseTime { get; set; }
         public string Logo { get; set; }
-        public List<Veterinarian> Veterinarians { get; set; }
-        public List<Customer> Customers { get; set; }
+        public ICollection<Veterinarian> Veterinarians { get; set; }
+        public ICollection<Customer> Customers { get; set; }
 
     }
 }

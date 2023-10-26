@@ -10,8 +10,8 @@
         public double? Weight { get; set; }
         public string ImageFile { get; set; }
         public string PedigreeFile { get; set; }
-        public List<Consultation> Consultations { get; set; }
-        public List<Medication> Medications { get; set; }
+        public ICollection<Consultation> Consultations { get; set; }
+        public ICollection<Medication> Medications { get; set; }
 
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
