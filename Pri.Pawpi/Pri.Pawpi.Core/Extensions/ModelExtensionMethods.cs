@@ -56,8 +56,6 @@ namespace Pri.Pawpi.Core.Extensions
 
         public static void MapEntity(this Person person, PersonModel personModel)
         {
-            person.FirstName = personModel.FirstName;
-            person.LastName = personModel.LastName;
             person.Birth = personModel.Birth;
             person.Address = personModel.Address;
             person.City = personModel.City;
