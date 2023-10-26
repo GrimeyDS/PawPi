@@ -15,6 +15,7 @@ namespace Pri.Pawpi.Api.Dtos
         public string Address { get; set; }
         public string City { get; set; }
         [Required(ErrorMessage = "email is required")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Postal { get; set; }
