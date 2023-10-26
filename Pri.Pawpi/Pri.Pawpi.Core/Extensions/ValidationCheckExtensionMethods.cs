@@ -1,5 +1,4 @@
 ﻿using Pri.Pawpi.Core.Entities;
-using Pri.Pawpi.Core.Interfaces.Repositories;
 
 namespace Pri.Pawpi.Core.Extensions
 {
@@ -23,6 +22,13 @@ namespace Pri.Pawpi.Core.Extensions
         public static bool CheckIfIdExists(this IQueryable<BaseEntity> list, int idToCheck)
         {
             if (list.Where(p => p.Id == idToCheck).Count() == 0)
+                return false;
+            return true;
+        }
+
+        public static bool CheckFutureDate(this DateTime date)
+        {
+            if (date > DateTime.Now)
                 return false;
             return true;
         }
