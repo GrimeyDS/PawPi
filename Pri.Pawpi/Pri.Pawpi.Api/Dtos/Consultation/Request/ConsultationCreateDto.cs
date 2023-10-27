@@ -12,11 +12,13 @@ namespace Pri.Pawpi.Api.Dtos.Consultation.Request
         public string Notes { get; set; }
         [Required(ErrorMessage = "Date is required")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-YYYY}", ApplyFormatInEditMode = true)]
         public DateTime DateOfConsultation { get; set; }
         public IFormFile Image { get; set; }
         public IFormFile Document { get; set; }
+        [Required]
         public int VeterinarianId { get; set; }
+        [Required]
         public int PetId { get; set; }
     }
 }
