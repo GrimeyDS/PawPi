@@ -187,7 +187,7 @@ namespace Pri.Pawpi.Core.Services
             if (model.Image is null)
                 return string.Empty;
 
-            var imageResult = await _fileService.StoreFile<Veterinarian>(model.Image, "VeterinarianImages");
+            var imageResult = await _fileService.StoreFile<Veterinarian>(model.Image, "Images");
             if (!imageResult.IsSuccess)
                 return imageResult.Error;
 

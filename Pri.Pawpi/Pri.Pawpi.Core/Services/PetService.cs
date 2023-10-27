@@ -195,7 +195,7 @@ namespace Pri.Pawpi.Core.Services
             if (model.Image is null)
                 return string.Empty;
 
-            var imageResult = await _fileService.StoreFile<Pet>(model.Image, "PetImages");
+            var imageResult = await _fileService.StoreFile<Pet>(model.Image, "Images");
             if (!imageResult.IsSuccess)
                 return imageResult.Error;
 
@@ -208,7 +208,7 @@ namespace Pri.Pawpi.Core.Services
             if (model.Pedigree is null)
                 return string.Empty;
 
-            var pedigreeResult = await _fileService.StoreFile<Pet>(model.Image, "PetPedigrees");
+            var pedigreeResult = await _fileService.StoreFile<Pet>(model.Image, "Pedigrees");
             if (!pedigreeResult.IsSuccess)
                 return pedigreeResult.Error;
 
