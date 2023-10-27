@@ -25,46 +25,24 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Consultation>> AddAsync(ConsultationAddModel addModel)
         {
-            var consultations = _consultationRepository.GetAll();
-            var vets = _veterinarianRepository.GetAll();
-            var pets = _petRepository.GetAll();
-
             var consultationToAdd = new Consultation();
 
-            // Input checks
-            if (!vets.CheckIfIdExists(addModel.VeterinarianId))
-                return consultationToAdd.ToErrorModel(Constants.UnknownVeterinarianMessage);
-            if (!pets.CheckIfIdExists(addModel.PetId))
-                return consultationToAdd.ToErrorModel(Constants.UnknownPetMessage);
+            string idSetSuccessMessage = SetIds(consultationToAdd, addModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return consultationToAdd.ToErrorModel(idSetSuccessMessage);
 
-            if (addModel.VeterinarianId == 0)
-                return consultationToAdd.ToErrorModel(Constants.NoVeterinarianMessage);
-            if (addModel.PetId == 0)
-                return consultationToAdd.ToErrorModel(Constants.NoPetMessage);
-
-            if (addModel.DateOfConsultation >= DateTime.Now)
+            if (!addModel.DateOfConsultation.CheckFutureDate())
                 return consultationToAdd.ToErrorModel(Constants.FutureDateMessage);
 
-            // store files
-            var imageResult = await _fileService.StoreFile<Consultation>(addModel.Image, "ConsultationImages");
-            if (!imageResult.IsSuccess)
-                return consultationToAdd.ToErrorModel(imageResult.Error);
-            var documentResult = await _fileService.StoreFile<Consultation>(addModel.Document, "ConsultationDocuments");
-            if (!documentResult.IsSuccess)
-                return consultationToAdd.ToErrorModel(documentResult.Error);
+            var imageSetSuccess = SetImage(consultationToAdd, addModel);
+            if (!string.IsNullOrEmpty(imageSetSuccess.Result))
+                return consultationToAdd.ToErrorModel(imageSetSuccess.Result);
 
+            var documentSetSuccess = SetDocument(consultationToAdd, addModel);
+            if (!string.IsNullOrEmpty(documentSetSuccess.Result))
+                return consultationToAdd.ToErrorModel(documentSetSuccess.Result);
 
-            // Get ids to attach as entities
-            var veterinarianToLink = vets.FirstOrDefault(p => p.Id == addModel.VeterinarianId);
-            var petToLink = pets.FirstOrDefault(p => p.Id == addModel.PetId);
-
-            // Update new consultation entity
             consultationToAdd.MapEntity(addModel);
-            consultationToAdd.ImageFile = imageResult.FileName;
-            consultationToAdd.DocumentFile = documentResult.FileName;
-            consultationToAdd.Veterinarian = veterinarianToLink;
-            consultationToAdd.Pet = petToLink;
-
 
             if (!await _repository.CreateAsync(consultationToAdd))
                 return consultationToAdd.ToErrorModel(Constants.DBCreateMessage);
@@ -74,48 +52,27 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Consultation>> UpdateAsync(ConsultationUpdateModel updateModel)
         {
-            var consultations = _consultationRepository.GetAll();
-            var vets = _veterinarianRepository.GetAll();
-            var pets = _petRepository.GetAll();
-
-
             var consultationToUpdate = await _consultationRepository.GetByIdAsync(updateModel.Id);
 
             if (consultationToUpdate == null)
                 return consultationToUpdate.ToErrorModel(Constants.UnknownConsultationMessage);
 
-            // Input checks
-            if (!vets.CheckIfIdExists(updateModel.VeterinarianId))
-                return consultationToUpdate.ToErrorModel(Constants.UnknownVeterinarianMessage);
-            if (!pets.CheckIfIdExists(updateModel.PetId))
-                return consultationToUpdate.ToErrorModel(Constants.UnknownPetMessage);
+            string idSetSuccessMessage = SetIds(consultationToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return consultationToUpdate.ToErrorModel(idSetSuccessMessage);
 
-            if (updateModel.VeterinarianId == 0)
-                return consultationToUpdate.ToErrorModel(Constants.NoVeterinarianMessage);
-            if (updateModel.PetId == 0)
-                return consultationToUpdate.ToErrorModel(Constants.NoPetMessage);
-
-            if (updateModel.DateOfConsultation >= DateTime.Now)
+            if (!updateModel.DateOfConsultation.CheckFutureDate())
                 return consultationToUpdate.ToErrorModel(Constants.FutureDateMessage);
 
-            // store files
-            var imageResult = await _fileService.StoreFile<Consultation>(updateModel.Image, "ConsultationImages");
-            if (!imageResult.IsSuccess)
-                return consultationToUpdate.ToErrorModel(imageResult.Error);
-            var documentResult = await _fileService.StoreFile<Consultation>(updateModel.Document, "ConsultationDocuments");
-            if (!documentResult.IsSuccess)
-                return consultationToUpdate.ToErrorModel(documentResult.Error);
+            var imageSetSuccess = SetImage(consultationToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(imageSetSuccess.Result))
+                return consultationToUpdate.ToErrorModel(imageSetSuccess.Result);
 
-            // Get ids to attach as entities
-            var veterinarianToLink = vets.FirstOrDefault(p => p.Id == updateModel.VeterinarianId);
-            var petToLink = pets.FirstOrDefault(p => p.Id == updateModel.PetId);
+            var documentSetSuccess = SetDocument(consultationToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(documentSetSuccess.Result))
+                return consultationToUpdate.ToErrorModel(documentSetSuccess.Result);
 
-            // Update consultation entity
             consultationToUpdate.MapEntity(updateModel);
-            consultationToUpdate.ImageFile = imageResult.FileName;
-            consultationToUpdate.DocumentFile = documentResult.FileName;
-            consultationToUpdate.Veterinarian = veterinarianToLink;
-            consultationToUpdate.Pet = petToLink;
 
             if (!await _repository.UpdateAsync(consultationToUpdate))
                 return consultationToUpdate.ToErrorModel(Constants.DBUpdateMessage);
@@ -141,6 +98,57 @@ namespace Pri.Pawpi.Core.Services
                 return consultations.ToErrorModel(Constants.NoConsultationFoundMessage);
 
             return consultations.ToResultModel();
+        }
+
+        private string SetIds(Consultation cons, ConsultationAddModel model)
+        {
+            var vets = _veterinarianRepository.GetAll();
+            var pets = _petRepository.GetAll();
+
+            // Input checks
+            if (!vets.CheckIfIdExists(model.VeterinarianId))
+                return Constants.UnknownVeterinarianMessage;
+            if (!pets.CheckIfIdExists(model.PetId))
+                return Constants.UnknownPetMessage;
+
+            if (model.VeterinarianId == 0)
+                return Constants.NoVeterinarianMessage;
+            if (model.PetId == 0)
+                return Constants.NoPetMessage;
+
+            var veterinarianToLink = vets.FirstOrDefault(p => p.Id == model.VeterinarianId);
+            var petToLink = pets.FirstOrDefault(p => p.Id == model.PetId);
+
+            cons.Veterinarian = veterinarianToLink;
+            cons.Pet = petToLink;
+
+            return string.Empty;
+        }
+
+        private async Task<string> SetImage(Consultation cons, ConsultationAddModel model)
+        {
+            if (model.Image is null)
+                return string.Empty;
+
+            var imageResult = await _fileService.StoreFile<Consultation>(model.Image, "ConsultationImages");
+            if (!imageResult.IsSuccess)
+                return imageResult.Error;
+
+            cons.ImageFile = imageResult.FileName;
+            return string.Empty;
+        }
+
+        private async Task<string> SetDocument(Consultation cons, ConsultationAddModel model)
+        {
+            if (model.Document is null)
+                return string.Empty;
+
+            var docuResulst = await _fileService.StoreFile<Consultation>(model.Image, "ConsultationDocuments");
+            if (!docuResulst.IsSuccess)
+                return docuResulst.Error;
+
+            cons.DocumentFile = docuResulst.FileName;
+            return string.Empty;
         }
     }
 }
