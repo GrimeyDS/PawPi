@@ -90,7 +90,6 @@ namespace Pri.Pawpi.Core.Extensions
 
         public static void MapEntity(this Pet pet, PetAddModel petModel)
         {
-            pet.Name = petModel.Name;
             pet.CallName = petModel.CallName;
             pet.Breed = petModel.Breed;
             pet.AnimalType = petModel.AnimalType;

@@ -192,6 +192,7 @@ namespace Pri.Pawpi.Api.Extensions
                 AnimalType = petCreateDto.AnimalType,
                 Weight = petCreateDto.Weight,
                 Image = petCreateDto.Image,
+                Pedigree = petCreateDto.Pedigree,
                 ConsultationIds = petCreateDto.ConsultationIds,
                 MedicationIds = petCreateDto.MedicationIds,
                 CustomerId = petCreateDto.CustomerId
@@ -210,6 +211,7 @@ namespace Pri.Pawpi.Api.Extensions
                 AnimalType = petUpdateDto.AnimalType,
                 Weight = petUpdateDto.Weight,
                 Image = petUpdateDto.Image,
+                Pedigree = petUpdateDto.Pedigree,
                 ConsultationIds = petUpdateDto.ConsultationIds,
                 MedicationIds = petUpdateDto.MedicationIds,
                 CustomerId = petUpdateDto.CustomerId

@@ -214,6 +214,7 @@ namespace Pri.Pawpi.Api.Extensions
                 AnimalType = pet.AnimalType,
                 Weight = (double)pet.Weight,
                 ImageUrl = pet.ImageFile,
+                PedigreeUrl = pet.PedigreeFile,
                 Customer= pet.Customer.MapBaseDto(),
                 LastConsultation = pet.Consultations.MapBaseDto().LastOrDefault(),
             };
