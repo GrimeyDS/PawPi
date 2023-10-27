@@ -14,7 +14,7 @@ namespace Pri.Pawpi.Core.Services
 
         // Input error messages
         internal const string NoVeterinarianMessage = "Please provide a veterinarian";
-        internal const string NoPetMessage = "Please provide a practice";
+        internal const string NoPetMessage = "Please provide a pet";
         internal const string NoConsultationMessage = "Please provide a consultation";
         internal const string NoPracticeMessage = "Please provide a practice";
         internal const string NoCustomerMessage = "Please provide a customer";
