@@ -4,6 +4,7 @@ using Pri.Pawpi.Core.Interfaces.Repositories;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services.Models;
 using Pri.Pawpi.Core.Services.Models.Customer;
+using Pri.Pawpi.Core.Services.Models.Veterinarian;
 
 namespace Pri.Pawpi.Core.Services
 {
@@ -22,41 +23,21 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Customer>> AddAsync(CustomerAddModel addModel)
         {
-            var customers = _repository.GetAll();
-            var pets = _petRepository.GetAll();
-            var practices = _practiceRepository.GetAll();
-
-            var modelPetIds = addModel.PetIds;
-
             var customerToAdd = new Customer();
 
-            // Input checks
-            if (!pets.CheckIfIdsExist(modelPetIds))
-                return customerToAdd.ToErrorModel(Constants.UnknownCustomerMessage);
-            if (!practices.CheckIfIdExists(addModel.PracticeId))
-                return customerToAdd.ToErrorModel(Constants.UnknownCustomerMessage);
+            string idSetSuccessMessage = SetIds(customerToAdd, addModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return customerToAdd.ToErrorModel(idSetSuccessMessage);
 
-            if (!pets.CheckIdsInput(modelPetIds))
-                return customerToAdd.ToErrorModel(Constants.NoPetMessage);
-            if (addModel.PracticeId == 0)
-                return customerToAdd.ToErrorModel(Constants.NoPracticeMessage);
+            string nameSetSuccessMessage = SetName(customerToAdd, addModel);
+            if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                return customerToAdd.ToErrorModel(nameSetSuccessMessage);
 
-            if (customers.Any(m => m.FirstName.ToUpper().Equals(addModel.FirstName.ToUpper())
-                                && m.LastName.ToUpper().Equals(addModel.LastName.ToUpper())))
-                return customerToAdd.ToErrorModel(Constants.NameExistsMessage);
-
-            if (addModel.Birth >= DateTime.Now)
+            if (!addModel.Birth.CheckFutureDate())
                 return customerToAdd.ToErrorModel(Constants.FutureDateMessage);
-
-            // Get ids to attach as entities
-            var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
-            var practiceToLink = practices.FirstOrDefault(p => p.Id == addModel.PracticeId);
 
             // Update new customer entity
             customerToAdd.MapEntity(addModel);
-            customerToAdd.Pets = petsToLink;
-            customerToAdd.Practice = practiceToLink;
-
 
             if (!await _repository.CreateAsync(customerToAdd))
                 return customerToAdd.ToErrorModel(Constants.DBCreateMessage);
@@ -98,49 +79,75 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Customer>> UpdateAsync(CustomerUpdateModel updateModel)
         {
-            var customers = _repository.GetAll();
-            var pets = _petRepository.GetAll();
-            var practices = _practiceRepository.GetAll();
-
-            var modelPetIds = updateModel.PetIds;
-
             var customerToUpdate = await _repository.GetByIdAsync(updateModel.Id);
 
             if (customerToUpdate == null)
                 return customerToUpdate.ToErrorModel(Constants.NoCustomerMessage);
 
-            // Input checks
-            if (!pets.CheckIfIdsExist(modelPetIds))
-                return customerToUpdate.ToErrorModel(Constants.UnknownPetMessage);
-            if (!practices.CheckIfIdExists(updateModel.PracticeId))
-                return customerToUpdate.ToErrorModel(Constants.UnknownCustomerMessage);
+            string idSetSuccessMessage = SetIds(customerToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return customerToUpdate.ToErrorModel(idSetSuccessMessage);
 
-            if (!pets.CheckIdsInput(modelPetIds))
-                return customerToUpdate.ToErrorModel(Constants.NoPetMessage);
-            if (customerToUpdate.PracticeId == 0)
-                return customerToUpdate.ToErrorModel(Constants.NoCustomerMessage);
-
-            if (customers.Any(m => m.FirstName.ToUpper().Equals(updateModel.FirstName.ToUpper())
-                                && m.LastName.ToUpper().Equals(updateModel.LastName.ToUpper())))
-                return customerToUpdate.ToErrorModel(Constants.NameExistsMessage);
-
-            if (updateModel.Birth >= DateTime.Now)
+            if (!updateModel.Birth.CheckFutureDate())
                 return customerToUpdate.ToErrorModel(Constants.FutureDateMessage);
 
-            // Get ids to attach as entities
-            var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
-            var practiceToLink = practices.FirstOrDefault(p => p.Id == updateModel.PracticeId);
+            if (customerToUpdate.FirstName.ToUpper() != updateModel.FirstName.ToUpper() &&
+                customerToUpdate.LastName.ToUpper() != updateModel.LastName.ToUpper())
+            {
+                string nameSetSuccessMessage = SetName(customerToUpdate, updateModel);
+                if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                    return customerToUpdate.ToErrorModel(nameSetSuccessMessage);
+            }
 
             // Update customer entity
             customerToUpdate.MapEntity(updateModel);
-            customerToUpdate.Pets = petsToLink;
-            customerToUpdate.Practice = practiceToLink;
-
 
             if (!await _repository.UpdateAsync(customerToUpdate))
                 return customerToUpdate.ToErrorModel(Constants.DBUpdateMessage);
 
             return customerToUpdate.ToResultModel();
+        }
+
+        private string SetIds(Customer customer, CustomerAddModel model)
+        {
+            var pets = _petRepository.GetAll();
+            var practices = _practiceRepository.GetAll();
+
+            var modelPetIds = model.PetIds ?? new List<int>();
+
+
+            // Input checks
+            if (!pets.CheckIfIdsExist(modelPetIds))
+                return Constants.UnknownPetMessage;
+            if (!practices.CheckIfIdExists(model.PracticeId))
+                return Constants.UnknownPracticeMessage;
+
+            if (!pets.CheckIdsInput(modelPetIds))
+                return Constants.NoPetMessage;
+            if (model.PracticeId == 0)
+                return Constants.NoPracticeMessage;
+
+            // Get ids to attach as entities
+            var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
+            var practiceToLink = practices.FirstOrDefault(p => p.Id == model.PracticeId);
+
+            customer.Pets = petsToLink;
+            customer.Practice = practiceToLink;
+
+            return string.Empty;
+        }
+
+        private string SetName(Customer customer, CustomerAddModel model)
+        {
+            var customers = _repository.GetAll();
+
+            if (customers.Any(m => m.FirstName.ToUpper().Equals(model.FirstName.ToUpper())
+                    && m.LastName.ToUpper().Equals(model.LastName.ToUpper())))
+                return Constants.NameExistsMessage;
+
+            customer.FirstName = model.FirstName;
+            customer.LastName = model.LastName;
+            return string.Empty;
         }
     }
 }
