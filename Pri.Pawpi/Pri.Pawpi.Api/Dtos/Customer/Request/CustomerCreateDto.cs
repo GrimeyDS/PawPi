@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace Pri.Pawpi.Api.Dtos.Veterinarian.Request
 {
     public class CustomerCreateDto : PersonRequestDto
