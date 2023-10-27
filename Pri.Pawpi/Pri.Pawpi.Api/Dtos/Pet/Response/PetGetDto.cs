@@ -11,7 +11,7 @@ namespace Pri.Pawpi.Api.Dtos.Pet.Response
         public string Breed { get; set; }
         public string Color { get; set; }
         public string AnimalType { get; set; }
-        public double Weight { get; set; }
+        public double? Weight { get; set; }
         public string ImageUrl { get; set; }
         public string PedigreeUrl { get; set; }
         public CustomerBaseDto Customer { get; set; }

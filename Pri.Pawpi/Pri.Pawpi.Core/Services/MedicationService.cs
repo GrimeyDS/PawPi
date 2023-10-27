@@ -20,25 +20,17 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Medication>> AddAsync(MedicationAddModel addModel)
         {
-            var medicine = _medicationRepository.GetAll();
-            var pets = _petRepository.GetAll();
-            var modelPetIds = addModel.PetIds;
-
             var medicationToAdd = new Medication();
 
-            // Input checks
-            if (!pets.CheckIfIdsExist(modelPetIds))
-                return medicationToAdd.ToErrorModel(Constants.NoPetMessage);
+            string idSetSuccessMessage = SetIds(medicationToAdd, addModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return medicationToAdd.ToErrorModel(idSetSuccessMessage);
 
-            if (medicine.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
-                return medicationToAdd.ToErrorModel(Constants.NameExistsMessage);
+            string nameSetSuccessMessage = SetName(medicationToAdd, addModel);
+            if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                return medicationToAdd.ToErrorModel(nameSetSuccessMessage);
 
-            // Get veterinarians to attach
-            var petsToLink = pets.Where(v => modelPetIds.Contains(v.Id)).ToList();
-
-            // Update new medication entity
             medicationToAdd.MapEntity(addModel);
-            medicationToAdd.Pets = petsToLink;
 
             if (!await _medicationRepository.CreateAsync(medicationToAdd))
                 return medicationToAdd.ToErrorModel(Constants.DBCreateMessage);
@@ -80,40 +72,56 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Medication>> UpdateAsync(MedicationUpdateModel updateModel)
         {
-            var medicine = _medicationRepository.GetAll();
-            var pets = _petRepository.GetAll();
-            var modelPetIds = updateModel.PetIds;
-
             var medicationToUpdate = await _medicationRepository.GetByIdAsync(updateModel.Id);
 
             if (medicationToUpdate == null)
                 return medicationToUpdate.ToErrorModel(Constants.UnknownMedicineMessage);
 
-            // Input checks
-            if (!pets.CheckIfIdsExist(modelPetIds))
-                return medicationToUpdate.ToErrorModel(Constants.UnknownPetMessage);
+            string idSetSuccessMessage = SetIds(medicationToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return medicationToUpdate.ToErrorModel(idSetSuccessMessage);
 
             if (medicationToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
             {
-                if (medicine.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
-                    return medicationToUpdate.ToErrorModel(Constants.NameExistsMessage);
+                string nameSetSuccessMessage = SetName(medicationToUpdate, updateModel);
+                if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                    return medicationToUpdate.ToErrorModel(nameSetSuccessMessage);
             }
 
-            // Get veterinarians to attach
-            var petsToLink = pets.Where(p => modelPetIds.Contains(p.Id)).ToList();
-
-            // Update new medication entity
-            medicationToUpdate.Name = updateModel.Name;
-            medicationToUpdate.Dosage = updateModel.Dosage;
-            medicationToUpdate.Frequency = updateModel.Frequency;
-            medicationToUpdate.Notes = updateModel.Notes;
-            medicationToUpdate.SideEffects = updateModel.SideEffects;
-            medicationToUpdate.Pets = petsToLink;
+            medicationToUpdate.MapEntity(updateModel);
 
             if (!await _medicationRepository.UpdateAsync(medicationToUpdate))
                 return medicationToUpdate.ToErrorModel(Constants.DBUpdateMessage);
 
             return medicationToUpdate.ToResultModel();
+        }
+
+        private string SetIds(Medication med, MedicationAddModel model)
+        {
+            var pets = _petRepository.GetAll();
+            var modelPetIds = model.PetIds ?? new List<int>();
+
+            if (!pets.CheckIfIdsExist(modelPetIds))
+                return Constants.UnknownPetMessage;
+            if (!pets.CheckIdsInput(modelPetIds))
+                return Constants.NoPetMessage;
+
+            var petsToLink = pets.Where(p => modelPetIds.Contains(p.Id)).ToList();
+
+            med.Pets = petsToLink;
+
+            return string.Empty;
+        }
+
+        private string SetName(Medication med, MedicationAddModel model)
+        {
+            var medicine = _medicationRepository.GetAll();
+
+            if (medicine.Any(m => m.Name.ToUpper().Equals(model.Name.ToUpper())))
+                return Constants.NameExistsMessage;
+
+            med.Name = model.Name;
+            return string.Empty;
         }
     }
 }
