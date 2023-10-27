@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Pri.Pawpi.Core.Entities;
+﻿using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Extensions;
 using Pri.Pawpi.Core.Interfaces.Repositories;
 using Pri.Pawpi.Core.Interfaces.Services;
@@ -31,48 +30,25 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Pet>> AddAsync(PetAddModel addModel)
         {
-            var pets = _petRepository.GetAll();
-
-            var customers = _customerRepository.GetAll();
-            var consultations = _consultationRepository.GetAll();
-            var medicine = _medicationRepository.GetAll();
-
-            var modelConsultationIds = addModel.ConsultationIds;
-            var modelMedicineIds = addModel.MedicationIds;
-
             var petToAdd = new Pet();
 
-            // Input checks
-            if (!consultations.CheckIfIdsExist(modelConsultationIds))
-                return petToAdd.ToErrorModel(Constants.UnknownConsultationMessage);
-            if (!medicine.CheckIfIdsExist(modelMedicineIds))
-                return petToAdd.ToErrorModel(Constants.UnknownMedicineMessage);
-            if (!customers.CheckIfIdExists(addModel.CustomerId))
-                return petToAdd.ToErrorModel(Constants.UnknownCustomerMessage);
+            string idSetSuccessMessage = SetIds(petToAdd, addModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return petToAdd.ToErrorModel(idSetSuccessMessage);
 
-            if (addModel.CustomerId == 0)
-                return petToAdd.ToErrorModel(Constants.NoCustomerMessage);
+            string nameSetSuccessMessage = SetName(petToAdd, addModel);
+            if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                return petToAdd.ToErrorModel(nameSetSuccessMessage);
 
-            if (pets.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
-                return petToAdd.ToErrorModel(Constants.NameExistsMessage);
+            var imageSetSuccess = SetImage(petToAdd, addModel);
+            if (!string.IsNullOrEmpty(imageSetSuccess.Result))
+                return petToAdd.ToErrorModel(imageSetSuccess.Result);
 
-            // store image
-            var imageResult = await _fileService.StoreFile<Pet>(addModel.Image, "PetImages");
-            if (!imageResult.IsSuccess)
-                return petToAdd.ToErrorModel(imageResult.Error);
+            var pedigreeSetSuccess = SetPedigree(petToAdd, addModel);
+            if (!string.IsNullOrEmpty(pedigreeSetSuccess.Result))
+                return petToAdd.ToErrorModel(pedigreeSetSuccess.Result);
 
-            // Get ids to attach as entities
-            var medicineToLink = medicine.Where(v => modelMedicineIds.Contains(v.Id)).ToList();
-            var consultationsToLink = consultations.Where(c => modelConsultationIds.Contains(c.Id)).ToList();
-            var customerToLink = customers.FirstOrDefault(c => c.Id == addModel.CustomerId);
-
-            // Update new pet entity
             petToAdd.MapEntity(addModel);
-            petToAdd.ImageFile = imageResult.FileName;
-            petToAdd.Medications = medicineToLink;
-            petToAdd.Consultations = consultationsToLink;
-            petToAdd.Customer = customerToLink;
-
 
             if (!await _repository.CreateAsync(petToAdd))
                 return petToAdd.ToErrorModel(Constants.DBCreateMessage);
@@ -82,53 +58,31 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Pet>> UpdateAsync(PetUpdateModel updateModel)
         {
-            var pets = _petRepository.GetAll();
-
-            var customers = _customerRepository.GetAll();
-            var consultations = _consultationRepository.GetAll();
-            var medicine = _medicationRepository.GetAll();
-
-            var modelConsultationIds = updateModel.ConsultationIds;
-            var modelMedicineIds = updateModel.MedicationIds;
-
             var petToUpdate = await _petRepository.GetByIdAsync(updateModel.Id);
 
             if (petToUpdate == null)
                 return petToUpdate.ToErrorModel(Constants.NoPetFoundMessage);
 
-            // Input checks
-            if (!consultations.CheckIfIdsExist(modelConsultationIds))
-                return petToUpdate.ToErrorModel(Constants.UnknownConsultationMessage);
-            if (!medicine.CheckIfIdsExist(modelMedicineIds))
-                return petToUpdate.ToErrorModel(Constants.UnknownMedicineMessage);
-            if (!customers.CheckIfIdExists(updateModel.CustomerId))
-                return petToUpdate.ToErrorModel(Constants.UnknownCustomerMessage);
-
-            if (updateModel.CustomerId == 0)
-                return petToUpdate.ToErrorModel(Constants.NoCustomerMessage);
+            string idSetSuccessMessage = SetIds(petToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return petToUpdate.ToErrorModel(idSetSuccessMessage);
 
             if (petToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
             {
-                if (pets.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
-                    return petToUpdate.ToErrorModel(Constants.NameExistsMessage);
+                string nameSetSuccessMessage = SetName(petToUpdate, updateModel);
+                if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                    return petToUpdate.ToErrorModel(nameSetSuccessMessage);
             }
 
-            // store image
-            var imageResult = await _fileService.StoreFile<Pet>(updateModel.Image, "PetImages");
-            if (!imageResult.IsSuccess)
-                return petToUpdate.ToErrorModel(imageResult.Error);
+            var imageSetSuccess = SetImage(petToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(imageSetSuccess.Result))
+                return petToUpdate.ToErrorModel(imageSetSuccess.Result);
 
-            // Get ids to attach as entities
-            var medicineToLink = medicine.Where(v => modelMedicineIds.Contains(v.Id)).ToList();
-            var consultationsToLink = consultations.Where(c => modelConsultationIds.Contains(c.Id)).ToList();
-            var customerToLink = customers.FirstOrDefault(c => c.Id == updateModel.CustomerId);
+            var pedigreeSetSuccess = SetPedigree(petToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(pedigreeSetSuccess.Result))
+                return petToUpdate.ToErrorModel(pedigreeSetSuccess.Result);
 
-            // Update veterinarian entity
             petToUpdate.MapEntity(updateModel);
-            petToUpdate.ImageFile = imageResult.FileName;
-            petToUpdate.Medications = medicineToLink;
-            petToUpdate.Consultations = consultationsToLink;
-            petToUpdate.Customer = customerToLink;
 
             if (!await _repository.UpdateAsync(petToUpdate))
                 return petToUpdate.ToErrorModel(Constants.DBUpdateMessage);
@@ -188,6 +142,78 @@ namespace Pri.Pawpi.Core.Services
                 return consultationsByPet.ToErrorModel(Constants.NoConsultationFoundMessage);
 
             return consultationsByPet.ToResultModel();
+        }
+
+        private string SetIds(Pet pet, PetAddModel model)
+        {
+            var customers = _customerRepository.GetAll();
+            var consultations = _consultationRepository.GetAll();
+            var medicine = _medicationRepository.GetAll();
+
+            var modelConsultationIds = model.ConsultationIds ?? new List<int>();
+            var modelMedicineIds = model.MedicationIds ?? new List<int>();
+
+            // Input checks
+            if (!consultations.CheckIfIdsExist(modelConsultationIds))
+                return Constants.UnknownConsultationMessage;
+            if (!medicine.CheckIfIdsExist(modelMedicineIds))
+                return Constants.UnknownMedicineMessage;
+            if (!customers.CheckIfIdExists(model.CustomerId))
+                return Constants.UnknownCustomerMessage;
+
+            if (!consultations.CheckIdsInput(modelConsultationIds))
+                return Constants.NoConsultationMessage;
+            if (!medicine.CheckIdsInput(modelMedicineIds))
+                return Constants.NoMedicineMessage;
+            if (model.CustomerId == 0)
+                return Constants.NoCustomerMessage;
+
+            var medicineToLink = medicine.Where(v => modelMedicineIds.Contains(v.Id)).ToList();
+            var consultationsToLink = consultations.Where(c => modelConsultationIds.Contains(c.Id)).ToList();
+            var customerToLink = customers.FirstOrDefault(c => c.Id == model.CustomerId);
+
+            pet.Medications = medicineToLink;
+            pet.Consultations = consultationsToLink;
+            pet.Customer = customerToLink;
+
+            return string.Empty;
+        }
+
+        private string SetName(Pet pet, PetAddModel model)
+        {
+            var pets = _repository.GetAll();
+
+            if (pets.Any(m => m.Name.ToUpper().Equals(model.Name.ToUpper())))
+                return Constants.NameExistsMessage;
+
+            pet.Name = model.Name;
+            return string.Empty;
+        }
+
+        private async Task<string> SetImage(Pet pet, PetAddModel model)
+        {
+            if (model.Image is null)
+                return string.Empty;
+
+            var imageResult = await _fileService.StoreFile<Pet>(model.Image, "PetImages");
+            if (!imageResult.IsSuccess)
+                return imageResult.Error;
+
+            pet.ImageFile = imageResult.FileName;
+            return string.Empty;
+        }
+
+        private async Task<string> SetPedigree(Pet pet, PetAddModel model)
+        {
+            if (model.Pedigree is null)
+                return string.Empty;
+
+            var pedigreeResult = await _fileService.StoreFile<Pet>(model.Image, "PetPedigrees");
+            if (!pedigreeResult.IsSuccess)
+                return pedigreeResult.Error;
+
+            pet.PedigreeFile = pedigreeResult.FileName;
+            return string.Empty;
         }
     }
 }
