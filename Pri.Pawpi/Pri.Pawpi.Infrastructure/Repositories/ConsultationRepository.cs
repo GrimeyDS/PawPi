@@ -37,13 +37,13 @@ namespace Pri.Pawpi.Infrastructure.Repositories
         public async Task<IEnumerable<Consultation>> SearchByTitleAsync(string title)
         {
             var consultations = GetAll();
-            return await consultations.Where(c => c.Title.ToUpper() == title.ToUpper()).ToListAsync();
+            return await consultations.Where(c => c.Title.ToUpper().Contains(title.ToUpper())).ToListAsync();
         }
 
         public async Task<IEnumerable<Consultation>> SearchByDiagnoseAsync(string diagnose)
         {
             var consultations = GetAll();
-            return await consultations.Where(c => c.Diagnosis.ToUpper() == diagnose.ToUpper()).ToListAsync();
+            return await consultations.Where(c => c.Diagnosis.ToUpper().Contains(diagnose.ToUpper())).ToListAsync();
         }
     }
 }
