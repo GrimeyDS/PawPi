@@ -4,7 +4,6 @@ using Pri.Pawpi.Core.Interfaces.Repositories;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services.Models;
 using Pri.Pawpi.Core.Services.Models.Customer;
-using Pri.Pawpi.Core.Services.Models.Veterinarian;
 
 namespace Pri.Pawpi.Core.Services
 {
