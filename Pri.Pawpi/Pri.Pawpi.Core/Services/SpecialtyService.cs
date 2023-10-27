@@ -18,28 +18,17 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Specialty>> AddAsync(SpecialtyAddModel addModel)
         {
-            var vets = _veterinarianRepository.GetAll();
-            var specialties = _repository.GetAll();
-            var modelVeterinarianIds = addModel.VeterinarianIds;
-
             var specialtyToAdd = new Specialty();
 
-            // Input checks
-            if (!vets.CheckIfIdsExist(modelVeterinarianIds))
-                return specialtyToAdd.ToErrorModel(Constants.UnknownVeterinarianMessage);
+            string idSetSuccessMessage = SetIds(specialtyToAdd, addModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return specialtyToAdd.ToErrorModel(idSetSuccessMessage);
 
-            if (!vets.CheckIdsInput(modelVeterinarianIds))
-                return specialtyToAdd.ToErrorModel(Constants.NoVeterinarianMessage);
+            string nameSetSuccessMessage = SetName(specialtyToAdd, addModel);
+            if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                return specialtyToAdd.ToErrorModel(nameSetSuccessMessage);
 
-            if (specialties.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
-                return specialtyToAdd.ToErrorModel(Constants.NameExistsMessage);
-
-            // Get veterinarians to attach
-            var vetsToLink = vets.Where(v => modelVeterinarianIds.Contains(v.Id)).ToList();
-
-            // Update new specialty entity
             specialtyToAdd.MapEntity(addModel);
-            specialtyToAdd.Veterinarians = vetsToLink;
 
             if (!await _repository.CreateAsync(specialtyToAdd))
                 return specialtyToAdd.ToErrorModel(Constants.DBCreateMessage);
@@ -48,34 +37,25 @@ namespace Pri.Pawpi.Core.Services
         }
 
         public async Task<ResultModel<Specialty>> UpdateAsync(SpecialtyUpdateModel updateModel)
-        {
-            var vets = _veterinarianRepository.GetAll();
-            var specialties = _repository.GetAll();
+        { 
             var specialtyToUpdate = await _repository.GetByIdAsync(updateModel.Id);
-            var modelVeterinarianIds = updateModel.VeterinarianIds;
 
             if (specialtyToUpdate == null)
                 return specialtyToUpdate.ToErrorModel(Constants.NoSpecialtyFoundMessage);
 
-            // Input checks
-            if (!vets.CheckIfIdsExist(modelVeterinarianIds))
-                return specialtyToUpdate.ToErrorModel(Constants.UnknownVeterinarianMessage);
+            string idSetSuccessMessage = SetIds(specialtyToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return specialtyToUpdate.ToErrorModel(idSetSuccessMessage);
 
-            if (!vets.CheckIdsInput(modelVeterinarianIds))
-                return specialtyToUpdate.ToErrorModel(Constants.NoVeterinarianMessage);
 
             if (specialtyToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
             {
-                if (specialties.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
-                    return specialtyToUpdate.ToErrorModel(Constants.NameExistsMessage);
+                string nameSetSuccessMessage = SetName(specialtyToUpdate, updateModel);
+                if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                    return specialtyToUpdate.ToErrorModel(nameSetSuccessMessage);
             }
 
-            // Get veterinarians to attach
-            var vetsToLink = vets.Where(p => modelVeterinarianIds.Contains(p.Id)).ToList();
-
-            // Update found specialty entity
             specialtyToUpdate.MapEntity(updateModel);
-            specialtyToUpdate.Veterinarians = vetsToLink;
 
             if (!await _repository.UpdateAsync(specialtyToUpdate))
                 return specialtyToUpdate.ToErrorModel(Constants.DBUpdateMessage);
@@ -103,6 +83,36 @@ namespace Pri.Pawpi.Core.Services
                 return vetsBySpecialty.ToErrorModel(Constants.NoVeterinarianFoundMessage);
 
             return vetsBySpecialty.ToResultModel();
+        }
+
+        private string SetIds(Specialty spec, SpecialtyAddModel model)
+        {
+            var vets = _veterinarianRepository.GetAll();
+
+            var modelVeterinarianIds = model.VeterinarianIds ?? new List<int>();
+
+            if (!vets.CheckIfIdsExist(modelVeterinarianIds))
+                return Constants.UnknownVeterinarianMessage;
+
+            if (!vets.CheckIdsInput(modelVeterinarianIds))
+                return Constants.NoVeterinarianMessage;
+
+            var vetsToLink = vets.Where(p => modelVeterinarianIds.Contains(p.Id)).ToList();
+
+            spec.Veterinarians = vetsToLink;
+
+            return string.Empty;
+        }
+
+        private string SetName(Specialty spec, SpecialtyAddModel model)
+        {
+            var specialties = _repository.GetAll();
+
+            if (specialties.Any(m => m.Name.ToUpper().Equals(model.Name.ToUpper())))
+                return Constants.NameExistsMessage;
+
+            spec.Name = model.Name;
+            return string.Empty;
         }
     }
 }

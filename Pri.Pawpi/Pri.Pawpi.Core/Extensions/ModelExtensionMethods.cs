@@ -83,7 +83,6 @@ namespace Pri.Pawpi.Core.Extensions
 
         public static void MapEntity(this Specialty specialty, SpecialtyAddModel specialtyModel)
         {
-            specialty.Name = specialtyModel.Name;
             specialty.Description = specialtyModel.Description;
         }
 
