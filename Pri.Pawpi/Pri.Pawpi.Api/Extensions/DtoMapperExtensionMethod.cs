@@ -212,7 +212,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Breed = pet.Breed,
                 Color = pet.Color,
                 AnimalType = pet.AnimalType,
-                Weight = (double)pet.Weight,
+                Weight = pet.Weight,
                 ImageUrl = pet.ImageFile,
                 PedigreeUrl = pet.PedigreeFile,
                 Customer= pet.Customer.MapBaseDto(),
