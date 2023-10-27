@@ -75,7 +75,6 @@ namespace Pri.Pawpi.Core.Extensions
 
         public static void MapEntity(this Medication medication, MedicationAddModel medicationModel)
         {
-            medication.Name = medicationModel.Name;
             medication.Dosage = medicationModel.Dosage;
             medication.Frequency = medicationModel.Frequency;
             medication.Notes = medicationModel.Notes;
