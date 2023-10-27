@@ -74,8 +74,6 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Veterinarian>> AddAsync(VeterinarianAddModel addModel)
         {
-            var vets = _repository.GetAll();
-
             var veterinarianToAdd = new Veterinarian();
 
             string idSetSuccessMessage = SetIds(veterinarianToAdd, addModel);
@@ -103,8 +101,6 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Veterinarian>> UpdateAsync(VeterinarianUpdateModel updateModel)
         {
-            var vets = _repository.GetAll();
-
             var veterinarianToUpdate = await _repository.GetByIdAsync(updateModel.Id);
 
             if (veterinarianToUpdate == null)
