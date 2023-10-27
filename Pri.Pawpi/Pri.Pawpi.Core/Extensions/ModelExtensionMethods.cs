@@ -99,7 +99,6 @@ namespace Pri.Pawpi.Core.Extensions
 
         public static void MapEntity(this Practice practice, PracticeAddModel practiceModel)
         {
-            practice.Name = practiceModel.Name;
             practice.Address = practiceModel.Address;
             practice.City = practiceModel.City;
             practice.Postal = practiceModel.Postal;

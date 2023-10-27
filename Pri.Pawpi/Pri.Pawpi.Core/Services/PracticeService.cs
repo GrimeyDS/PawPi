@@ -24,45 +24,21 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Practice>> AddAsync(PracticeAddModel addModel)
         {
-            var practices = _practiceRepository.GetAll();
-
-            var customers = _customerRepository.GetAll();
-            var vets = _veterinarianRepository.GetAll();
-
-            var modelCustomerIds = addModel.CustomerIds;
-            var modelVetsIds = addModel.VeterinarianIds;
-
             var practiceToAdd = new Practice();
 
-            // Input checks
-            if (!vets.CheckIfIdsExist(modelVetsIds))
-                return practiceToAdd.ToErrorModel(Constants.UnknownVeterinarianMessage);
-            if (!customers.CheckIfIdsExist(modelCustomerIds))
-                return practiceToAdd.ToErrorModel(Constants.UnknownCustomerMessage);
+            string idSetSuccessMessage = SetIds(practiceToAdd, addModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return practiceToAdd.ToErrorModel(idSetSuccessMessage);
 
+            string nameSetSuccessMessage = SetName(practiceToAdd, addModel);
+            if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                return practiceToAdd.ToErrorModel(nameSetSuccessMessage);
 
-            if (!customers.CheckIdsInput(modelCustomerIds))
-                return practiceToAdd.ToErrorModel(Constants.NoCustomerMessage);
-            if (!vets.CheckIdsInput(modelVetsIds))
-                return practiceToAdd.ToErrorModel(Constants.NoVeterinarianMessage);
+            var logoSetSuccess = SetLogo(practiceToAdd, addModel);
+            if (!string.IsNullOrEmpty(logoSetSuccess.Result))
+                return practiceToAdd.ToErrorModel(logoSetSuccess.Result);
 
-            if (practices.Any(m => m.Name.ToUpper().Equals(addModel.Name.ToUpper())))
-                return practiceToAdd.ToErrorModel(Constants.NameExistsMessage);
-
-            // Get ids to attach as entities
-            var vetsToLink = vets.Where(v => modelVetsIds.Contains(v.Id)).ToList();
-            var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
-
-            // store logo
-            var fileResult = await _fileService.StoreFile<Practice>(addModel.Logo, "logos");
-            if (!fileResult.IsSuccess)
-                return practiceToAdd.ToErrorModel(fileResult.Error);
-
-            // Update new pet entity
             practiceToAdd.MapEntity(addModel);
-            practiceToAdd.Logo = fileResult.FileName;
-            practiceToAdd.Customers = customersToLink;
-            practiceToAdd.Veterinarians = vetsToLink;
 
             if (!await _repository.CreateAsync(practiceToAdd))
                 return practiceToAdd.ToErrorModel(Constants.DBCreateMessage);
@@ -72,48 +48,27 @@ namespace Pri.Pawpi.Core.Services
 
         public async Task<ResultModel<Practice>> UpdateAsync(PracticeUpdateModel updateModel)
         {
-            var practices = _practiceRepository.GetAll();
-
-            var customers = _customerRepository.GetAll();
-            var vets = _veterinarianRepository.GetAll();
-
-            var modelCustomerIds = updateModel.CustomerIds;
-            var modelVetsIds = updateModel.VeterinarianIds;
-
             var practiceToUpdate = await _practiceRepository.GetByIdAsync(updateModel.Id);
 
             if (practiceToUpdate == null)
                 return practiceToUpdate.ToErrorModel(Constants.NoPracticeFoundMessage);
 
-            // Input checks
-            if (!vets.CheckIfIdsExist(modelVetsIds))
-                return practiceToUpdate.ToErrorModel(Constants.UnknownVeterinarianMessage);
-            if (!customers.CheckIfIdsExist(modelCustomerIds))
-                return practiceToUpdate.ToErrorModel(Constants.UnknownCustomerMessage);
-
-            if (!vets.CheckIdsInput(modelVetsIds))
-                return practiceToUpdate.ToErrorModel(Constants.NoVeterinarianMessage);
+            string idSetSuccessMessage = SetIds(practiceToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(idSetSuccessMessage))
+                return practiceToUpdate.ToErrorModel(idSetSuccessMessage);
 
             if (practiceToUpdate.Name.ToUpper() != updateModel.Name.ToUpper())
             {
-                if (practices.Any(m => m.Name.ToUpper().Equals(updateModel.Name.ToUpper())))
-                    return practiceToUpdate.ToErrorModel(Constants.NameExistsMessage);
+                string nameSetSuccessMessage = SetName(practiceToUpdate, updateModel);
+                if (!string.IsNullOrEmpty(nameSetSuccessMessage))
+                    return practiceToUpdate.ToErrorModel(nameSetSuccessMessage);
             }
 
-            // store logo
-            var fileResult = await _fileService.StoreFile<Practice>(updateModel.Logo, "logos");
-            if (!fileResult.IsSuccess)
-                return practiceToUpdate.ToErrorModel(fileResult.Error);
+            var logoSetSuccess = SetLogo(practiceToUpdate, updateModel);
+            if (!string.IsNullOrEmpty(logoSetSuccess.Result))
+                return practiceToUpdate.ToErrorModel(logoSetSuccess.Result);
 
-            // Get ids to attach as entities
-            var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
-            var vetsToLink = vets.Where(v => modelVetsIds.Contains(v.Id)).ToList();
-
-            // Update new pet entity
             practiceToUpdate.MapEntity(updateModel);
-            practiceToUpdate.Logo = fileResult.FileName;
-            practiceToUpdate.Customers = customersToLink;
-            practiceToUpdate.Veterinarians = vetsToLink;
 
             if (!await _repository.UpdateAsync(practiceToUpdate))
                 return practiceToUpdate.ToErrorModel(Constants.DBUpdateMessage);
@@ -163,6 +118,58 @@ namespace Pri.Pawpi.Core.Services
                 return customersByPractice.ToErrorModel(Constants.NoCustomerFoundMessage);
 
             return customersByPractice.ToResultModel();
+        }
+
+        private string SetIds(Practice practice, PracticeAddModel model)
+        {
+            var customers = _customerRepository.GetAll();
+            var vets = _veterinarianRepository.GetAll();
+
+            var modelCustomerIds = model.CustomerIds ?? new List<int>();
+            var modelVetsIds = model.VeterinarianIds ?? new List<int>();
+
+            // Input checks
+            if (!vets.CheckIfIdsExist(modelVetsIds))
+                return Constants.UnknownVeterinarianMessage;
+            if (!customers.CheckIfIdsExist(modelCustomerIds))
+                return Constants.UnknownCustomerMessage;
+
+            if (!vets.CheckIdsInput(modelVetsIds))
+                return Constants.NoVeterinarianMessage;
+            if (!customers.CheckIdsInput(modelCustomerIds))
+                return Constants.NoCustomerMessage;
+
+            var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
+            var vetsToLink = vets.Where(v => modelVetsIds.Contains(v.Id)).ToList();
+
+            practice.Customers = customersToLink;
+            practice.Veterinarians = vetsToLink;
+
+            return string.Empty;
+        }
+
+        private string SetName(Practice practice, PracticeAddModel model)
+        {
+            var practices = _repository.GetAll();
+
+            if (practices.Any(m => m.Name.ToUpper().Equals(model.Name.ToUpper())))
+                return Constants.NameExistsMessage;
+
+            practice.Name = model.Name;
+            return string.Empty;
+        }
+
+        private async Task<string> SetLogo(Practice practice, PracticeAddModel model)
+        {
+            if (model.Logo is null)
+                return string.Empty;
+
+            var logoResult = await _fileService.StoreFile<Practice>(model.Logo, "Logos");
+            if (!logoResult.IsSuccess)
+                return logoResult.Error;
+
+            practice.Logo = logoResult.FileName;
+            return string.Empty;
         }
     }
 }
