@@ -8,6 +8,6 @@
         public string? Notes { get; set; }
         public string? SideEffects { get; set; }
 
-        public List<Pet> Pets { get; set; }
+        public ICollection<Pet> Pets { get; set; }
     }
 }

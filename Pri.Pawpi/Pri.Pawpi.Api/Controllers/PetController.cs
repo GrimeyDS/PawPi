@@ -1,0 +1,139 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Pri.Pawpi.Api.Dtos.Pet.Request;
+using Pri.Pawpi.Api.Extensions;
+using Pri.Pawpi.Core.Entities;
+using Pri.Pawpi.Core.Interfaces.Services;
+
+namespace Pri.Pawpi.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PetController : BaseController<Pet>
+    {
+        private readonly IPetService _petService;
+
+        public PetController(IPetService petService) : base(petService)
+        {
+            _petService = petService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var pets = await _petService.GetAllAsync();
+            var petResponseDto = pets.Items.MapDto();
+
+            return Ok(petResponseDto);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var pet = await _petService.GetByIdAsync(id);
+
+            if (!pet.IsSuccess)
+                return BadRequest(pet.Errors);
+
+            var petResponseDto = pet.Item.MapDto();
+
+            return Ok(petResponseDto);
+        }
+
+        [HttpGet("searchName/{name}")]
+        public async Task<IActionResult> SearchByName(string name)
+        {
+            var pets = await _petService.SearchByNameAsync(name);
+
+            if (!pets.IsSuccess)
+                return NotFound(pets.Errors);
+
+            var petResponseDto = pets.Items.MapDto(name);
+
+            return Ok(petResponseDto);
+        }
+
+        [HttpGet("searchAnimalType/{animalType}")]
+        public async Task<IActionResult> SearchByAnimalType(string animalType)
+        {
+            var pets = await _petService.SearchByAnimalTypeAsync(animalType);
+
+            if (!pets.IsSuccess)
+                return NotFound(pets.Errors);
+
+            var petResponseDto = pets.Items.MapDto(animalType);
+
+            return Ok(petResponseDto);
+        }
+
+        [HttpGet("searchBreed/{breed}")]
+        public async Task<IActionResult> SearchByBreed(string breed)
+        {
+            var pets = await _petService.SearchByBreedAsync(breed);
+
+            if (!pets.IsSuccess)
+                return NotFound(pets.Errors);
+
+            var petResponseDto = pets.Items.MapDto(breed);
+
+            return Ok(petResponseDto);
+        }
+
+        [HttpGet("{id}/Medicine")]
+        public async Task<IActionResult> GetMedicineFromPet(int id)
+        {
+            var medicine = await _petService.GetMedicineFromPetAsync(id);
+            var pet = await _petService.GetByIdAsync(id);
+
+            if (!medicine.IsSuccess)
+                return BadRequest(medicine.Errors);
+
+            var name = $"{pet.Item.Name}";
+
+            var petResponseDto = medicine.Items.MapDto(name);
+
+            return Ok(petResponseDto);
+        }
+
+        [HttpGet("{id}/Consultations")]
+        public async Task<IActionResult> GetConsultationsFromPet(int id)
+        {
+            var consultations = await _petService.GetConsultationsFromPetAsync(id);
+            var pet = await _petService.GetByIdAsync(id);
+
+            if (!consultations.IsSuccess)
+                return BadRequest(consultations.Errors);
+
+            var name = $"{pet.Item.Name}";
+
+            var petResponseDto = consultations.Items.MapDto(name);
+
+            return Ok(petResponseDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromForm] PetCreateDto petCreateDto)
+        {
+            var petModel = petCreateDto.MapModel();
+
+            var result = await _petService.AddAsync(petModel);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Errors);
+
+            return Ok("Added");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromForm] PetUpdateDto petUpdateDto)
+        {
+            var petModel = petUpdateDto.MapModel();
+
+            var result = await _petService.UpdateAsync(petModel);
+
+            if (!result.IsSuccess)
+                return NotFound(result.Errors);
+
+            return Ok("Updated");
+        }
+    }
+}
