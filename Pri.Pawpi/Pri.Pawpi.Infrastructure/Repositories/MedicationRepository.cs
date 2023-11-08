@@ -13,10 +13,34 @@ namespace Pri.Pawpi.Infrastructure.Repositories
 
         }
 
+        public async override Task<IEnumerable<Medication>> GetAllAsync()
+        {
+            return await _table.Include(m => m.Pets)
+                               .ToListAsync();
+        }
+
+        public async override Task<Medication> GetByIdAsync(int id)
+        {
+            return await _table.Include(m => m.Pets)
+                                .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public override IQueryable<Medication> GetAll()
+        {
+            return _table.Include(m => m.Pets)
+                         .AsQueryable();
+        }
+
         public override async Task<IEnumerable<Medication>> SearchByNameAsync(string name)
         {
-            var medication = GetAll();
-            return await medication.Where(m => m.Name.ToUpper() == name.ToUpper()).ToListAsync();
+            var medicine = GetAll();
+            return await medicine.Where(m => m.Name.ToUpper().Contains(name.ToUpper())).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Medication>> SearchBySideEffectAsync(string sideEffect)
+        {
+            var medicine = GetAll();
+            return await medicine.Where(m => m.SideEffects.ToUpper().Contains(sideEffect.ToUpper())).ToListAsync();
         }
     }
 }

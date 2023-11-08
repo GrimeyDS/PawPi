@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Repositories;
+using Pri.Pawpi.Core.Services.Models;
 using Pri.Pawpi.Infrastructure.Data;
 using System.Xml.Linq;
 
@@ -14,22 +15,34 @@ namespace Pri.Pawpi.Infrastructure.Repositories
 
         }
 
-        public async Task<DateTime?> GetClosureTime(int practiceId)
+        public async override Task<IEnumerable<Practice>> GetAllAsync()
         {
-            var practice = await GetByIdAsync(practiceId);
-            return practice.CloseTime;
+            return await _table.Include(p => p.Veterinarians)
+                                .Include(p => p.Customers)
+                                .ToListAsync();
         }
 
-        public async Task<DateTime?> GetOpenTime(int practiceId)
+        public async override Task<Practice> GetByIdAsync(int id)
         {
-            var practice = await GetByIdAsync(practiceId);
-            return practice.OpenTime;
+            return await _table.Include(p => p.Veterinarians)
+                               .Include(p => p.Customers)
+                               .FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<IEnumerable<Practice>> SearchByCity(string city)
+        public override IQueryable<Practice> GetAll()
+        {
+            return _table.Include(p => p.Veterinarians)
+                         .Include(p => p.Customers)
+                         .AsQueryable();
+        }
+
+        public async Task<IEnumerable<Practice>> SearchByAddressAsync(string address)
         {
             var practices = GetAll();
-            return await practices.Where(p => p.City.ToUpper().Contains(city.ToUpper())).ToListAsync();
+            return await practices.Where(p => p.Address.ToUpper().Contains(address.ToUpper()) ||
+                                              p.City.ToUpper().Contains(address.ToUpper()) ||
+                                              p.Postal.ToUpper().Contains(address.ToUpper()))
+                                              .ToListAsync();
         }
 
         public override async Task<IEnumerable<Practice>> SearchByNameAsync(string name)

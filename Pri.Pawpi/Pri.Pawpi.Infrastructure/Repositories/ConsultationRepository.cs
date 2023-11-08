@@ -13,28 +13,37 @@ namespace Pri.Pawpi.Infrastructure.Repositories
 
         }
 
-        public async Task<IEnumerable<Consultation>> SearchByDateAsync(DateTime date)
+        public async override Task<IEnumerable<Consultation>> GetAllAsync()
         {
-            var consultations = GetAll();
-            return await consultations.Where(c => c.DateOfConsultation.Date == date.Date).ToListAsync();
+            return await _table.Include(c => c.Pet)
+                               .Include(c => c.Veterinarian)
+                               .ToListAsync();
         }
 
-        public override async Task<IEnumerable<Consultation>> SearchByNameAsync(string name)
+        public async override Task<Consultation> GetByIdAsync(int id)
         {
-            var consultations = GetAll();
-            return await consultations.Where(c => c.Title.ToUpper() == name.ToUpper()).ToListAsync();
+            return await _table.Include(c => c.Pet)
+                               .Include(c => c.Veterinarian)
+                               .FirstOrDefaultAsync(v => v.Id == id);
         }
 
-        public async Task<IEnumerable<Consultation>> SearchByPetIdAsync(int petId)
+        public override IQueryable<Consultation> GetAll()
         {
-            var consultations = GetAll();
-            return await consultations.Where(c => c.PetId == petId).ToListAsync();
+            return _table.Include(c => c.Pet)
+                         .Include(c => c.Veterinarian)
+                         .AsQueryable();
         }
 
-        public async Task<IEnumerable<Consultation>> SearchByVeterinarianIdAsync(int vetId)
+        public async Task<IEnumerable<Consultation>> SearchByTitleAsync(string title)
         {
             var consultations = GetAll();
-            return await consultations.Where(c => c.VeterinarianId == vetId).ToListAsync();
+            return await consultations.Where(c => c.Title.ToUpper().Contains(title.ToUpper())).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Consultation>> SearchByDiagnoseAsync(string diagnose)
+        {
+            var consultations = GetAll();
+            return await consultations.Where(c => c.Diagnosis.ToUpper().Contains(diagnose.ToUpper())).ToListAsync();
         }
     }
 }

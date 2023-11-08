@@ -13,13 +13,37 @@ namespace Pri.Pawpi.Infrastructure.Repositories
 
         }
 
-        public async Task<IEnumerable<Pet>> SearchByAnimalType(string type)
+        public async override Task<IEnumerable<Pet>> GetAllAsync()
+        {
+            return await _table.Include(p => p.Customer)
+                               .Include(p => p.Consultations)
+                               .Include(p => p.Medications)
+                               .ToListAsync();
+        }
+
+        public async override Task<Pet> GetByIdAsync(int id)
+        {
+            return await _table.Include(p => p.Customer)
+                               .Include(p => p.Consultations)
+                               .Include(p => p.Medications)
+                               .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public override IQueryable<Pet> GetAll()
+        {
+            return _table.Include(p => p.Customer)
+                         .Include(p => p.Consultations)
+                         .Include(p => p.Medications)
+                         .AsQueryable();
+        }
+
+        public async Task<IEnumerable<Pet>> SearchByAnimalTypeAsync(string type)
         {
             var pets = GetAll();
             return await pets.Where(p => p.AnimalType.ToUpper().Contains(type.ToUpper())).ToListAsync();
         }
 
-        public async Task<IEnumerable<Pet>> SearchByBreed(string breed)
+        public async Task<IEnumerable<Pet>> SearchByBreedAsync(string breed)
         {
             var pets = GetAll();
             return await pets.Where(p => p.Breed.ToUpper().Contains(breed.ToUpper())).ToListAsync();

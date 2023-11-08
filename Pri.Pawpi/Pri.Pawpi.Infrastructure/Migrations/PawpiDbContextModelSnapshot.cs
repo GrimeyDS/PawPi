@@ -192,6 +192,12 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<string>("DocumentFile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageFile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Notes")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
@@ -223,7 +229,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            DateOfConsultation = new DateTime(2023, 10, 7, 16, 5, 0, 720, DateTimeKind.Local).AddTicks(1356),
+                            DateOfConsultation = new DateTime(2023, 10, 26, 22, 39, 34, 903, DateTimeKind.Local).AddTicks(6771),
                             Diagnosis = "Controle",
                             Notes = "Staat wat mager",
                             PetId = 1,
@@ -234,7 +240,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            DateOfConsultation = new DateTime(2023, 10, 7, 16, 5, 0, 720, DateTimeKind.Local).AddTicks(1398),
+                            DateOfConsultation = new DateTime(2023, 10, 26, 22, 39, 34, 903, DateTimeKind.Local).AddTicks(6812),
                             Diagnosis = "Hond in kwestie heeft gras gegeten en moet overgeven",
                             Notes = "",
                             PetId = 1,
@@ -245,7 +251,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            DateOfConsultation = new DateTime(2023, 10, 7, 16, 5, 0, 720, DateTimeKind.Local).AddTicks(1401),
+                            DateOfConsultation = new DateTime(2023, 10, 26, 22, 39, 34, 903, DateTimeKind.Local).AddTicks(6817),
                             Diagnosis = "Vaccinatie",
                             Notes = "",
                             PetId = 2,
@@ -256,7 +262,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            DateOfConsultation = new DateTime(2023, 10, 7, 16, 5, 0, 720, DateTimeKind.Local).AddTicks(1403),
+                            DateOfConsultation = new DateTime(2023, 10, 26, 22, 39, 34, 903, DateTimeKind.Local).AddTicks(6820),
                             Diagnosis = "Tanden zijn slecht onderhouden",
                             Notes = "",
                             PetId = 3,
@@ -267,7 +273,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            DateOfConsultation = new DateTime(2023, 10, 7, 16, 5, 0, 720, DateTimeKind.Local).AddTicks(1406),
+                            DateOfConsultation = new DateTime(2023, 10, 26, 22, 39, 34, 903, DateTimeKind.Local).AddTicks(6823),
                             Diagnosis = "Vaccinatie",
                             Notes = "",
                             PetId = 2,
@@ -651,10 +657,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImageFile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PedigreeFile")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("Weight")
                         .HasColumnType("float");
@@ -859,6 +871,9 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Logo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1052,6 +1067,9 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ImageFile")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()

@@ -7,6 +7,8 @@
         public string? Treatment { get; set; }
         public string? Notes { get; set; }
         public DateTime DateOfConsultation { get; set; }
+        public string ImageFile { get; set; }
+        public string DocumentFile { get; set; }
 
         public int VeterinarianId { get; set; }
         public Veterinarian Veterinarian { get; set; }

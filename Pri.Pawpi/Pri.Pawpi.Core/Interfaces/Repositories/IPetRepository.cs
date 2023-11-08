@@ -4,7 +4,7 @@ namespace Pri.Pawpi.Core.Interfaces.Repositories
 {
     public interface IPetRepository : IBaseRepository<Pet>
     {
-        public Task<IEnumerable<Pet>> SearchByAnimalType(string type);
-        public Task<IEnumerable<Pet>> SearchByBreed(string breed);
+        public Task<IEnumerable<Pet>> SearchByAnimalTypeAsync(string type);
+        public Task<IEnumerable<Pet>> SearchByBreedAsync(string breed);
     }
 }
