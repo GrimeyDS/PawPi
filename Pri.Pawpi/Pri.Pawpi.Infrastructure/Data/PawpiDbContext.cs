@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Infrastructure.Data.Seeding;
 
 namespace Pri.Pawpi.Infrastructure.Data
 {
-    public class PawpiDbContext : DbContext
+    public class PawpiDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Practice> Practices { get; set; }
         public DbSet<Veterinarian> Veterinarians { get; set; }
