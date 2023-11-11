@@ -12,7 +12,7 @@ using Pri.Pawpi.Infrastructure.Data;
 namespace Pri.Pawpi.Infrastructure.Migrations
 {
     [DbContext(typeof(PawpiDbContext))]
-    [Migration("20231110194518_AddIdentity")]
+    [Migration("20231111203713_AddIdentity")]
     partial class AddIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -323,6 +323,9 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -363,7 +366,14 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("VeterinarianId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId")
+                        .IsUnique()
+                        .HasFilter("[CustomerId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -372,6 +382,10 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("VeterinarianId")
+                        .IsUnique()
+                        .HasFilter("[VeterinarianId] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -429,7 +443,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            DateOfConsultation = new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6420),
+                            DateOfConsultation = new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6146),
                             Diagnosis = "Controle",
                             Notes = "Staat wat mager",
                             PetId = 1,
@@ -440,7 +454,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            DateOfConsultation = new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6454),
+                            DateOfConsultation = new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6186),
                             Diagnosis = "Hond in kwestie heeft gras gegeten en moet overgeven",
                             Notes = "",
                             PetId = 1,
@@ -451,7 +465,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            DateOfConsultation = new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6493),
+                            DateOfConsultation = new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6188),
                             Diagnosis = "Vaccinatie",
                             Notes = "",
                             PetId = 2,
@@ -462,7 +476,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            DateOfConsultation = new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6496),
+                            DateOfConsultation = new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6190),
                             Diagnosis = "Tanden zijn slecht onderhouden",
                             Notes = "",
                             PetId = 3,
@@ -473,7 +487,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            DateOfConsultation = new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6498),
+                            DateOfConsultation = new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6192),
                             Diagnosis = "Vaccinatie",
                             Notes = "",
                             PetId = 2,
@@ -495,9 +509,6 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Birth")
                         .HasColumnType("datetime2");
@@ -536,10 +547,6 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique()
-                        .HasFilter("[ApplicationUserId] IS NOT NULL");
 
                     b.HasIndex("PracticeId");
 
@@ -1257,9 +1264,6 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("Birth")
                         .HasColumnType("datetime2");
 
@@ -1297,10 +1301,6 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique()
-                        .HasFilter("[ApplicationUserId] IS NOT NULL");
 
                     b.ToTable("Veterinarians");
 
@@ -1500,6 +1500,21 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Pri.Pawpi.Core.Entities.ApplicationUser", b =>
+                {
+                    b.HasOne("Pri.Pawpi.Core.Entities.Customer", "Customer")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("Pri.Pawpi.Core.Entities.ApplicationUser", "CustomerId");
+
+                    b.HasOne("Pri.Pawpi.Core.Entities.Veterinarian", "Veterinarian")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("Pri.Pawpi.Core.Entities.ApplicationUser", "VeterinarianId");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Veterinarian");
+                });
+
             modelBuilder.Entity("Pri.Pawpi.Core.Entities.Consultation", b =>
                 {
                     b.HasOne("Pri.Pawpi.Core.Entities.Pet", "Pet")
@@ -1521,17 +1536,11 @@ namespace Pri.Pawpi.Infrastructure.Migrations
 
             modelBuilder.Entity("Pri.Pawpi.Core.Entities.Customer", b =>
                 {
-                    b.HasOne("Pri.Pawpi.Core.Entities.ApplicationUser", "ApplicationUser")
-                        .WithOne("Customer")
-                        .HasForeignKey("Pri.Pawpi.Core.Entities.Customer", "ApplicationUserId");
-
                     b.HasOne("Pri.Pawpi.Core.Entities.Practice", "Practice")
                         .WithMany("Customers")
                         .HasForeignKey("PracticeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Practice");
                 });
@@ -1545,15 +1554,6 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("Pri.Pawpi.Core.Entities.Veterinarian", b =>
-                {
-                    b.HasOne("Pri.Pawpi.Core.Entities.ApplicationUser", "ApplicationUser")
-                        .WithOne("Veterinarian")
-                        .HasForeignKey("Pri.Pawpi.Core.Entities.Veterinarian", "ApplicationUserId");
-
-                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("SpecialtyVeterinarian", b =>
@@ -1571,15 +1571,10 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Pri.Pawpi.Core.Entities.ApplicationUser", b =>
-                {
-                    b.Navigation("Customer");
-
-                    b.Navigation("Veterinarian");
-                });
-
             modelBuilder.Entity("Pri.Pawpi.Core.Entities.Customer", b =>
                 {
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("Pets");
                 });
 
@@ -1595,6 +1590,8 @@ namespace Pri.Pawpi.Infrastructure.Migrations
 
             modelBuilder.Entity("Pri.Pawpi.Core.Entities.Veterinarian", b =>
                 {
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("Consultations");
                 });
 #pragma warning restore 612, 618

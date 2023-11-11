@@ -9,18 +9,6 @@ namespace Pri.Pawpi.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ApplicationUserId",
-                table: "Veterinarians",
-                type: "nvarchar(450)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "ApplicationUserId",
-                table: "Customers",
-                type: "nvarchar(450)",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -40,6 +28,8 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    VeterinarianId = table.Column<int>(type: "int", nullable: true),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -58,6 +48,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Veterinarians_VeterinarianId",
+                        column: x => x.VeterinarianId,
+                        principalTable: "Veterinarians",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -171,49 +171,35 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "DateOfConsultation",
-                value: new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6420));
+                value: new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6146));
 
             migrationBuilder.UpdateData(
                 table: "Consultations",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "DateOfConsultation",
-                value: new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6454));
+                value: new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6186));
 
             migrationBuilder.UpdateData(
                 table: "Consultations",
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "DateOfConsultation",
-                value: new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6493));
+                value: new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6188));
 
             migrationBuilder.UpdateData(
                 table: "Consultations",
                 keyColumn: "Id",
                 keyValue: 4,
                 column: "DateOfConsultation",
-                value: new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6496));
+                value: new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6190));
 
             migrationBuilder.UpdateData(
                 table: "Consultations",
                 keyColumn: "Id",
                 keyValue: 5,
                 column: "DateOfConsultation",
-                value: new DateTime(2023, 11, 10, 20, 45, 18, 410, DateTimeKind.Local).AddTicks(6498));
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Veterinarians_ApplicationUserId",
-                table: "Veterinarians",
-                column: "ApplicationUserId",
-                unique: true,
-                filter: "[ApplicationUserId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customers_ApplicationUserId",
-                table: "Customers",
-                column: "ApplicationUserId",
-                unique: true,
-                filter: "[ApplicationUserId] IS NOT NULL");
+                value: new DateTime(2023, 11, 11, 21, 37, 13, 345, DateTimeKind.Local).AddTicks(6192));
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -248,37 +234,29 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_CustomerId",
+                table: "AspNetUsers",
+                column: "CustomerId",
+                unique: true,
+                filter: "[CustomerId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_VeterinarianId",
+                table: "AspNetUsers",
+                column: "VeterinarianId",
+                unique: true,
+                filter: "[VeterinarianId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Customers_AspNetUsers_ApplicationUserId",
-                table: "Customers",
-                column: "ApplicationUserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Veterinarians_AspNetUsers_ApplicationUserId",
-                table: "Veterinarians",
-                column: "ApplicationUserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Customers_AspNetUsers_ApplicationUserId",
-                table: "Customers");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Veterinarians_AspNetUsers_ApplicationUserId",
-                table: "Veterinarians");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -299,22 +277,6 @@ namespace Pri.Pawpi.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Veterinarians_ApplicationUserId",
-                table: "Veterinarians");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Customers_ApplicationUserId",
-                table: "Customers");
-
-            migrationBuilder.DropColumn(
-                name: "ApplicationUserId",
-                table: "Veterinarians");
-
-            migrationBuilder.DropColumn(
-                name: "ApplicationUserId",
-                table: "Customers");
 
             migrationBuilder.UpdateData(
                 table: "Consultations",
