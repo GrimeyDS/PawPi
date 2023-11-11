@@ -5,7 +5,9 @@ namespace Pri.Pawpi.Core.Entities
 {
     public class ApplicationUser : IdentityUser
     {
+        public int? VeterinarianId { get; set; }
         public Veterinarian Veterinarian { get; set; }
+        public int? CustomerId { get; set; }
         public Customer Customer { get; set; }
     }
 }

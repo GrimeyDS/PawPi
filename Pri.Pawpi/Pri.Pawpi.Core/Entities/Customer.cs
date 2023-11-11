@@ -8,8 +8,5 @@ namespace Pri.Pawpi.Core.Entities
 
         public int PracticeId { get; set; }
         public Practice Practice { get; set; }
-
-        public string ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
     }
 }
