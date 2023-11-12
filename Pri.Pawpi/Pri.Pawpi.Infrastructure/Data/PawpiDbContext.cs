@@ -208,6 +208,7 @@ namespace Pri.Pawpi.Infrastructure.Data
             PracticeVeterinarianSeeder.Seed(modelBuilder);
             SpecialtyVeterinarianSeeder.Seed(modelBuilder);
             MedicationPetSeeder.Seed(modelBuilder);
+            ApplicationUserSeeder.Seed(modelBuilder);
             base.OnModelCreating(modelBuilder);
             #endregion
         }
