@@ -43,6 +43,8 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 }
             };
 
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
+
             #region Customers
             var customerUsers = new List<ApplicationUser>
             {
@@ -164,12 +166,89 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
             testCustomer.PasswordHash = _hasher.HashPassword(testCustomer, "Test123");
             customerUsers.Add(testCustomer);
 
-
+            modelBuilder.Entity<ApplicationUser>().HasData(customerUsers);
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(customerRoles);
             #endregion
 
-            modelBuilder.Entity<ApplicationUser>().HasData(customerUsers);
-            modelBuilder.Entity<IdentityRole>().HasData(roles);
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(customerRoles);
+            #region Veterinarians
+            var veterinarianUsers = new List<ApplicationUser>
+            {
+                new ApplicationUser
+                {
+                    Id = "13",
+                    VeterinarianId = 1,
+                    UserName = "vl@deberenakker.be",
+                    NormalizedUserName = "vl@deberenakker.be".ToUpper(),
+                    Email = "vl@deberenakker.be",
+                    NormalizedEmail = "vl@deberenakker.be".ToUpper()
+                },
+                new ApplicationUser
+                {
+                    Id = "14",
+                    VeterinarianId = 2,
+                    UserName = "wb@gmail.com",
+                    NormalizedUserName = "wb@gmail.com".ToUpper(),
+                    Email = "wb@gmail.com",
+                    NormalizedEmail = "wb@gmail.com".ToUpper()
+                },
+                new ApplicationUser
+                {
+                    Id = "15",
+                    VeterinarianId = 3,
+                    UserName = "kdv@gmail.com",
+                    NormalizedUserName = "kdv@gmail.com".ToUpper(),
+                    Email = "kdv@gmail.com",
+                    NormalizedEmail = "kdv@gmail.com".ToUpper()
+                },
+                new ApplicationUser
+                {
+                    Id = "16",
+                    VeterinarianId = 4,
+                    UserName = "SanneDZ@telenet.be",
+                    NormalizedUserName = "SanneDZ@telenet.be".ToUpper(),
+                    Email = "SanneDZ@telenet.be",
+                    NormalizedEmail = "SanneDZ@telenet.be".ToUpper()
+                },
+                new ApplicationUser
+                {
+                    Id = "17",
+                    VeterinarianId = 5,
+                    UserName = "Lottevanputte@proximus.be",
+                    NormalizedUserName = "Lottevanputte@proximus.be".ToUpper(),
+                    Email = "Lottevanputte@proximus.be",
+                    NormalizedEmail = "Lottevanputte@proximus.be".ToUpper()
+                }
+            };
+
+            var vetRoles = new List<IdentityUserRole<string>>();
+
+            foreach (var user in veterinarianUsers)
+            {
+                user.PasswordHash = _hasher.HashPassword(user, Guid.NewGuid().ToString());
+                vetRoles.Add(new IdentityUserRole<string>
+                {
+                    RoleId = "2",
+                    UserId = user.Id
+                });
+            }
+
+            var testVet = new ApplicationUser
+            {
+                Id = "18",
+                VeterinarianId = 999,
+                UserName = "Veterinarian@test.com",
+                NormalizedUserName = "Veterinarian@test.com".ToUpper(),
+                Email = "Veterinarian@test.com",
+                NormalizedEmail = "Veterinarian@test.com".ToUpper()
+            };
+
+            testVet.PasswordHash = _hasher.HashPassword(testVet, "Test123");
+            veterinarianUsers.Add(testVet);
+
+            modelBuilder.Entity<ApplicationUser>().HasData(veterinarianUsers);
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(vetRoles);
+            #endregion
+
         }
     }
 }
