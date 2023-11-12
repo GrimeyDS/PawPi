@@ -13,13 +13,16 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
             var admin = new ApplicationUser
             {
                 Id = "1",
-                UserName = "Admin",
-                NormalizedUserName = "ADMIN",
-                Email = "admin@pawpi.COM",
-                NormalizedEmail = "ADMIN@PAWPI.COM",
+                UserName = "admin@pawpi.com",
+                NormalizedUserName = "admin@pawpi.com".ToUpper(),
+                Email = "admin@pawpi.com",
+                NormalizedEmail = "admin@pawpi.com".ToUpper(),
                 SecurityStamp = new Guid().ToString(),
                 ConcurrencyStamp = new Guid().ToString(),
+                EmailConfirmed = true
             };
+
+            admin.PasswordHash = _hasher.HashPassword(admin, "Test123");
 
             var roles = new IdentityRole<string>[]
             {
@@ -151,6 +154,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                     RoleId = "3",
                     UserId = user.Id
                 });
+                user.EmailConfirmed = true;
             }
 
             var testCustomer = new ApplicationUser
@@ -160,11 +164,13 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 UserName = "Customer@test.com",
                 NormalizedUserName = "Customer@test.com".ToUpper(),
                 Email = "Customer@test.com",
-                NormalizedEmail = "Customer@test.com".ToUpper()
+                NormalizedEmail = "Customer@test.com".ToUpper(),
+                EmailConfirmed = true
             };
 
             testCustomer.PasswordHash = _hasher.HashPassword(testCustomer, "Test123");
             customerUsers.Add(testCustomer);
+            customerUsers.Add(admin);
 
             modelBuilder.Entity<ApplicationUser>().HasData(customerUsers);
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(customerRoles);
@@ -230,6 +236,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                     RoleId = "2",
                     UserId = user.Id
                 });
+                user.EmailConfirmed = true;
             }
 
             var testVet = new ApplicationUser
@@ -239,7 +246,8 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 UserName = "Veterinarian@test.com",
                 NormalizedUserName = "Veterinarian@test.com".ToUpper(),
                 Email = "Veterinarian@test.com",
-                NormalizedEmail = "Veterinarian@test.com".ToUpper()
+                NormalizedEmail = "Veterinarian@test.com".ToUpper(),
+                EmailConfirmed = true
             };
 
             testVet.PasswordHash = _hasher.HashPassword(testVet, "Test123");
