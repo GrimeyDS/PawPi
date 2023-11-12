@@ -22,7 +22,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 EmailConfirmed = true
             };
 
-            admin.PasswordHash = _hasher.HashPassword(admin, "Test123");
+            admin.PasswordHash = _hasher.HashPassword(admin, "Test12345");
 
             var roles = new IdentityRole<string>[]
             {
@@ -168,7 +168,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 EmailConfirmed = true
             };
 
-            testCustomer.PasswordHash = _hasher.HashPassword(testCustomer, "Test123");
+            testCustomer.PasswordHash = _hasher.HashPassword(testCustomer, "Test12345");
             customerUsers.Add(testCustomer);
             customerUsers.Add(admin);
 
@@ -250,7 +250,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 EmailConfirmed = true
             };
 
-            testVet.PasswordHash = _hasher.HashPassword(testVet, "Test123");
+            testVet.PasswordHash = _hasher.HashPassword(testVet, "Test12345");
             veterinarianUsers.Add(testVet);
 
             modelBuilder.Entity<ApplicationUser>().HasData(veterinarianUsers);
