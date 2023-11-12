@@ -1,15 +1,45 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Repositories;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services;
 using Pri.Pawpi.Infrastructure.Data;
 using Pri.Pawpi.Infrastructure.Repositories;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PawpiDbContext>(
     options => options
     .UseSqlServer(builder.Configuration.GetConnectionString("PawpiDB"))
     );
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
+    options =>
+    {
+        options.Password.RequiredLength = 8;
+        options.SignIn.RequireConfirmedEmail = true;
+    }
+    )
+    .AddEntityFrameworkStores<PawpiDbContext>();
+
+//Add Authentication
+builder.Services.AddAuthentication(options
+   =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+{
+    ValidateAudience = true,
+    ValidateIssuer = true,
+    ValidAudience = builder.Configuration["JWTConfiguration:Audience"],
+    ValidIssuer = builder.Configuration["JWTConfiguration:Issuer"],
+    RequireExpirationTime = true,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTConfiguration:SigninKey"])),
+});
 
 // Add services to the container.
 
