@@ -24,30 +24,6 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
 
             admin.PasswordHash = _hasher.HashPassword(admin, "Test12345");
 
-            var roles = new IdentityRole<string>[]
-            {
-                new IdentityRole<string>
-                {
-                    Id = "1",
-                    Name = "Admin",
-                    NormalizedName = "ADMIN",
-                },
-                new IdentityRole<string>
-                {
-                    Id = "2",
-                    Name = "Veterinarian",
-                    NormalizedName = "VETERINARIAN",
-                },
-                new IdentityRole<string>
-                {
-                    Id = "3",
-                    Name = "Customer",
-                    NormalizedName = "CUSTOMER",
-                }
-            };
-
-            modelBuilder.Entity<IdentityRole>().HasData(roles);
-
             #region Customers
             var customerUsers = new List<ApplicationUser>
             {
@@ -151,7 +127,6 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 user.PasswordHash = _hasher.HashPassword(user, Guid.NewGuid().ToString());
                 customerRoles.Add(new IdentityUserRole<string>
                 {
-                    RoleId = "3",
                     UserId = user.Id
                 });
                 user.EmailConfirmed = true;
@@ -173,7 +148,6 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
             customerUsers.Add(admin);
 
             modelBuilder.Entity<ApplicationUser>().HasData(customerUsers);
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(customerRoles);
             #endregion
 
             #region Veterinarians
@@ -233,7 +207,6 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 user.PasswordHash = _hasher.HashPassword(user, Guid.NewGuid().ToString());
                 vetRoles.Add(new IdentityUserRole<string>
                 {
-                    RoleId = "2",
                     UserId = user.Id
                 });
                 user.EmailConfirmed = true;
@@ -254,7 +227,6 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
             veterinarianUsers.Add(testVet);
 
             modelBuilder.Entity<ApplicationUser>().HasData(veterinarianUsers);
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(vetRoles);
             #endregion
 
         }
