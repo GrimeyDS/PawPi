@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Pri.Pawpi.Core.Entities;
+using System.Security.Claims;
 
 namespace Pri.Pawpi.Infrastructure.Data.Seeding
 {
@@ -10,6 +11,8 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
         {
             IPasswordHasher<ApplicationUser> _hasher = new PasswordHasher<ApplicationUser>();
 
+
+            #region Admin
             var admin = new ApplicationUser
             {
                 Id = "1",
@@ -24,29 +27,26 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
 
             admin.PasswordHash = _hasher.HashPassword(admin, "Test12345");
 
-            var roles = new IdentityRole<string>[]
+            var adminClaim = new IdentityUserClaim<string>[]
             {
-                new IdentityRole<string>
+                new IdentityUserClaim<string>
                 {
-                    Id = "1",
-                    Name = "Admin",
-                    NormalizedName = "ADMIN",
+                    Id = 1,
+                    UserId = admin.Id,
+                    ClaimType = ClaimTypes.Role,
+                    ClaimValue = "Admin"
                 },
-                new IdentityRole<string>
+                new IdentityUserClaim<string>
                 {
-                    Id = "2",
-                    Name = "Veterinarian",
-                    NormalizedName = "VETERINARIAN",
+                    Id = 2,
+                    UserId = admin.Id,
+                    ClaimType = ClaimTypes.NameIdentifier,
+                    ClaimValue = admin.Id
                 },
-                new IdentityRole<string>
-                {
-                    Id = "3",
-                    Name = "Customer",
-                    NormalizedName = "CUSTOMER",
-                }
             };
 
-            modelBuilder.Entity<IdentityRole>().HasData(roles);
+            modelBuilder.Entity<IdentityUserClaim<string>>().HasData(adminClaim);
+            #endregion
 
             #region Customers
             var customerUsers = new List<ApplicationUser>
@@ -144,15 +144,24 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 }
             };
 
-            var customerRoles = new List<IdentityUserRole<string>>();
+            var customerClaims = new List<IdentityUserClaim<string>>();
 
             foreach(var user in customerUsers)
             {
                 user.PasswordHash = _hasher.HashPassword(user, Guid.NewGuid().ToString());
-                customerRoles.Add(new IdentityUserRole<string>
+                customerClaims.Add(new IdentityUserClaim<string>
                 {
-                    RoleId = "3",
-                    UserId = user.Id
+                    Id = (int)user.CustomerId + 20,
+                    UserId = user.Id,
+                    ClaimType = ClaimTypes.Role,
+                    ClaimValue = "Customer"
+                });
+                customerClaims.Add(new IdentityUserClaim<string>
+                {
+                    Id = (int)user.CustomerId + 41,
+                    UserId = user.Id,
+                    ClaimType = ClaimTypes.NameIdentifier,
+                    ClaimValue = user.Id
                 });
                 user.EmailConfirmed = true;
             }
@@ -168,10 +177,19 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 EmailConfirmed = true
             };
 
-            customerRoles.Add(new IdentityUserRole<string>
+            customerClaims.Add(new IdentityUserClaim<string>
             {
-                RoleId = "3",
-                UserId = testCustomer.Id
+                Id = (int)testCustomer.CustomerId + 20,
+                UserId = testCustomer.Id,
+                ClaimType = ClaimTypes.Role,
+                ClaimValue = "Customer"
+            });
+            customerClaims.Add(new IdentityUserClaim<string>
+            {
+                Id = (int)testCustomer.CustomerId + 41,
+                UserId = testCustomer.Id,
+                ClaimType = ClaimTypes.NameIdentifier,
+                ClaimValue = testCustomer.Id
             });
 
             testCustomer.PasswordHash = _hasher.HashPassword(testCustomer, "Test12345");
@@ -179,7 +197,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
             customerUsers.Add(admin);
 
             modelBuilder.Entity<ApplicationUser>().HasData(customerUsers);
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(customerRoles);
+            modelBuilder.Entity<IdentityUserClaim<string>>().HasData(customerClaims);
             #endregion
 
             #region Veterinarians
@@ -232,15 +250,24 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 }
             };
 
-            var vetRoles = new List<IdentityUserRole<string>>();
+            var vetClaims = new List<IdentityUserClaim<string>>();
 
             foreach (var user in veterinarianUsers)
             {
                 user.PasswordHash = _hasher.HashPassword(user, Guid.NewGuid().ToString());
-                vetRoles.Add(new IdentityUserRole<string>
+                vetClaims.Add(new IdentityUserClaim<string>
                 {
-                    RoleId = "2",
-                    UserId = user.Id
+                    Id = (int)user.VeterinarianId + 60,
+                    UserId = user.Id,
+                    ClaimType = ClaimTypes.Role,
+                    ClaimValue = "Veterinarian"
+                });
+                vetClaims.Add(new IdentityUserClaim<string>
+                {
+                    Id = (int)user.VeterinarianId + 81,
+                    UserId = user.Id,
+                    ClaimType = ClaimTypes.NameIdentifier,
+                    ClaimValue = user.Id
                 });
                 user.EmailConfirmed = true;
             }
@@ -256,19 +283,31 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 EmailConfirmed = true
             };
 
-            vetRoles.Add(new IdentityUserRole<string>
+            vetClaims.Add(new IdentityUserClaim<string>
             {
-                RoleId = "2",
-                UserId = testVet.Id
+                Id = (int)testVet.VeterinarianId + 60,
+                UserId = testVet.Id,
+                ClaimType = ClaimTypes.Role,
+                ClaimValue = "Veterinarian"
+            });
+            vetClaims.Add(new IdentityUserClaim<string>
+            {
+                Id = (int)testVet.VeterinarianId + 81,
+                UserId = testVet.Id,
+                ClaimType = ClaimTypes.NameIdentifier,
+                ClaimValue = testVet.Id
             });
 
             testVet.PasswordHash = _hasher.HashPassword(testVet, "Test12345");
             veterinarianUsers.Add(testVet);
 
             modelBuilder.Entity<ApplicationUser>().HasData(veterinarianUsers);
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(vetRoles);
+            modelBuilder.Entity<IdentityUserClaim<string>>().HasData(vetClaims);
             #endregion
 
+            #region Practices
+
+            #endregion
         }
     }
 }
