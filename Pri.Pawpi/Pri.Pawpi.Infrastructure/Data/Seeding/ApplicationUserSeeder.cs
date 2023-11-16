@@ -40,7 +40,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 {
                     Id = 2,
                     UserId = admin.Id,
-                    ClaimType = ClaimTypes.NameIdentifier,
+                    ClaimType = ClaimTypes.PrimarySid,
                     ClaimValue = admin.Id
                 },
             };
@@ -160,7 +160,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 {
                     Id = (int)user.CustomerId + 150,
                     UserId = user.Id,
-                    ClaimType = ClaimTypes.NameIdentifier,
+                    ClaimType = ClaimTypes.PrimarySid,
                     ClaimValue = user.Id
                 });
                 user.EmailConfirmed = true;
@@ -188,7 +188,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
             {
                 Id = (int)testCustomer.CustomerId + 150,
                 UserId = testCustomer.Id,
-                ClaimType = ClaimTypes.NameIdentifier,
+                ClaimType = ClaimTypes.PrimarySid,
                 ClaimValue = testCustomer.Id
             });
 
@@ -266,7 +266,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 {
                     Id = (int)user.VeterinarianId + 250,
                     UserId = user.Id,
-                    ClaimType = ClaimTypes.NameIdentifier,
+                    ClaimType = ClaimTypes.PrimarySid,
                     ClaimValue = user.Id
                 });
                 user.EmailConfirmed = true;
@@ -294,7 +294,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
             {
                 Id = (int)testVet.VeterinarianId + 250,
                 UserId = testVet.Id,
-                ClaimType = ClaimTypes.NameIdentifier,
+                ClaimType = ClaimTypes.PrimarySid,
                 ClaimValue = testVet.Id
             });
 
@@ -353,7 +353,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 {
                     Id = (int)user.PracticeId + 350,
                     UserId = user.Id,
-                    ClaimType = ClaimTypes.NameIdentifier,
+                    ClaimType = ClaimTypes.PrimarySid,
                     ClaimValue = user.Id
                 });
                 user.EmailConfirmed = true;
@@ -381,7 +381,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
             {
                 Id = (int)testPractice.PracticeId + 350,
                 UserId = testPractice.Id,
-                ClaimType = ClaimTypes.NameIdentifier,
+                ClaimType = ClaimTypes.PrimarySid,
                 ClaimValue = testPractice.Id
             });
 
