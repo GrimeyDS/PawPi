@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pri.Pawpi.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using Pri.Pawpi.Infrastructure.Data;
 namespace Pri.Pawpi.Infrastructure.Migrations
 {
     [DbContext(typeof(PawpiDbContext))]
-    partial class PawpiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231116191013_AddPracticeUserSeeder")]
+    partial class AddPracticeUserSeeder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
