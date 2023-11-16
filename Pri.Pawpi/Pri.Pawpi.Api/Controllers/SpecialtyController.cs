@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
@@ -19,6 +20,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             var specialties = await _specialtyService.GetAllAsync();
@@ -28,6 +30,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(int id)
         {
             var specialty = await _specialtyService.GetByIdAsync(id);
@@ -41,6 +44,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchName/{name}")]
+        [AllowAnonymous]
         public async Task<IActionResult> SearchByName(string name)
         {
             var specialties = await _specialtyService.SearchByNameAsync(name);
@@ -54,6 +58,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Veterinarians")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetVetsFromSpecialty(int id)
         {
             var vets = await _specialtyService.GetVetsFromSpecialtyAsync(id);
@@ -70,6 +75,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Veterinarian")]
         public async Task<IActionResult> Create(SpecialtyCreateDto specialtyCreateDto)
         {
             var specialtyModel = specialtyCreateDto.MapModel();
@@ -83,6 +89,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "Veterinarian")]
         public async Task<IActionResult> Update(SpecialtyUpdateDto specialtyUpdateDto)
         {
             var specialtyUpdateModel = specialtyUpdateDto.MapModel();

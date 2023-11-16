@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Pet.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
@@ -18,6 +19,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> Get()
         {
             var pets = await _petService.GetAllAsync();
@@ -27,6 +29,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> Get(int id)
         {
             var pet = await _petService.GetByIdAsync(id);
@@ -40,6 +43,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchName/{name}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> SearchByName(string name)
         {
             var pets = await _petService.SearchByNameAsync(name);
@@ -53,6 +57,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchAnimalType/{animalType}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> SearchByAnimalType(string animalType)
         {
             var pets = await _petService.SearchByAnimalTypeAsync(animalType);
@@ -66,6 +71,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchBreed/{breed}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> SearchByBreed(string breed)
         {
             var pets = await _petService.SearchByBreedAsync(breed);
@@ -79,6 +85,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Medicine")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> GetMedicineFromPet(int id)
         {
             var medicine = await _petService.GetMedicineFromPetAsync(id);
@@ -95,6 +102,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Consultations")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> GetConsultationsFromPet(int id)
         {
             var consultations = await _petService.GetConsultationsFromPetAsync(id);
@@ -111,6 +119,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> Create([FromForm] PetCreateDto petCreateDto)
         {
             var petModel = petCreateDto.MapModel();
@@ -124,6 +133,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> Update([FromForm] PetUpdateDto petUpdateDto)
         {
             var petModel = petUpdateDto.MapModel();

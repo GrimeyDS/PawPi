@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Medication.Request;
-using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
-using Pri.Pawpi.Core.Services;
-using Pri.Pawpi.Core.Services.Models.Medication;
 
 namespace Pri.Pawpi.Api.Controllers
 {
@@ -21,6 +19,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> Get()
         {
             var medicine = await _medicationService.GetAllAsync();
@@ -30,6 +29,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> Get(int id)
         {
             var medication = await _medicationService.GetByIdAsync(id);
@@ -43,6 +43,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Pets")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> GetPetsFromMedication(int id)
         {
             var pets = await _medicationService.GetPetsByMedicationIdAsync(id);
@@ -59,6 +60,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchName/{name}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> SearchByName(string name)
         {
             var medicine = await _medicationService.SearchByNameAsync(name);
@@ -72,6 +74,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchSideEffect/{sideEffect}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> SearchBySideEffect(string sideEffect)
         {
             var medicine = await _medicationService.SearchBySideEffectAsync(sideEffect);
@@ -85,6 +88,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Veterinarian")]
         public async Task<IActionResult> Create(MedicationCreateDto medicationCreateDto)
         {
             var medicationModel = medicationCreateDto.MapModel();
@@ -98,6 +102,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "Veterinarian")]
         public async Task<IActionResult> Update(MedicationUpdateDto medicationUpdateDto)
         {
             var medicationUpdateModel = medicationUpdateDto.MapModel();
@@ -109,7 +114,5 @@ namespace Pri.Pawpi.Api.Controllers
 
             return Ok("Updated");
         }
-
-
     }
 }
