@@ -25,7 +25,7 @@ namespace Pri.Pawpi.Api.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login(AccountLoginRequestDto accountLoginDto)
         {
             var result = await _signInManager.PasswordSignInAsync(accountLoginDto.Username, accountLoginDto.Password, false, false);
@@ -36,14 +36,6 @@ namespace Pri.Pawpi.Api.Controllers
 
             var user = await _userManager.FindByNameAsync(accountLoginDto.Username);
             var claims = await _userManager.GetClaimsAsync(user);
-            claims.Add(new Claim(ClaimTypes.PrimarySid, user.Id));
-
-            // put roles in claims
-            var roles = await _userManager.GetRolesAsync(user);
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
 
             var securityKey =
                 new SymmetricSecurityKey
@@ -60,6 +52,35 @@ namespace Pri.Pawpi.Api.Controllers
 
             var serializedToken = new JwtSecurityTokenHandler().WriteToken(token);
             return Ok(new AccountLoginResponseDto { Token = serializedToken });
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(AccountRegisterRequestDto accountRegisterDto)
+        {
+            var user = new ApplicationUser
+            {
+                UserName = accountRegisterDto.Username,
+                Email = accountRegisterDto.Username,
+                EmailConfirmed = true
+            };
+
+            var result = await _userManager.CreateAsync(user, accountRegisterDto.Password);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Role, "User"),
+                new Claim(ClaimTypes.PrimarySid, user.Id)
+            };
+
+            result = await _userManager.AddClaimsAsync(user, claims);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok("User created");
         }
     }
 }
