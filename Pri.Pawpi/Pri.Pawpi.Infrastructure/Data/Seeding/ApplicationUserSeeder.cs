@@ -151,14 +151,14 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 user.PasswordHash = _hasher.HashPassword(user, Guid.NewGuid().ToString());
                 customerClaims.Add(new IdentityUserClaim<string>
                 {
-                    Id = (int)user.CustomerId + 20,
+                    Id = (int)user.CustomerId + 100,
                     UserId = user.Id,
                     ClaimType = ClaimTypes.Role,
                     ClaimValue = "Customer"
                 });
                 customerClaims.Add(new IdentityUserClaim<string>
                 {
-                    Id = (int)user.CustomerId + 41,
+                    Id = (int)user.CustomerId + 150,
                     UserId = user.Id,
                     ClaimType = ClaimTypes.NameIdentifier,
                     ClaimValue = user.Id
@@ -179,14 +179,14 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
 
             customerClaims.Add(new IdentityUserClaim<string>
             {
-                Id = (int)testCustomer.CustomerId + 20,
+                Id = (int)testCustomer.CustomerId + 100,
                 UserId = testCustomer.Id,
                 ClaimType = ClaimTypes.Role,
                 ClaimValue = "Customer"
             });
             customerClaims.Add(new IdentityUserClaim<string>
             {
-                Id = (int)testCustomer.CustomerId + 41,
+                Id = (int)testCustomer.CustomerId + 150,
                 UserId = testCustomer.Id,
                 ClaimType = ClaimTypes.NameIdentifier,
                 ClaimValue = testCustomer.Id
@@ -257,14 +257,14 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 user.PasswordHash = _hasher.HashPassword(user, Guid.NewGuid().ToString());
                 vetClaims.Add(new IdentityUserClaim<string>
                 {
-                    Id = (int)user.VeterinarianId + 60,
+                    Id = (int)user.VeterinarianId + 200,
                     UserId = user.Id,
                     ClaimType = ClaimTypes.Role,
                     ClaimValue = "Veterinarian"
                 });
                 vetClaims.Add(new IdentityUserClaim<string>
                 {
-                    Id = (int)user.VeterinarianId + 81,
+                    Id = (int)user.VeterinarianId + 250,
                     UserId = user.Id,
                     ClaimType = ClaimTypes.NameIdentifier,
                     ClaimValue = user.Id
@@ -285,14 +285,14 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
 
             vetClaims.Add(new IdentityUserClaim<string>
             {
-                Id = (int)testVet.VeterinarianId + 60,
+                Id = (int)testVet.VeterinarianId + 200,
                 UserId = testVet.Id,
                 ClaimType = ClaimTypes.Role,
                 ClaimValue = "Veterinarian"
             });
             vetClaims.Add(new IdentityUserClaim<string>
             {
-                Id = (int)testVet.VeterinarianId + 81,
+                Id = (int)testVet.VeterinarianId + 250,
                 UserId = testVet.Id,
                 ClaimType = ClaimTypes.NameIdentifier,
                 ClaimValue = testVet.Id
@@ -306,7 +306,90 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
             #endregion
 
             #region Practices
+            var practiceUsers = new List<ApplicationUser>
+            {
+                new ApplicationUser
+                {
+                    Id = "19",
+                    PracticeId = 1,
+                    UserName = "deberenakker@proximus.be",
+                    NormalizedUserName = "deberenakker@proximus.be".ToUpper(),
+                    Email = "deberenakker@proximus.be",
+                    NormalizedEmail = "deberenakker@proximus.be".ToUpper()
+                },
+                new ApplicationUser
+                {
+                    Id = "20",
+                    PracticeId = 2,
+                    UserName = "Dedierenvriend@proximus.be",
+                    NormalizedUserName = "Dedierenvriend@proximus.be".ToUpper(),
+                    Email = "Dedierenvriend@proximus.be",
+                    NormalizedEmail = "Dedierenvriend@proximus.be".ToUpper()
+                },
+                new ApplicationUser
+                {
+                    Id = "21",
+                    PracticeId = 3,
+                    UserName = "hetplatteland@proximus.be",
+                    NormalizedUserName = "hetplatteland@proximus.be".ToUpper(),
+                    Email = "hetplatteland@proximus.be",
+                    NormalizedEmail = "hetplatteland@proximus.be".ToUpper()
+                }
+            };
 
+            var practiceClaims = new List<IdentityUserClaim<string>>();
+
+            foreach (var user in practiceUsers)
+            {
+                user.PasswordHash = _hasher.HashPassword(user, Guid.NewGuid().ToString());
+                practiceClaims.Add(new IdentityUserClaim<string>
+                {
+                    Id = (int)user.PracticeId + 300,
+                    UserId = user.Id,
+                    ClaimType = ClaimTypes.Role,
+                    ClaimValue = "Practice"
+                });
+                practiceClaims.Add(new IdentityUserClaim<string>
+                {
+                    Id = (int)user.PracticeId + 350,
+                    UserId = user.Id,
+                    ClaimType = ClaimTypes.NameIdentifier,
+                    ClaimValue = user.Id
+                });
+                user.EmailConfirmed = true;
+            }
+
+            var testPractice = new ApplicationUser
+            {
+                Id = "22",
+                PracticeId = 999,
+                UserName = "Practice@test.com",
+                NormalizedUserName = "Practice@test.com".ToUpper(),
+                Email = "Practice@test.com",
+                NormalizedEmail = "Practice@test.com".ToUpper(),
+                EmailConfirmed = true
+            };
+
+            practiceClaims.Add(new IdentityUserClaim<string>
+            {
+                Id = (int)testPractice.PracticeId + 300,
+                UserId = testPractice.Id,
+                ClaimType = ClaimTypes.Role,
+                ClaimValue = "Practice"
+            });
+            practiceClaims.Add(new IdentityUserClaim<string>
+            {
+                Id = (int)testPractice.PracticeId + 350,
+                UserId = testPractice.Id,
+                ClaimType = ClaimTypes.NameIdentifier,
+                ClaimValue = testPractice.Id
+            });
+
+            testPractice.PasswordHash = _hasher.HashPassword(testPractice, "Test12345");
+            practiceUsers.Add(testPractice);
+
+            modelBuilder.Entity<ApplicationUser>().HasData(practiceUsers);
+            modelBuilder.Entity<IdentityUserClaim<string>>().HasData(practiceClaims);
             #endregion
         }
     }
