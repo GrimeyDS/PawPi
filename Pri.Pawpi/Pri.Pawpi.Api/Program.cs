@@ -8,6 +8,7 @@ using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services;
 using Pri.Pawpi.Infrastructure.Data;
 using Pri.Pawpi.Infrastructure.Repositories;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +48,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+    options.AddPolicy("Practice", policy => policy.RequireClaim(ClaimTypes.Role, "Practice"));
+    options.AddPolicy("Veterinarian", policy => policy.RequireClaim(ClaimTypes.Role, "Veterinarian"));
+    options.AddPolicy("Customer", policy => policy.RequireClaim(ClaimTypes.Role, "Customer"));
+});
 
 builder.Services.AddScoped<IConsultationRepository, ConsultationRepository>();
 builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
