@@ -42,16 +42,10 @@ builder.Services.AddAuthentication(options
     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTConfiguration:SigninKey"])),
 });
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+// Add services to the container
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "admin"));
     options.AddPolicy("Practice", policy => policy.RequireAssertion(context =>
     {
         if (context.User.Claims.Count() == 0)
@@ -88,6 +82,16 @@ builder.Services.AddAuthorization(options =>
             return true;
         return false;
     }));
+    options.AddPolicy("AllUsers", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Customer") || role.Value.Equals("Veterinarian") || role.Value.Equals("Practice"))
+            return true;
+        return false;
+    }));
+
 });
 
 builder.Services.AddScoped<IConsultationRepository, ConsultationRepository>();
@@ -107,6 +111,11 @@ builder.Services.AddScoped<IPracticeService, PracticeService>();
 builder.Services.AddScoped<IConsultationService, ConsultationService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -117,7 +126,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
