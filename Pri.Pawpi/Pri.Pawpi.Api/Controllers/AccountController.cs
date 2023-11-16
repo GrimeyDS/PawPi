@@ -38,6 +38,13 @@ namespace Pri.Pawpi.Api.Controllers
             var claims = await _userManager.GetClaimsAsync(user);
             claims.Add(new Claim(ClaimTypes.PrimarySid, user.Id));
 
+            // put roles in claims
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
             var securityKey =
                 new SymmetricSecurityKey
                 (Encoding.UTF8.GetBytes(_configuration.GetValue<string>("JWTConfiguration:SigninKey")));
