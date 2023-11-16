@@ -52,9 +52,42 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
-    options.AddPolicy("Practice", policy => policy.RequireClaim(ClaimTypes.Role, "Practice"));
-    options.AddPolicy("Veterinarian", policy => policy.RequireClaim(ClaimTypes.Role, "Veterinarian"));
-    options.AddPolicy("Customer", policy => policy.RequireClaim(ClaimTypes.Role, "Customer"));
+    options.AddPolicy("Practice", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Practice"))
+            return true;
+        return false;
+    }));
+    options.AddPolicy("Veterinarian", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Veterinarian"))
+            return true;
+        return false;
+    }));
+    options.AddPolicy("Practice/Veterinarian", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Veterinarian") || role.Value.Equals("Practice"))
+            return true;
+        return false;
+    }));
+    options.AddPolicy("Customer", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Customer"))
+            return true;
+        return false;
+    }));
 });
 
 builder.Services.AddScoped<IConsultationRepository, ConsultationRepository>();
