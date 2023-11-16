@@ -71,7 +71,7 @@ namespace Pri.Pawpi.Api.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Role, "User"),
+                new Claim(ClaimTypes.Role, "Customer"),
                 new Claim(ClaimTypes.PrimarySid, user.Id)
             };
 
