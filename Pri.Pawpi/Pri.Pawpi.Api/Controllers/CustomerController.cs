@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
-using Pri.Pawpi.Core.Services;
+using System.Security.Claims;
 
 namespace Pri.Pawpi.Api.Controllers
 {
@@ -19,6 +20,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> Get()
         {
             var customers = await _customerService.GetAllAsync();
@@ -28,8 +30,15 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> Get(int id)
         {
+            var userCustomerClaims = HttpContext.User.Claims;
+            var userValidated = userCustomerClaims.CheckUserIdentity(id);
+
+            if (!userValidated)
+                return Forbid();
+
             var customer = await _customerService.GetByIdAsync(id);
 
             if (!customer.IsSuccess)
@@ -41,6 +50,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchName/{name}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> SearchByName(string name)
         {
             var customers = await _customerService.SearchByNameAsync(name);
@@ -54,6 +64,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchAddress/{address}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> SearchByAddress(string address)
         {
             var customers = await _customerService.SearchByAddressAsync(address);
@@ -67,8 +78,15 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Pets")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> GetPetsByCustomer(int id)
         {
+            var userCustomerClaims = HttpContext.User.Claims;
+            var userValidated = userCustomerClaims.CheckUserIdentity(id);
+
+            if (!userValidated)
+                return Forbid();
+
             var pets = await _customerService.GetPetsFromCustomerAsync(id);
             var customer = await _customerService.GetByIdAsync(id);
 
@@ -83,11 +101,12 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CustomerCreateDto veterinarianCreateDto)
+        [Authorize(Policy = "Practice/Veterinarian")]
+        public async Task<IActionResult> Create(CustomerCreateDto customerCreateDto)
         {
-            var veterinarianModel = veterinarianCreateDto.MapModel();
+            var customerModel = customerCreateDto.MapModel();
 
-            var result = await _customerService.AddAsync(veterinarianModel);
+            var result = await _customerService.AddAsync(customerModel);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Errors);
@@ -96,6 +115,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> Update(CustomerUpdateDto customerUpdateDto)
         {
             var customerModel = customerUpdateDto.MapModel();

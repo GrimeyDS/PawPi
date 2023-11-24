@@ -64,7 +64,19 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                         Address = "Kerkstraat 23",
                         City = "Brugge",
                         Postal = "8000"
-                    });
+                    },
+                    new Veterinarian
+                    {
+                        Id = 999,
+                        FirstName = "Test",
+                        LastName = "Test",
+                        Email = "Veterinarian@test.com",
+                        Phone = "0032459698738",
+                        Address = "Test",
+                        City = "Test",
+                        Postal = "9999",
+                    }
+                    );
         }
     }
 }

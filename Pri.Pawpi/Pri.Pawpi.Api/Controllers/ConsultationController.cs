@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Consultation.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
@@ -18,6 +19,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> Get()
         {
             var consultations = await _consultationService.GetAllAsync();
@@ -27,9 +29,16 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> Get(int id)
         {
             var consultation = await _consultationService.GetByIdAsync(id);
+
+            var userMedClaims = HttpContext.User.Claims;
+            var userValidated = userMedClaims.CheckUserIdentity(consultation.Item);
+
+            if (!userValidated)
+                return Forbid();
 
             if (!consultation.IsSuccess)
                 return BadRequest(consultation.Errors);
@@ -40,6 +49,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchTitle/{title}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> SearchByTitle(string title)
         {
             var consultations = await _consultationService.SearchByTitleAsync(title);
@@ -53,6 +63,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchDiagnose/{diagnose}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> SearchByDiagnose(string diagnose)
         {
             var consultations = await _consultationService.SearchByDiagnoseAsync(diagnose);
@@ -66,6 +77,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Veterinarian")]
         public async Task<IActionResult> Create([FromForm] ConsultationCreateDto consultationCreateDto)
         {
             var consultationModel = consultationCreateDto.MapModel();
@@ -79,6 +91,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "Veterinarian")]
         public async Task<IActionResult> Update([FromForm] ConsultationUpdateDto consultationUpdateDto)
         {
             var consultationModel = consultationUpdateDto.MapModel();

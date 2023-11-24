@@ -1,9 +1,4 @@
 ﻿using Pri.Pawpi.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pri.Pawpi.Core.Entities
 {
@@ -17,5 +12,6 @@ namespace Pri.Pawpi.Core.Entities
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Postal { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

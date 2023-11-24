@@ -153,8 +153,6 @@ namespace Pri.Pawpi.Core.Services
 
             if (!specialties.CheckIdsInput(modelSpecialtyIds))
                 return Constants.NoSpecialtyMessage;
-            if (!consultations.CheckIdsInput(modelConsultationIds))
-                return Constants.NoConsultationMessage;
             if (!practices.CheckIdsInput(modelPracticeIds))
                 return Constants.NoPracticeMessage;
 
