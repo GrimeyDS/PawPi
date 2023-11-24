@@ -104,6 +104,7 @@ namespace Pri.Pawpi.Api.Controllers
             return Ok("Customer registered");
         }
 
+        [Authorize(Policy = "Practice")]
         [HttpPost("RegisterVeterinarian")]
         public async Task<IActionResult> Register([FromForm] VeterinarianRegisterRequestDto accountRegisterDto)
         {
