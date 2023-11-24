@@ -14,7 +14,12 @@ namespace Pri.Pawpi.Api.Extensions
             // check if requested pet is a pet of the logged in customer
             if (userRole.Value == "Customer")
             {
-                if (userId.Value != pet.CustomerId.ToString())
+                if (pet is not null)
+                {
+                    if (userId.Value != pet.CustomerId.ToString())
+                        return false;
+                }
+                else
                     return false;
             }
             return true;
@@ -27,7 +32,12 @@ namespace Pri.Pawpi.Api.Extensions
 
             if (userRole.Value == "Customer")
             {
-                if (userId.Value != cons.Pet.CustomerId.ToString())
+                if (cons is not null)
+                {
+                    if (userId.Value != cons.Pet.CustomerId.ToString())
+                        return false;
+                }
+                else
                     return false;
             }
             return true;
