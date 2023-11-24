@@ -4,6 +4,7 @@ using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
+using System.Security.Claims;
 
 namespace Pri.Pawpi.Api.Controllers
 {
@@ -29,9 +30,20 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Policy = "Practice/Veterinarian")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> Get(int id)
         {
+            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.PrimarySid));
+            var userRole = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+
+            if (userRole.Value == "Customer")
+            {
+                if (userId.Value != id.ToString())
+                {
+                    return Unauthorized();
+                }
+            }
+
             var customer = await _customerService.GetByIdAsync(id);
 
             if (!customer.IsSuccess)
@@ -71,9 +83,18 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Pets")]
-        [Authorize(Policy = "Practice/Veterinarian")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> GetPetsByCustomer(int id)
         {
+            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.PrimarySid));
+            var userRole = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+
+            if (userRole.Value == "Customer")
+            {
+                if (userId.Value != id.ToString())
+                    return Unauthorized();
+            }
+
             var pets = await _customerService.GetPetsFromCustomerAsync(id);
             var customer = await _customerService.GetByIdAsync(id);
 
