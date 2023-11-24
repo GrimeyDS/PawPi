@@ -37,7 +37,7 @@ namespace Pri.Pawpi.Api.Controllers
             var userValidated = userCustomerClaims.CheckUserIdentity(id);
 
             if (!userValidated)
-                return Unauthorized();
+                return Forbid();
 
             var customer = await _customerService.GetByIdAsync(id);
 
@@ -85,7 +85,7 @@ namespace Pri.Pawpi.Api.Controllers
             var userValidated = userCustomerClaims.CheckUserIdentity(id);
 
             if (!userValidated)
-                return Unauthorized();
+                return Forbid();
 
             var pets = await _customerService.GetPetsFromCustomerAsync(id);
             var customer = await _customerService.GetByIdAsync(id);

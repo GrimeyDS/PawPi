@@ -34,14 +34,14 @@ namespace Pri.Pawpi.Api.Controllers
         {
             var consultation = await _consultationService.GetByIdAsync(id);
 
-            if (!consultation.IsSuccess)
-                return BadRequest(consultation.Errors);
-
             var userMedClaims = HttpContext.User.Claims;
             var userValidated = userMedClaims.CheckUserIdentity(consultation.Item);
 
             if (!userValidated)
-                return Unauthorized();
+                return Forbid();
+
+            if (!consultation.IsSuccess)
+                return BadRequest(consultation.Errors);
 
             var consultationResponseDto = consultation.Item.MapDto();
 

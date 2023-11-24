@@ -35,14 +35,14 @@ namespace Pri.Pawpi.Api.Controllers
         {
             var pet = await _petService.GetByIdAsync(id);
 
-            if (!pet.IsSuccess)
-                return BadRequest(pet.Errors);
-
             var userPetClaims = HttpContext.User.Claims;
             var userValidated = userPetClaims.CheckUserIdentity(pet.Item);
 
             if (!userValidated)
-                return Unauthorized();
+                return Forbid();
+
+            if (!pet.IsSuccess)
+                return BadRequest(pet.Errors);
 
             var petResponseDto = pet.Item.MapDto();
 
@@ -97,14 +97,14 @@ namespace Pri.Pawpi.Api.Controllers
         {
             var pet = await _petService.GetByIdAsync(id);
 
-            if (!pet.IsSuccess)
-                return BadRequest(pet.Errors);
-
             var userPetClaims = HttpContext.User.Claims;
             var userValidated = userPetClaims.CheckUserIdentity(pet.Item);
 
             if (!userValidated)
-                return Unauthorized();
+                return Forbid();
+
+            if (!pet.IsSuccess)
+                return BadRequest(pet.Errors);
 
             var medicine = await _petService.GetMedicineFromPetAsync(id);
 
@@ -124,14 +124,14 @@ namespace Pri.Pawpi.Api.Controllers
         {
             var pet = await _petService.GetByIdAsync(id);
 
-            if (!pet.IsSuccess)
-                return BadRequest(pet.Errors);
-
             var userPetClaims = HttpContext.User.Claims;
             var userValidated = userPetClaims.CheckUserIdentity(pet.Item);
 
             if (!userValidated)
-                return Unauthorized();
+                return Forbid();
+
+            if (!pet.IsSuccess)
+                return BadRequest(pet.Errors);
            
             var consultations = await _petService.GetConsultationsFromPetAsync(id);
 
