@@ -29,7 +29,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> Get(int id)
         {
             var pet = await _petService.GetByIdAsync(id);
@@ -85,7 +85,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Medicine")]
-        [Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> GetMedicineFromPet(int id)
         {
             var medicine = await _petService.GetMedicineFromPetAsync(id);
@@ -102,7 +102,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Consultations")]
-        [Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> GetConsultationsFromPet(int id)
         {
             var consultations = await _petService.GetConsultationsFromPetAsync(id);
