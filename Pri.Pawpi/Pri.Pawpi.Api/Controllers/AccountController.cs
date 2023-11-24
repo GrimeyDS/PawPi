@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Api.DTOS.Account.Request;
 using Pri.Pawpi.Api.DTOS.Account.Response;
+using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
+using Pri.Pawpi.Core.Interfaces.Services;
+using Pri.Pawpi.Core.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,13 +21,17 @@ namespace Pri.Pawpi.Api.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICustomerService _customerService;
+        private readonly IVeterinarianService _veterinarianService;
         private readonly IConfiguration _configuration;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IConfiguration configuration, ICustomerService customerService, IVeterinarianService veterinarianService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _configuration = configuration;
+            _customerService = customerService;
+            _veterinarianService = veterinarianService;
         }
 
         [HttpPost("Login")]
@@ -54,20 +63,32 @@ namespace Pri.Pawpi.Api.Controllers
             return Ok(new AccountLoginResponseDto { Token = serializedToken });
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register(AccountRegisterRequestDto accountRegisterDto)
+        [HttpPost("RegisterCustomer")]
+        public async Task<IActionResult> Register(CustomerRegisterRequestDto accountRegisterDto)
         {
             var user = new ApplicationUser
             {
-                UserName = accountRegisterDto.Username,
-                Email = accountRegisterDto.Username,
+                UserName = accountRegisterDto.Email,
+                Email = accountRegisterDto.Email,
                 EmailConfirmed = true
             };
+
+            var customerModel = accountRegisterDto.MapModel();
+
+            var customerResult = await _customerService.AddAsync(customerModel);
+
+            if (!customerResult.IsSuccess)
+                return BadRequest(customerResult.Errors);
+
+            user.CustomerId = customerResult.Item.Id;
 
             var result = await _userManager.CreateAsync(user, accountRegisterDto.Password);
 
             if (!result.Succeeded)
+            {
+                await _customerService.DeleteAsync(customerResult.Item.Id);
                 return BadRequest(result.Errors);
+            }
 
             var claims = new List<Claim>
             {
@@ -80,7 +101,48 @@ namespace Pri.Pawpi.Api.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            return Ok("User created");
+            return Ok("Customer registered");
+        }
+
+        [HttpPost("RegisterVeterinarian")]
+        public async Task<IActionResult> Register([FromForm] VeterinarianRegisterRequestDto accountRegisterDto)
+        {
+            var user = new ApplicationUser
+            {
+                UserName = accountRegisterDto.Email,
+                Email = accountRegisterDto.Email,
+                EmailConfirmed = true
+            };
+
+            var vetModel = accountRegisterDto.MapModel();
+
+            var vetResult = await _veterinarianService.AddAsync(vetModel);
+
+            if (!vetResult.IsSuccess)
+                return BadRequest(vetResult.Errors);
+
+            user.VeterinarianId = vetResult.Item.Id;
+
+            var result = await _userManager.CreateAsync(user, accountRegisterDto.Password);
+
+            if (!result.Succeeded)
+            {
+                await _veterinarianService.DeleteAsync(vetResult.Item.Id);
+                return BadRequest(result.Errors);
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Role, "Veterinarian"),
+                new Claim(ClaimTypes.PrimarySid, user.Id)
+            };
+
+            result = await _userManager.AddClaimsAsync(user, claims);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok("Veterinarian registered");
         }
     }
 }
