@@ -161,7 +161,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                     Id = (int)user.CustomerId + 150,
                     UserId = user.Id,
                     ClaimType = ClaimTypes.PrimarySid,
-                    ClaimValue = user.Id
+                    ClaimValue = user.CustomerId.ToString(),
                 });
                 user.EmailConfirmed = true;
             }
@@ -189,7 +189,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 Id = (int)testCustomer.CustomerId + 150,
                 UserId = testCustomer.Id,
                 ClaimType = ClaimTypes.PrimarySid,
-                ClaimValue = testCustomer.Id
+                ClaimValue = testCustomer.CustomerId.ToString()
             });
 
             testCustomer.PasswordHash = _hasher.HashPassword(testCustomer, "Test12345");
@@ -267,7 +267,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                     Id = (int)user.VeterinarianId + 250,
                     UserId = user.Id,
                     ClaimType = ClaimTypes.PrimarySid,
-                    ClaimValue = user.Id
+                    ClaimValue = user.VeterinarianId.ToString()
                 });
                 user.EmailConfirmed = true;
             }
@@ -295,7 +295,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 Id = (int)testVet.VeterinarianId + 250,
                 UserId = testVet.Id,
                 ClaimType = ClaimTypes.PrimarySid,
-                ClaimValue = testVet.Id
+                ClaimValue = testVet.VeterinarianId.ToString()
             });
 
             testVet.PasswordHash = _hasher.HashPassword(testVet, "Test12345");
@@ -354,7 +354,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                     Id = (int)user.PracticeId + 350,
                     UserId = user.Id,
                     ClaimType = ClaimTypes.PrimarySid,
-                    ClaimValue = user.Id
+                    ClaimValue = user.PracticeId.ToString(),
                 });
                 user.EmailConfirmed = true;
             }
@@ -382,7 +382,7 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 Id = (int)testPractice.PracticeId + 350,
                 UserId = testPractice.Id,
                 ClaimType = ClaimTypes.PrimarySid,
-                ClaimValue = testPractice.Id
+                ClaimValue = testPractice.PracticeId.ToString()
             });
 
             testPractice.PasswordHash = _hasher.HashPassword(testPractice, "Test12345");
