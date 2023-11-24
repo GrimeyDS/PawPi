@@ -89,11 +89,11 @@ namespace Pri.Pawpi.Api.Controllers
 
         [HttpPost]
         [Authorize(Policy = "Practice/Veterinarian")]
-        public async Task<IActionResult> Create(CustomerCreateDto veterinarianCreateDto)
+        public async Task<IActionResult> Create(CustomerCreateDto customerCreateDto)
         {
-            var veterinarianModel = veterinarianCreateDto.MapModel();
+            var customerModel = customerCreateDto.MapModel();
 
-            var result = await _customerService.AddAsync(veterinarianModel);
+            var result = await _customerService.AddAsync(customerModel);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Errors);
