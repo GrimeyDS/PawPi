@@ -4,6 +4,7 @@ using Pri.Pawpi.Api.Dtos.Pet.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
+using System.Security.Claims;
 
 namespace Pri.Pawpi.Api.Controllers
 {
@@ -29,13 +30,19 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Policy = "Practice/Veterinarian")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> Get(int id)
         {
             var pet = await _petService.GetByIdAsync(id);
 
             if (!pet.IsSuccess)
                 return BadRequest(pet.Errors);
+
+            var userPetClaims = HttpContext.User.Claims;
+            var userValidated = userPetClaims.CheckUserIdentity(pet.Item);
+
+            if (!userValidated)
+                return Unauthorized();
 
             var petResponseDto = pet.Item.MapDto();
 
@@ -85,11 +92,21 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Medicine")]
-        [Authorize(Policy = "Practice/Veterinarian")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> GetMedicineFromPet(int id)
         {
-            var medicine = await _petService.GetMedicineFromPetAsync(id);
             var pet = await _petService.GetByIdAsync(id);
+
+            if (!pet.IsSuccess)
+                return BadRequest(pet.Errors);
+
+            var userPetClaims = HttpContext.User.Claims;
+            var userValidated = userPetClaims.CheckUserIdentity(pet.Item);
+
+            if (!userValidated)
+                return Unauthorized();
+
+            var medicine = await _petService.GetMedicineFromPetAsync(id);
 
             if (!medicine.IsSuccess)
                 return BadRequest(medicine.Errors);
@@ -102,11 +119,21 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Consultations")]
-        [Authorize(Policy = "Practice/Veterinarian")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> GetConsultationsFromPet(int id)
         {
-            var consultations = await _petService.GetConsultationsFromPetAsync(id);
             var pet = await _petService.GetByIdAsync(id);
+
+            if (!pet.IsSuccess)
+                return BadRequest(pet.Errors);
+
+            var userPetClaims = HttpContext.User.Claims;
+            var userValidated = userPetClaims.CheckUserIdentity(pet.Item);
+
+            if (!userValidated)
+                return Unauthorized();
+           
+            var consultations = await _petService.GetConsultationsFromPetAsync(id);
 
             if (!consultations.IsSuccess)
                 return BadRequest(consultations.Errors);

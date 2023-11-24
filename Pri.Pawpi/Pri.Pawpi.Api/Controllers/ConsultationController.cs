@@ -29,13 +29,19 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Policy = "Practice/Veterinarian")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> Get(int id)
         {
             var consultation = await _consultationService.GetByIdAsync(id);
 
             if (!consultation.IsSuccess)
                 return BadRequest(consultation.Errors);
+
+            var userMedClaims = HttpContext.User.Claims;
+            var userValidated = userMedClaims.CheckUserIdentity(consultation.Item);
+
+            if (!userValidated)
+                return Unauthorized();
 
             var consultationResponseDto = consultation.Item.MapDto();
 

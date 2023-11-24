@@ -33,16 +33,11 @@ namespace Pri.Pawpi.Api.Controllers
         [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> Get(int id)
         {
-            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.PrimarySid));
-            var userRole = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+            var userCustomerClaims = HttpContext.User.Claims;
+            var userValidated = userCustomerClaims.CheckUserIdentity(id);
 
-            if (userRole.Value == "Customer")
-            {
-                if (userId.Value != id.ToString())
-                {
-                    return Unauthorized();
-                }
-            }
+            if (!userValidated)
+                return Unauthorized();
 
             var customer = await _customerService.GetByIdAsync(id);
 
@@ -86,14 +81,11 @@ namespace Pri.Pawpi.Api.Controllers
         [Authorize(Policy = "AllUsers")]
         public async Task<IActionResult> GetPetsByCustomer(int id)
         {
-            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.PrimarySid));
-            var userRole = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+            var userCustomerClaims = HttpContext.User.Claims;
+            var userValidated = userCustomerClaims.CheckUserIdentity(id);
 
-            if (userRole.Value == "Customer")
-            {
-                if (userId.Value != id.ToString())
-                    return Unauthorized();
-            }
+            if (!userValidated)
+                return Unauthorized();
 
             var pets = await _customerService.GetPetsFromCustomerAsync(id);
             var customer = await _customerService.GetByIdAsync(id);
