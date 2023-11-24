@@ -4,6 +4,8 @@ using Pri.Pawpi.Api.Dtos.Pet.Request;
 using Pri.Pawpi.Api.Dtos.Practice.Request;
 using Pri.Pawpi.Api.Dtos.Specialty.Request;
 using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
+using Pri.Pawpi.Api.DTOS.Account;
+using Pri.Pawpi.Api.DTOS.Account.Request;
 using Pri.Pawpi.Core.Services.Models.Consultations;
 using Pri.Pawpi.Core.Services.Models.Customer;
 using Pri.Pawpi.Core.Services.Models.Medication;

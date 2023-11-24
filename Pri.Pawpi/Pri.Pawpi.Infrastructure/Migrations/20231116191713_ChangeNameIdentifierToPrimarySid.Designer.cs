@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pri.Pawpi.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using Pri.Pawpi.Infrastructure.Data;
 namespace Pri.Pawpi.Infrastructure.Migrations
 {
     [DbContext(typeof(PawpiDbContext))]
-    partial class PawpiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231116191713_ChangeNameIdentifierToPrimarySid")]
+    partial class ChangeNameIdentifierToPrimarySid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,7 +228,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 151,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "1",
+                            ClaimValue = "2",
                             UserId = "2"
                         },
                         new
@@ -240,7 +242,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 152,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "2",
+                            ClaimValue = "3",
                             UserId = "3"
                         },
                         new
@@ -254,7 +256,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 153,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "3",
+                            ClaimValue = "4",
                             UserId = "4"
                         },
                         new
@@ -268,7 +270,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 154,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "4",
+                            ClaimValue = "5",
                             UserId = "5"
                         },
                         new
@@ -282,7 +284,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 155,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "5",
+                            ClaimValue = "6",
                             UserId = "6"
                         },
                         new
@@ -296,7 +298,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 156,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "6",
+                            ClaimValue = "7",
                             UserId = "7"
                         },
                         new
@@ -310,7 +312,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 157,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "7",
+                            ClaimValue = "8",
                             UserId = "8"
                         },
                         new
@@ -324,7 +326,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 158,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "8",
+                            ClaimValue = "9",
                             UserId = "9"
                         },
                         new
@@ -338,7 +340,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 159,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "9",
+                            ClaimValue = "10",
                             UserId = "10"
                         },
                         new
@@ -352,7 +354,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 160,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "10",
+                            ClaimValue = "11",
                             UserId = "11"
                         },
                         new
@@ -366,7 +368,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 1149,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "999",
+                            ClaimValue = "12",
                             UserId = "12"
                         },
                         new
@@ -380,7 +382,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 251,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "1",
+                            ClaimValue = "13",
                             UserId = "13"
                         },
                         new
@@ -394,7 +396,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 252,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "2",
+                            ClaimValue = "14",
                             UserId = "14"
                         },
                         new
@@ -408,7 +410,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 253,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "3",
+                            ClaimValue = "15",
                             UserId = "15"
                         },
                         new
@@ -422,7 +424,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 254,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "4",
+                            ClaimValue = "16",
                             UserId = "16"
                         },
                         new
@@ -436,7 +438,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 255,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "5",
+                            ClaimValue = "17",
                             UserId = "17"
                         },
                         new
@@ -450,7 +452,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 1249,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "999",
+                            ClaimValue = "18",
                             UserId = "18"
                         },
                         new
@@ -464,7 +466,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 351,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "1",
+                            ClaimValue = "19",
                             UserId = "19"
                         },
                         new
@@ -478,7 +480,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 352,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "2",
+                            ClaimValue = "20",
                             UserId = "20"
                         },
                         new
@@ -492,7 +494,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 353,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "3",
+                            ClaimValue = "21",
                             UserId = "21"
                         },
                         new
@@ -506,7 +508,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = 1349,
                             ClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid",
-                            ClaimValue = "999",
+                            ClaimValue = "22",
                             UserId = "22"
                         });
                 });
@@ -709,16 +711,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6aa766b2-8574-401e-b9e7-4fece795e983",
+                            ConcurrencyStamp = "721cc70d-ddc4-4735-900e-5d04a7de329b",
                             CustomerId = 1,
                             Email = "svends@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SVENDS@GMAIL.COM",
                             NormalizedUserName = "SVENDS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKryjAxCjejbdn76HH4wxYig+YxoFdKZ8QAfn65JvOG3EcZRUXtRdvJfladZtxjidQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEQ0sRFMaBjReLWm27w+KDJGPZZvnkaGv1kzcHytKnFVNHjZgG2tK931Us+LB3PyBQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a5f7ec7f-6d1d-42eb-a465-f5708edfe6f0",
+                            SecurityStamp = "5ed0e923-1088-469a-a644-a1fd4584a4c2",
                             TwoFactorEnabled = false,
                             UserName = "svends@gmail.com"
                         },
@@ -726,16 +728,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1bee7abc-b356-405d-bae1-62d9c9d466e7",
+                            ConcurrencyStamp = "02f39325-6e6d-4651-8188-e10bdba458ad",
                             CustomerId = 2,
                             Email = "vb@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "VB@GMAIL.COM",
                             NormalizedUserName = "VB@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEN7uPH2sbm+Ve/GyxHWpHST0feHt7TWu6XwltLrAS4+fUHr/fjFzfxfi4E64gpkmvg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGyufzQRgldKY1rjjwpPbY1uH9jSP57Zt9tQeRMPxhqwqnWlDW2NCVWSK/Jjn89JMA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1495008f-e7c1-4c0a-b697-67794c7ee199",
+                            SecurityStamp = "95aef76d-ee99-4d14-aab5-184f3a2f7953",
                             TwoFactorEnabled = false,
                             UserName = "vb@gmail.com"
                         },
@@ -743,16 +745,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6a6622f1-0e2f-440b-bbe9-e6140a28a296",
+                            ConcurrencyStamp = "3ab157ae-3586-49fe-96b0-79e5e7b40e36",
                             CustomerId = 3,
                             Email = "kdv@outlook.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KDV@OUTLOOK.COM",
                             NormalizedUserName = "KDV@OUTLOOK.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOWa1WMa1Vnz0rtKzGeNqKiXxlJ3PeS7A8Tz54hhMKG9QaALAETrPLaK6CQNHsKqhQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAkZyjmJC6NKYn1K5Yj6JDY9xYK26+QmEjgo/yHnfn2LmAlPSQnSiWsQlfuycnKBoA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0e106da4-efff-440e-a2b7-83279546510e",
+                            SecurityStamp = "9cace100-d1ee-492b-9cf7-c1bcb661fe5c",
                             TwoFactorEnabled = false,
                             UserName = "kdv@outlook.com"
                         },
@@ -760,16 +762,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b39364ee-ca72-4ee0-9134-3c4973f731ad",
+                            ConcurrencyStamp = "16823e15-b6ce-45ee-ae2b-28d694944cef",
                             CustomerId = 4,
                             Email = "makkermaat@telenet.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MAKKERMAAT@TELENET.BE",
                             NormalizedUserName = "MAKKERMAAT@TELENET.BE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC8HximwvhODj5y+LZV98FwPxD7q2i1sde6T6II6qJiyZoQb/RL7umkV5KSITf/pFA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHM2EOkuz/J5ZL0Y3sB52zx4h/XJDr5LqyoPACisDKys8VLBzm/QgaEz3Omg86dcRA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5a856b73-d302-4409-b0cf-141917cb7ee3",
+                            SecurityStamp = "d13f3c16-286e-4faa-90e2-d0ad59ed064b",
                             TwoFactorEnabled = false,
                             UserName = "makkermaat@telenet.be"
                         },
@@ -777,16 +779,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eb9a29d4-2445-46af-af7e-da23ad6423fe",
+                            ConcurrencyStamp = "919360c4-9967-4ca6-8709-11e83b2692f9",
                             CustomerId = 5,
                             Email = "sarahdv@proximus.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SARAHDV@PROXIMUS.BE",
                             NormalizedUserName = "SARAHDV@PROXIMUS.BE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHlie77yAS9g/eTs6j/b97/GkvQ5Ps79mrebu1/NYolSCUtc2sht+w0FjqicS2g0qw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJWCtDXldvaKXcveEaG5DQ4di4Rene6OPYb/uzF6fZCTXBHJHxfrSzU19V1mePDYzA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0f38f40d-2488-4744-bb77-671720507953",
+                            SecurityStamp = "807e33f4-2b90-4179-9fff-700e334ee9ab",
                             TwoFactorEnabled = false,
                             UserName = "sarahdv@proximus.be"
                         },
@@ -794,16 +796,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d4b3e89d-9266-4f0a-a762-cdf3f5d94887",
+                            ConcurrencyStamp = "bd400646-864c-4dd8-b70b-bb4c7ccd8d22",
                             CustomerId = 6,
                             Email = "jdv@yahoo.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "JDV@YAHOO.COM",
                             NormalizedUserName = "JDV@YAHOO.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDN+rs5g8u95ar74iyousiHckfe6IFhQjQYxxjmAnD1KTO921bOs7WycHZ54JTRtAw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFeNLHJDygzNeUgx66Es57zQeZP1dqrQLXOS7UKP/dALmB+qDEZnIGklASD/WMp/tA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3e7acefc-f1a7-4da6-bc93-7a25ac3fe6c5",
+                            SecurityStamp = "dc2a89d3-c9ac-4d58-96cf-88bef80de1e4",
                             TwoFactorEnabled = false,
                             UserName = "jdv@yahoo.com"
                         },
@@ -811,16 +813,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1abd73f8-b372-40ff-a737-3012786f4744",
+                            ConcurrencyStamp = "0b77cad3-1770-4f8a-844e-1c562135351b",
                             CustomerId = 7,
                             Email = "mieketjeeeeh@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MIEKETJEEEEH@GMAIL.COM",
                             NormalizedUserName = "MIEKETJEEEEH@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAwaaVx1CAacopV0qJFR1VYPgsZEMdZ9RUKTzQP3bsrzc/PXkmxoJAwGN6vaJ2uKQQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEM8s8QexhYYqwzyOKKGZIRcwAMxH00pvYnguhTYDsNVM1+NNXsC4zeJMCOEjCerc8g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f19bcd57-15f4-4830-a2b3-a3ba2d8dee38",
+                            SecurityStamp = "94ae8bf2-c090-48b2-bb83-88ba519c77f5",
                             TwoFactorEnabled = false,
                             UserName = "mieketjeeeeh@gmail.com"
                         },
@@ -828,16 +830,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "aa035f1b-697c-4de9-8377-0a72095066c3",
+                            ConcurrencyStamp = "6302d8f8-b7ca-4484-84ff-ebab93408e5b",
                             CustomerId = 8,
                             Email = "jeffkeeuh@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "JEFFKEEUH@GMAIL.COM",
                             NormalizedUserName = "JEFFKEEUH@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELky6rJIbHOWbMo/5rgP5QvY5ZPOGbgjbc+iY98VSu6ipRxlB7vDs1nUHvIovprPYQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKKaF3p4vT5SVekqIWBufLdDMwg+thulGy3D5yUZgj2KtKYnjfDTSwjHb03V7U9juQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c79eddc0-07d2-44c3-81c4-be9e1de4f509",
+                            SecurityStamp = "996e8f9a-cf8f-485c-9238-424ee8e3d43f",
                             TwoFactorEnabled = false,
                             UserName = "jeffkeeuh@gmail.com"
                         },
@@ -845,16 +847,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "10",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8fdc9b40-98f6-4418-bb38-a97ee98df9fc",
+                            ConcurrencyStamp = "136dc170-c1c6-4129-a990-cb2ed55135fb",
                             CustomerId = 9,
                             Email = "hansdissen@telenet.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "HANSDISSEN@TELENET.BE",
                             NormalizedUserName = "HANSDISSEN@TELENET.BE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGep4xRNAGxG+dfrnSmTwBkR4MHmdbN8QLh5LqmHUDCCn1bdYwidCWbPD9GzQDcPvw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEERaNggtEEl3OFa62Atv/2p9vGHSdG4WuneOx7B19o8hBV0Fn222PJsIYNWiaAunbQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a4ed8e88-4023-4ca0-994b-597caad2e4b9",
+                            SecurityStamp = "95cddb27-c7cc-4a7f-9292-b6a758890ff9",
                             TwoFactorEnabled = false,
                             UserName = "hansdissen@telenet.be"
                         },
@@ -862,16 +864,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "96853174-b68f-44ca-9e30-875e1ad9d22a",
+                            ConcurrencyStamp = "c0e0fe2e-9636-440c-b365-5dd90666f678",
                             CustomerId = 10,
                             Email = "chaydz@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHAYDZ@GMAIL.COM",
                             NormalizedUserName = "CHAYDZ@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHbMvj9K8k/ygdPu4BG5K8oyTWofhuJq9e3sR9k2aYD72H0uoaxDPGxPcTJOJw7q7w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOo6ydeDsrRI3w0AFF0yDASCSyUYy6uH6oBMLwFM06YvuA8Zdzs2cDnlDGcLRekQOg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b0673c91-b5cd-46a0-b7b7-d57ba88f79a0",
+                            SecurityStamp = "337a2c93-da3e-4c34-a0d0-b75d3a0dd79c",
                             TwoFactorEnabled = false,
                             UserName = "chaydz@gmail.com"
                         },
@@ -879,16 +881,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "12",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cd76c088-8f91-4e4f-a06f-edc7bca5e905",
+                            ConcurrencyStamp = "b47c9407-f968-4914-a094-36422682d0d3",
                             CustomerId = 999,
                             Email = "Customer@test.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "CUSTOMER@TEST.COM",
                             NormalizedUserName = "CUSTOMER@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKRpCfaPyDvwCd8zrtyq8rjGwTBgp2bJ+IAlGYsvGUwCkKVL89LzijlNt/uPJx5z7A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBRmAcGfBDLL+i/wBWUrujvVNa4ElNcsTiM9fIxj+7S2YvuuU3odgYqXOgH5tVg4pA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b55c7cf7-3618-4fc2-a97b-eb79926a25c5",
+                            SecurityStamp = "867d0811-0fe9-4cf6-8b76-e963a4341c05",
                             TwoFactorEnabled = false,
                             UserName = "Customer@test.com"
                         },
@@ -902,7 +904,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@PAWPI.COM",
                             NormalizedUserName = "ADMIN@PAWPI.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOJH5J4a4h1g6hgVqukMxU6NYdrAEPajxWpACpfKqeoyOUANuGtOmWh7ixGVGs4JEQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHy93hIcrHPWEQL229/wzzwQIefDsL7KuIaZxqXnUce03tcXy3sV+QvUl96CZ1yW6A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -912,15 +914,15 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "13",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5394e852-acf3-45fd-bc45-ac5c9d118d99",
+                            ConcurrencyStamp = "3f83d6ae-56f5-4daa-9707-0fd61107fd38",
                             Email = "vl@deberenakker.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "VL@DEBERENAKKER.BE",
                             NormalizedUserName = "VL@DEBERENAKKER.BE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEI54hSleJ49naf/IZI3GeeXd9Urv7ckvfp/YkQNNvlTiXzDR85ETICNzQFV6Qyuj1g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHxNSz6TSAhEPzmi7QGkx5PxE+i5x6RvL9f8C+tyxBqogTFzIy7cnY1nXN4V3AfN1A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "463b733a-9cba-4d7f-a032-e27197b3b68b",
+                            SecurityStamp = "cc63e17a-0f1f-4282-aa8e-87f39517952e",
                             TwoFactorEnabled = false,
                             UserName = "vl@deberenakker.be",
                             VeterinarianId = 1
@@ -929,15 +931,15 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "14",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0548b808-407c-4581-ac54-0557a6e70ea9",
+                            ConcurrencyStamp = "02e5ef2a-9a67-4cc9-9e3b-c0ef31899f7b",
                             Email = "wb@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "WB@GMAIL.COM",
                             NormalizedUserName = "WB@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC4llJKjoE9aljnimQ6KBZYFqhwXxvknXIvJTniFUPROdXOMNisnKaHTTm0y09+wDw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIaIUjmUu3n19kSDAk5CEEz1Y6d0TmX8omUAKHskdyU19q7cDacN0DtWlAsq/uZroQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c46244d6-79bc-46b1-b96b-9690c5e7900a",
+                            SecurityStamp = "84a3e232-0857-4e87-8c6f-177db5431e0e",
                             TwoFactorEnabled = false,
                             UserName = "wb@gmail.com",
                             VeterinarianId = 2
@@ -946,15 +948,15 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "15",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8a30fa09-1fca-4da7-885e-441195582198",
+                            ConcurrencyStamp = "4cb3094e-e06c-4348-b553-1adc630d6d0d",
                             Email = "kdv@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KDV@GMAIL.COM",
                             NormalizedUserName = "KDV@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOlqM5Iaaf8WOGSX08SMdDcUWb1rCl+ioSTESH7gOkS/1PawqJn6qDAxtnrayUJfXg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAED+Lt4T2aVeHktiog2WU6EhtoavgwsYA8HEywR7A/3M2FWMQSL5O3JB8mvrstEdySA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "865b4990-bc37-4205-b4b3-cd214f346bfd",
+                            SecurityStamp = "0473462b-7021-44a0-a82f-020fddbd0985",
                             TwoFactorEnabled = false,
                             UserName = "kdv@gmail.com",
                             VeterinarianId = 3
@@ -963,15 +965,15 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "16",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "77104478-2af7-4d0f-bda2-88374baf454a",
+                            ConcurrencyStamp = "b07a7a43-8835-44c3-b18c-47bd7f8d04d0",
                             Email = "SanneDZ@telenet.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SANNEDZ@TELENET.BE",
                             NormalizedUserName = "SANNEDZ@TELENET.BE",
-                            PasswordHash = "AQAAAAEAACcQAAAAENiclXQZeUx9HsnbpvOOPoowhMiSKTor3YE85bsGtz0W+dkmYu3HD2eAtMRzG41LMA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHsc5hqlhuWfjtujwwA+DnsWt1yrzbZp3qTvfYWhUyvykDj2ufh/K/Il2ZkIGOqyZA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "94967988-e5a5-4ea8-a07a-668315173103",
+                            SecurityStamp = "461dce19-a30f-4f8b-ae95-68608570e421",
                             TwoFactorEnabled = false,
                             UserName = "SanneDZ@telenet.be",
                             VeterinarianId = 4
@@ -980,15 +982,15 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "17",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "40e2e95b-3e89-4997-9860-be415e96217c",
+                            ConcurrencyStamp = "9c568623-eab7-4eec-808c-9a825cee72e5",
                             Email = "Lottevanputte@proximus.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "LOTTEVANPUTTE@PROXIMUS.BE",
                             NormalizedUserName = "LOTTEVANPUTTE@PROXIMUS.BE",
-                            PasswordHash = "AQAAAAEAACcQAAAAECVLoMLJxHf3icdum9aR/CqeYjn+GorHuph5nOcOh9iHEvmwN30VC3J9ZeKfs6/2sg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOATQkjhXANT/WYXWgK91J6P7tHEnCL3Vanj6KPsWppU/wUDZWv7vScG2tkEVzADoQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ad9e2fa2-0f66-4b95-bc84-df8056aeb873",
+                            SecurityStamp = "33c4bab4-8896-4809-a218-013989cf37be",
                             TwoFactorEnabled = false,
                             UserName = "Lottevanputte@proximus.be",
                             VeterinarianId = 5
@@ -997,15 +999,15 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "18",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d8b00c1b-176a-446a-ba23-4f822cdf8936",
+                            ConcurrencyStamp = "faa20a4c-86ea-45a9-9d5f-f2604ca54593",
                             Email = "Veterinarian@test.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "VETERINARIAN@TEST.COM",
                             NormalizedUserName = "VETERINARIAN@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOayKAUV6HHB10dStK+u5ogoxi/uknmVvXffn8+BX6bk7JJOxN5THh+FLgXQ6cxzDg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOHfmnjqq36ZnMXNGm8suIYbcIa792Vn5boCyjQpPO5xri2bvKKqEujQBoKGmKkrJA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cc44bb4a-5a05-442b-8b3c-baab0accdd90",
+                            SecurityStamp = "43cdfa1d-3e51-4754-8e0a-84fa8cde6c61",
                             TwoFactorEnabled = false,
                             UserName = "Veterinarian@test.com",
                             VeterinarianId = 999
@@ -1014,16 +1016,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "19",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "72a705e0-63e4-4259-985d-d0dd6aed8676",
+                            ConcurrencyStamp = "3a7eb633-7bd2-4804-a53d-40f4ae24933f",
                             Email = "deberenakker@proximus.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DEBERENAKKER@PROXIMUS.BE",
                             NormalizedUserName = "DEBERENAKKER@PROXIMUS.BE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFEZcPKvP68+qs8qxCoAIssGoPlYykgjgVvJ9SD5u2x1kxnZZYP6GHbBiSIpA/mjlA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEjTRWmsBPusk12rXE4ObNtAU6M/dUXt+RcmaEVwHZk2lPqR8Q9QlqGR1bpy2P1SUw==",
                             PhoneNumberConfirmed = false,
                             PracticeId = 1,
-                            SecurityStamp = "6402de93-05f2-4f05-b491-e3b521452d7d",
+                            SecurityStamp = "c074070b-5681-4553-947a-f067023d4a95",
                             TwoFactorEnabled = false,
                             UserName = "deberenakker@proximus.be"
                         },
@@ -1031,16 +1033,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "20",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e9cb827c-ae85-4e0a-b3f4-ee1e71fef0d1",
+                            ConcurrencyStamp = "d599cef8-96c3-4ca7-83fb-c9f697eb6b47",
                             Email = "Dedierenvriend@proximus.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DEDIERENVRIEND@PROXIMUS.BE",
                             NormalizedUserName = "DEDIERENVRIEND@PROXIMUS.BE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOuX2a4ozDA+vsxftDVV0lbBokBoNRJCi5MuT6C8wVsCAnXPykgB9sm6wrwH8nsmAw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGlWiyFFu1gy2CaAtoOd1Y6i1IaAZL/R4WtAE8DEhB6joV/knO0aDTjI+o5wDIshhw==",
                             PhoneNumberConfirmed = false,
                             PracticeId = 2,
-                            SecurityStamp = "098f905d-d712-405a-8a71-5c9a79ff54f5",
+                            SecurityStamp = "094bea9d-3852-475c-9f31-80bde49f9784",
                             TwoFactorEnabled = false,
                             UserName = "Dedierenvriend@proximus.be"
                         },
@@ -1048,16 +1050,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "21",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "adda23af-a378-46ed-a5d4-47fa322a883b",
+                            ConcurrencyStamp = "ee8c4c45-3a8b-41ff-8cc6-0c9934274e05",
                             Email = "hetplatteland@proximus.be",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "HETPLATTELAND@PROXIMUS.BE",
                             NormalizedUserName = "HETPLATTELAND@PROXIMUS.BE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOmYjQqIBKzBv0/lL2BC0amvs8NdTqB2KCVDq7JGqgt995yXCW1oKN4RN0rnMGyJtA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENrA0inyzzaO+lY38w/fIK+d1FY8/yWXIqrANbgedCbueUhCF5uLtHwHtVPNrJO4fw==",
                             PhoneNumberConfirmed = false,
                             PracticeId = 3,
-                            SecurityStamp = "27d2ee19-febd-4e20-a688-a0ebbceeb691",
+                            SecurityStamp = "36014694-84b3-4bff-99de-2d6d818584e6",
                             TwoFactorEnabled = false,
                             UserName = "hetplatteland@proximus.be"
                         },
@@ -1065,16 +1067,16 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         {
                             Id = "22",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bd03dbca-cd60-4556-b3f3-5c7bc3fe0c37",
+                            ConcurrencyStamp = "d23c577b-2a60-424e-ac77-0decd04531dd",
                             Email = "Practice@test.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "PRACTICE@TEST.COM",
                             NormalizedUserName = "PRACTICE@TEST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENQiASOrk5gdyPlchFChDaW1CrawkjWLd2aGVBoQYNqHX0Dan2u/lfbgvvnWS4QhDQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECBcIzPsBl7QvvTpd9Ah0I99QQovRX3nJAgSit8naTPNg38PDbyMpzeeCeldmkIKtA==",
                             PhoneNumberConfirmed = false,
                             PracticeId = 999,
-                            SecurityStamp = "c1328f16-c1d1-46fd-9a32-2c65b500bcf7",
+                            SecurityStamp = "30d0a5e3-7732-4fcd-ab3e-7f29e2ca49af",
                             TwoFactorEnabled = false,
                             UserName = "Practice@test.com"
                         });
@@ -1133,7 +1135,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            DateOfConsultation = new DateTime(2023, 11, 24, 19, 42, 58, 201, DateTimeKind.Local).AddTicks(7181),
+                            DateOfConsultation = new DateTime(2023, 11, 16, 20, 17, 12, 775, DateTimeKind.Local).AddTicks(776),
                             Diagnosis = "Controle",
                             Notes = "Staat wat mager",
                             PetId = 1,
@@ -1144,7 +1146,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            DateOfConsultation = new DateTime(2023, 11, 24, 19, 42, 58, 201, DateTimeKind.Local).AddTicks(7231),
+                            DateOfConsultation = new DateTime(2023, 11, 16, 20, 17, 12, 775, DateTimeKind.Local).AddTicks(818),
                             Diagnosis = "Hond in kwestie heeft gras gegeten en moet overgeven",
                             Notes = "",
                             PetId = 1,
@@ -1155,7 +1157,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            DateOfConsultation = new DateTime(2023, 11, 24, 19, 42, 58, 201, DateTimeKind.Local).AddTicks(7234),
+                            DateOfConsultation = new DateTime(2023, 11, 16, 20, 17, 12, 775, DateTimeKind.Local).AddTicks(822),
                             Diagnosis = "Vaccinatie",
                             Notes = "",
                             PetId = 2,
@@ -1166,7 +1168,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            DateOfConsultation = new DateTime(2023, 11, 24, 19, 42, 58, 201, DateTimeKind.Local).AddTicks(7236),
+                            DateOfConsultation = new DateTime(2023, 11, 16, 20, 17, 12, 775, DateTimeKind.Local).AddTicks(825),
                             Diagnosis = "Tanden zijn slecht onderhouden",
                             Notes = "",
                             PetId = 3,
@@ -1177,7 +1179,7 @@ namespace Pri.Pawpi.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            DateOfConsultation = new DateTime(2023, 11, 24, 19, 42, 58, 201, DateTimeKind.Local).AddTicks(7238),
+                            DateOfConsultation = new DateTime(2023, 11, 16, 20, 17, 12, 775, DateTimeKind.Local).AddTicks(829),
                             Diagnosis = "Vaccinatie",
                             Notes = "",
                             PetId = 2,

@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Api.Dtos.Practice.Request;
-using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
-using Pri.Pawpi.Core.Services;
 
 namespace Pri.Pawpi.Api.Controllers
 {
@@ -20,6 +19,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
             var practices = await _practiceService.GetAllAsync();
@@ -29,6 +29,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(int id)
         {
             var practice = await _practiceService.GetByIdAsync(id);
@@ -42,6 +43,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchName/{name}")]
+        [AllowAnonymous]
         public async Task<IActionResult> SearchByName(string name)
         {
             var practices = await _practiceService.SearchByNameAsync(name);
@@ -55,6 +57,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("searchAddress/{address}")]
+        [AllowAnonymous]
         public async Task<IActionResult> SearchByAddress(string address)
         {
             var practices = await _practiceService.SearchByAddressAsync(address);
@@ -68,6 +71,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Veterinarians")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetVeterinariansByPractice(int id)
         {
             var vets = await _practiceService.GetVeterinariansFromPracticeAsync(id);
@@ -84,6 +88,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id}/Customers")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> GetCustomersByPractice(int id)
         {
             var customers = await _practiceService.GetCustomersByPracticeAsync(id);
@@ -100,6 +105,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> Create([FromForm] PracticeCreateDto practiceCreateDto)
         {
             var practiceModel = practiceCreateDto.MapModel();
@@ -113,6 +119,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "Practice")]
         public async Task<IActionResult> Update([FromForm] PracticeUpdateDto PracticeUpdateDto)
         {
             var practiceModel = PracticeUpdateDto.MapModel();

@@ -43,6 +43,18 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                     Email = "hetplatteland@proximus.be",
                     OpenTime = new DateTime(2021, 1, 1, 8, 0, 0),
                     CloseTime = new DateTime(2021, 1, 1, 19, 0, 0)
+                },
+                new Practice
+                {
+                    Id = 999,
+                    Name = "Test",
+                    Address = "Test",
+                    City = "Test",
+                    Postal = "Test",
+                    Phone = "Test",
+                    Email = "Practice@test.com",
+                    OpenTime = new DateTime(2021, 1, 1, 8, 0, 0),
+                    CloseTime = new DateTime(2021, 1, 1, 19, 0, 0)
                 });
         }
     }

@@ -16,5 +16,7 @@ namespace Pri.Pawpi.Core.Entities
         public ICollection<Veterinarian> Veterinarians { get; set; }
         public ICollection<Customer> Customers { get; set; }
 
+        public ApplicationUser ApplicationUser { get; set; }
+
     }
 }

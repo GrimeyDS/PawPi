@@ -1,9 +1,15 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Repositories;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services;
 using Pri.Pawpi.Infrastructure.Data;
 using Pri.Pawpi.Infrastructure.Repositories;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PawpiDbContext>(
@@ -11,12 +17,82 @@ builder.Services.AddDbContext<PawpiDbContext>(
     .UseSqlServer(builder.Configuration.GetConnectionString("PawpiDB"))
     );
 
-// Add services to the container.
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
+    options =>
+    {
+        options.Password.RequiredLength = 8;
+        options.SignIn.RequireConfirmedEmail = true;
+    }
+    )
+    .AddEntityFrameworkStores<PawpiDbContext>();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//Add Authentication
+builder.Services.AddAuthentication(options
+   =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+{
+    ValidateAudience = true,
+    ValidateIssuer = true,
+    ValidAudience = builder.Configuration["JWTConfiguration:Audience"],
+    ValidIssuer = builder.Configuration["JWTConfiguration:Issuer"],
+    RequireExpirationTime = true,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTConfiguration:SigninKey"])),
+});
+
+// Add services to the container
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "admin"));
+    options.AddPolicy("Practice", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Practice"))
+            return true;
+        return false;
+    }));
+    options.AddPolicy("Veterinarian", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Veterinarian"))
+            return true;
+        return false;
+    }));
+    options.AddPolicy("Practice/Veterinarian", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Veterinarian") || role.Value.Equals("Practice"))
+            return true;
+        return false;
+    }));
+    options.AddPolicy("Customer", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Customer"))
+            return true;
+        return false;
+    }));
+    options.AddPolicy("AllUsers", policy => policy.RequireAssertion(context =>
+    {
+        if (context.User.Claims.Count() == 0)
+            return false;
+        var role = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (role.Value.Equals("Admin") || role.Value.Equals("Customer") || role.Value.Equals("Veterinarian") || role.Value.Equals("Practice"))
+            return true;
+        return false;
+    }));
+
+});
 
 builder.Services.AddScoped<IConsultationRepository, ConsultationRepository>();
 builder.Services.AddScoped<IMedicationRepository, MedicationRepository>();
@@ -35,6 +111,11 @@ builder.Services.AddScoped<IPracticeService, PracticeService>();
 builder.Services.AddScoped<IConsultationService, ConsultationService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,7 +126,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

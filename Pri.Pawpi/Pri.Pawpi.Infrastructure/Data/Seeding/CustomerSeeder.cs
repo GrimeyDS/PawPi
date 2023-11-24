@@ -137,6 +137,19 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                         Postal = "8730",
                         Birth = new DateTime(1996, 6, 23),
                         PracticeId = 1
+                    },
+                    new Customer
+                    {
+                        Id = 999,
+                        FirstName = "Test",
+                        LastName = "Test",
+                        Email = "Customer@test.com",
+                        Phone = "0032459698738",
+                        Address = "Test",
+                        City = "Test",
+                        Postal = "9999",
+                        Birth = new DateTime(1996, 6, 23),
+                        PracticeId = 1
                     }
                 );
         }

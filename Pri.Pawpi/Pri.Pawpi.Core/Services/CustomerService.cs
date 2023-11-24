@@ -121,8 +121,6 @@ namespace Pri.Pawpi.Core.Services
             if (!practices.CheckIfIdExists(model.PracticeId))
                 return Constants.UnknownPracticeMessage;
 
-            if (!pets.CheckIdsInput(modelPetIds))
-                return Constants.NoPetMessage;
             if (model.PracticeId == 0)
                 return Constants.NoPracticeMessage;
 
