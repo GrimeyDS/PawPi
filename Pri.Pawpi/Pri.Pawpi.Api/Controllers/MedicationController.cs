@@ -29,7 +29,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public async Task<IActionResult> Get(int id)
         {
             var medication = await _medicationService.GetByIdAsync(id);
