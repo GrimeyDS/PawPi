@@ -1,20 +1,35 @@
 ﻿let app = new Vue({
     el: '#app',
-        data: {
-            pageTitle: '',
-            homeVisible: true,
-            practicesVisible: false,
-            veterinariansVisible: false,
-            customersVisible: false,
-            petsVisible: false,
-            consultationsVisible: false,
-            specialtiesVisible: false,
-            medicationsVisible: false,
-            isLoading: false,
+    data: {
+        pageTitle: '',
+        homeVisible: true,
+        practicesVisible: false,
+        veterinariansVisible: false,
+        customersVisible: false,
+        petsVisible: false,
+        consultationsVisible: false,
+        specialtiesVisible: false,
+        medicationsVisible: false,
+        loading: false,
+        hasError: false,
+        errorMessage: '',
 
-            baseUrl: 'https://localhost:7031/api',
+        baseUrl: 'https://localhost:7031/api',
 
-            practices: null,
+        practices: null,
+        practice: {
+            name: '',
+            address: '',
+            city: '',
+            email: '',
+            phone: '',
+            postal: '',
+            openTime: '',
+            closeTime: '',
+            logoUrl: null,
+            veterinarians: []
+        },
+        
     },
 
         
@@ -67,20 +82,42 @@
             this.setNav('Practices');
             this.pageTitle = 'Practices';
 
-            isLoading = true;
+            this.hasError = false;
+            this.loading = true;
 
             const practicesUrl = `${this.baseUrl}/Practice`;
             this.practices = await axios.get(practicesUrl)
                 .then(response => response.data.practices)
-                .catch(error => console.log(error))
-                .finally(() => { this.isLoading = false; });
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.Message;
+                })
+                .finally(() => { this.loading = false; });
 
             console.log(this.practices);
         },
+
+        showPracticeInfo: async function (id) {
+            this.hasError = false;
+            this.loading = true;
+
+            const practiceUrl = `${this.baseUrl}/Practice/${id}`;
+            this.practice = await axios.get(practiceUrl)
+                .then(response => response.data)
+                .catch(error => console.log(error.Message))
+                    .finally(() => { this.loading = false; });
+            $('#practiceInfo').modal('show');
+        },
+
+        hidePracticeInfo: function () {
+            $('#practiceInfo').modal('hide');
+        }
     },
 
     filters: {
         formatTime(value) {
+            if (value == null)
+                return value;
             return value.substring(11,16);
         }
     }

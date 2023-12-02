@@ -1,23 +1,14 @@
-﻿<div class="row">
+﻿<div id="title" class="row">
     <h1>{{pageTitle}}</h1>
-    <div v-if="isLoading" class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
+</div>
+
+<partial name="../Pages/Practice.cshtml" />
+
+<div v-if="loading" id="spinnerContainer">
+    <div class="text-primary spinner-grow" id="spinner" role="status">
+        <span class="sr-only"></span>
     </div>
 </div>
 
-<div v-if="practicesVisible" class="row">
-    <div v-for="practice in practices" class="col col-lg-8 m-auto">
-        <div class="card m-3">
-            <h5 class="card-header">{{practice.name}}</h5>
-            <div class="card-body">
-                <img v-bind:src="practice.logoUrl" v-bind:alt="practice.name" id="practiceLogo" onerror="this.onerror=null; this.src='https://www.dierenklinieksoest.nl/Portals/0/adam/Content/k2XQQ4GgQE21KP45ShsjyQ/Photo/dierenarts-logo.jpg?w=379&h=488&mode=crop&quality=90'" />
-                    <h5 class="card-title">{{practice.address}}</h5>
-                    <h6>{{practice.postal}} {{practice.city}}</h6>
-                    <p class="card-text">Opening hours: {{ practice.openTime | formatTime() }} - {{ practice.closeTime | formatTime() }}</p>
-                    <a href="#" class="btn btn-primary">See details</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 @* End of vue app instance *@

@@ -1,7 +1,17 @@
-h1{
-    color: dodgerblue;
-    margin-left: 20px;
-    display: block;
+#main-container {
+    width: 100%;
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+}
+
+#title {
+    font-size: 2.5rem;
+    font-weight: 500;
+    height: 60px;
+    margin-left: 0px;
+    margin-bottom: 20px;
+    background-color: #0d6efd;
+    color: white;
 }
 
 #practiceLogo {
@@ -13,8 +23,24 @@ h1{
     float: left;
 }
 
+#spinner {
+    height: 50px;
+    width: 50px;
+    margin: auto;
+}
+
+#spinnerContainer{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0;
+    margin-right: 0;
+}
+
 @media (min-width: 768px) {
-  html {
+    html {
     font-size: 16px;
   }
 }
