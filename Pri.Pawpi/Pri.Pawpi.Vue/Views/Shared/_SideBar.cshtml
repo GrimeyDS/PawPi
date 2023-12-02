@@ -6,37 +6,42 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="#" class="nav-link active" aria-current="page">
+            <a href="#" v-on:click="setHome" class="nav-link link-dark" v-bind:class="{ active: homeVisible }">
+                Home
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" v-on:click="getPractices" v-bind:class="{ active: practicesVisible }" class="nav-link link-dark">
                 Practices
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link link-dark">
+            <a href="#" v-on:click="getPractices" v-bind:class="{ active: veterinariansVisible }" class="nav-link link-dark">
                 Veterinarians
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link link-dark">
+            <a href="#" v-on:click="getPractices" v-bind:class="{ active: customersVisible }" class="nav-link link-dark">
                 Customers
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link link-dark">
+            <a href="#" v-on:click="getPractices" v-bind:class="{ active: petsVisible }" class="nav-link link-dark">
                 Pets
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link link-dark">
+            <a href="#" v-on:click="getPractices" v-bind:class="{ active: consultationsVisible }" class="nav-link link-dark">
                 Consultations
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link link-dark">
+            <a href="#" v-on:click="getPractices" v-bind:class="{ active: specialtiesVisible }" class="nav-link link-dark">
                 Specialties
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link link-dark">
+            <a href="#" v-on:click="getPractices" v-bind:class="{ active: medicationsVisible }" class="nav-link link-dark">
                 Medication
             </a>
         </li>

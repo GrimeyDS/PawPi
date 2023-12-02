@@ -1,4 +1,17 @@
+h1{
+    color: dodgerblue;
+    margin-left: 20px;
+    display: block;
+}
 
+#practiceLogo {
+    width: 140px;
+    height: 150px;
+    margin-left: 0px;
+    margin-right: 25px;
+    display: inline-block;
+    float: left;
+}
 
 @media (min-width: 768px) {
   html {
