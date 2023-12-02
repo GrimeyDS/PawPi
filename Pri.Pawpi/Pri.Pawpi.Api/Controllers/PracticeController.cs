@@ -12,10 +12,12 @@ namespace Pri.Pawpi.Api.Controllers
     public class PracticeController : BaseController<Practice>
     {
         private readonly IPracticeService _practiceService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PracticeController(IPracticeService practiceService) : base(practiceService)
+        public PracticeController(IPracticeService practiceService, IHttpContextAccessor httpContextAccessor) : base(practiceService)
         {
             _practiceService = practiceService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -23,7 +25,7 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var practices = await _practiceService.GetAllAsync();
-            var practiceResponseDto = practices.Items.MapDto();
+            var practiceResponseDto = practices.Items.MapDto(_httpContextAccessor);
 
             return Ok(practiceResponseDto);
         }
@@ -37,7 +39,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!practice.IsSuccess)
                 return BadRequest(practice.Errors);
 
-            var practiceResponseDto = practice.Item.MapDto();
+            var practiceResponseDto = practice.Item.MapDto(_httpContextAccessor);
 
             return Ok(practiceResponseDto);
         }
@@ -51,7 +53,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!practices.IsSuccess)
                 return NotFound(practices.Errors);
 
-            var practiceResponseDto = practices.Items.MapDto(name);
+            var practiceResponseDto = practices.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(practiceResponseDto);
         }
@@ -65,7 +67,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!practices.IsSuccess)
                 return NotFound(practices.Errors);
 
-            var practiceResponseDto = practices.Items.MapDto(address);
+            var practiceResponseDto = practices.Items.MapDto(address, _httpContextAccessor);
 
             return Ok(practiceResponseDto);
         }
@@ -82,7 +84,7 @@ namespace Pri.Pawpi.Api.Controllers
 
             var name = $"{practice.Item.Name}";
 
-            var practiceResponseDto = vets.Items.MapDto(name);
+            var practiceResponseDto = vets.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(practiceResponseDto);
         }

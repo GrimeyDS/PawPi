@@ -13,10 +13,12 @@ namespace Pri.Pawpi.Api.Controllers
     {
 
         private readonly ISpecialtyService _specialtyService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SpecialtyController(ISpecialtyService specialtyService) : base(specialtyService)
+        public SpecialtyController(ISpecialtyService specialtyService, IHttpContextAccessor httpContextAccessor) : base(specialtyService)
         {
             _specialtyService = specialtyService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -69,7 +71,7 @@ namespace Pri.Pawpi.Api.Controllers
 
             var name = specialty.Item.Name;
 
-            var specialtyResponseDto = vets.Items.MapDto(name);
+            var specialtyResponseDto = vets.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(specialtyResponseDto);
         }

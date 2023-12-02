@@ -12,10 +12,12 @@ namespace Pri.Pawpi.Api.Controllers
     public class ConsultationController : BaseController<Consultation>
     {
         private readonly IConsultationService _consultationService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ConsultationController(IConsultationService consultationService) : base(consultationService)
+        public ConsultationController(IConsultationService consultationService, IHttpContextAccessor httpContextAccessor) : base(consultationService)
         {
             _consultationService = consultationService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -23,7 +25,7 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var consultations = await _consultationService.GetAllAsync();
-            var consultationResponseDto = consultations.Items.MapDto();
+            var consultationResponseDto = consultations.Items.MapDto(_httpContextAccessor);
 
             return Ok(consultationResponseDto);
         }
@@ -43,7 +45,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!consultation.IsSuccess)
                 return BadRequest(consultation.Errors);
 
-            var consultationResponseDto = consultation.Item.MapDto();
+            var consultationResponseDto = consultation.Item.MapDto(_httpContextAccessor);
 
             return Ok(consultationResponseDto);
         }
@@ -57,7 +59,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!consultations.IsSuccess)
                 return NotFound(consultations.Errors);
 
-            var consultationResponseDto = consultations.Items.MapDto(title);
+            var consultationResponseDto = consultations.Items.MapDto(title, _httpContextAccessor);
 
             return Ok(consultationResponseDto);
         }
@@ -71,7 +73,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!consultations.IsSuccess)
                 return NotFound(consultations.Errors);
 
-            var consultationResponseDto = consultations.Items.MapDto(diagnose);
+            var consultationResponseDto = consultations.Items.MapDto(diagnose, _httpContextAccessor);
 
             return Ok(consultationResponseDto);
         }
