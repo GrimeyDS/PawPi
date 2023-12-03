@@ -1,0 +1,33 @@
+﻿<div class="modal fade" id="practiceInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{practice.name}}</h5>
+                <button type="button" v-on:click="hidePracticeInfo" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <img v-bind:src="practice.logoUrl" v-bind:alt="practice.name" id="practiceLogo" onerror="this.onerror=null; this.src='https://www.dierenklinieksoest.nl/Portals/0/adam/Content/k2XQQ4GgQE21KP45ShsjyQ/Photo/dierenarts-logo.jpg?w=379&h=488&mode=crop&quality=90'" />
+                    <h5 class="card-title">{{practice.address}}</h5>
+                    <h6>{{practice.postal}} {{practice.city}}</h6>
+                    <div class="card-text">
+                        <b>Opening Hours:</b> {{ practice.openTime | formatTime() }} - {{ practice.closeTime | formatTime() }}
+                        <br />
+                        <b>E-mail:</b> {{practice.email}}
+                        <br />
+                        <b>Phone:</b> {{practice.phone}}
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h5 class="card-title  mb-0">Veterinarians:</h5>
+                    <span v-for="vet in practice.veterinarians">{{vet.firstName}} {{vet.lastName}}<br /></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hidePracticeInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

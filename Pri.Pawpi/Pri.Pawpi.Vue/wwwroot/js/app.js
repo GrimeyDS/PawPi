@@ -16,6 +16,10 @@
 
         baseUrl: 'https://localhost:7031/api',
 
+        searchPracticeName: '',
+        searchPracticeAddress: '',
+        searchVeterinarianName: '',
+
         practices: null,
         practice: {
             name: '',
@@ -29,7 +33,21 @@
             logoUrl: null,
             veterinarians: []
         },
-        
+
+        veterinarians: null,
+        veterinarian: {
+            firstName: '',
+            lastName: '',
+            birth: '',
+            address: '',
+            city: '',
+            email: '',
+            phone: '',
+            postal: '',
+            imageUrl: null,
+            practices: [],
+            specialties: []
+        },
     },
 
         
@@ -78,6 +96,7 @@
             this.pageTitle = 'Home';
         },
 
+        //#region Practices
         getPractices: async function () {
             this.setNav('Practices');
             this.pageTitle = 'Practices';
@@ -85,16 +104,14 @@
             this.hasError = false;
             this.loading = true;
 
-            const practicesUrl = `${this.baseUrl}/Practice`;
+            const practicesUrl = `${this.baseUrl}/Practic`;
             this.practices = await axios.get(practicesUrl)
                 .then(response => response.data.practices)
                 .catch(error => {
                     this.hasError = true;
-                    this.errorMessage = error.Message;
+                    this.errorMessage = error.message;
                 })
                 .finally(() => { this.loading = false; });
-
-            console.log(this.practices);
         },
 
         showPracticeInfo: async function (id) {
@@ -104,14 +121,118 @@
             const practiceUrl = `${this.baseUrl}/Practice/${id}`;
             this.practice = await axios.get(practiceUrl)
                 .then(response => response.data)
-                .catch(error => console.log(error.Message))
-                    .finally(() => { this.loading = false; });
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
             $('#practiceInfo').modal('show');
         },
 
         hidePracticeInfo: function () {
             $('#practiceInfo').modal('hide');
-        }
+        },
+
+        searchPracticeByName: async function () {
+            this.hasError = false;
+            this.loading = true;
+
+            if (this.searchPracticeName == null || this.searchPracticeName == '') {
+                if (this.searchPracticeAddress == null || this.searchPracticeAddress == '') {
+                    this.getPractices();
+                }
+                else {
+                    this.searchPracticeByAddress();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Practice/searchName/${this.searchPracticeName}`;
+            this.practices = await axios.get(searchUrl)
+                .then(response => response.data.practices)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+        },
+
+        searchPracticeByAddress: async function () {
+            this.hasError = false;
+            this.loading = true;
+
+            if (this.searchPracticeAddress == null || this.searchPracticeAddress == '') {
+                if (this.searchPracticeName == null || this.searchPracticeName == '') {
+                    this.getPractices();
+                }
+                else {
+                    this.searchPracticeByName();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Practice/searchAddress/${this.searchPracticeAddress}`;
+            this.practices = await axios.get(searchUrl)
+                .then(response => response.data.practices)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+        },
+//#endregion Practices
+
+        getVeterinarians: async function () {
+            this.setNav('Veterinarians');
+            this.pageTitle = 'Veterinarians';
+
+            this.hasError = false;
+            this.loading = true;
+
+            const veterinariansUrl = `${this.baseUrl}/Veterinarian`;
+            this.veterinarians = await axios.get(veterinariansUrl)
+                .then(response => response.data.veterinarians)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+        },
+
+        showVeterinarianInfo: async function (id) {
+            this.hasError = false;
+            this.loading = true;
+
+            const vetUrl = `${this.baseUrl}/Veterinarian/${id}`;
+            this.veterinarian = await axios.get(vetUrl)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+            $('#veterinarianInfo').modal('show');
+        },
+
+        hideVeterinarianInfo: function () {
+            $('#veterinarianInfo').modal('hide');
+        },
+
+        searchVeterinarianByName: async function () {
+            this.hasError = false;
+            this.loading = true;
+
+            if (this.searchVeterinarianName == null || this.searchVeterinarianName == '') {
+                this.getVeterinarians();
+            }
+
+            const searchUrl = `${this.baseUrl}/Veterinarian/searchName/${this.searchVeterinarianName}`;
+            this.veterinarians = await axios.get(searchUrl)
+                .then(response => response.data.veterinarians)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+        },
     },
 
     filters: {
@@ -119,6 +240,12 @@
             if (value == null)
                 return value;
             return value.substring(11,16);
+        },
+
+        formatDate(value) {
+            if (value == null)
+                return value;
+            return value.substring(0, 10);
         }
     }
 });
