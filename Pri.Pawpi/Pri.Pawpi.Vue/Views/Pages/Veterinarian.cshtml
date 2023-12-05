@@ -7,17 +7,17 @@
 
         <div v-if="searchResults">
             <div v-for="veterinarian in veterinarians" id="card">
-                <div class="card" style="width: 18rem;" v-on:click="showVeterinarianInfo(veterinarian.id)">
-                    <img class="card-img-top" v-bind:src="veterinarian.imageUrl" v-bind:alt="veterinarian.name" onerror="this.onerror=null; this.src='https://cdn4.iconfinder.com/data/icons/forum-buttons-and-community-signs-1/794/profile-3-512.png'">
-                    <div class="card-body" id="vet-body">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" v-on:click="showVeterinarianInfo(veterinarian.id)" v-bind:src="veterinarian.imageUrl" v-bind:alt="veterinarian.name" onerror="this.onerror=null; this.src='../assets/images/userPlaceHolder.png'">
+                    <div class="card-body" id="vet-body" v-on:click="showVeterinarianInfo(veterinarian.id)">
                         <h5 class="card-title">{{veterinarian.firstName}} {{veterinarian.lastName}}</h5>
                         <span v-for="specialties in veterinarian.specialties">{{specialties.name}} <br /> </span>
                     </div>
                     <div class="card-body" id="vet-prac">
                     <ul class="list-group list-group-flush"> <li class="list-group-item"><b>Practice:</b></li></ul>
-                    <ul class="list-group list-group-flush" v-for="practice in veterinarian.practices">
+                    <ol class="list-group list-group-flush" v-for="practice in veterinarian.practices">
                         <li class="list-group-item"><a href="#" v-on:click="showPracticeInfo(practice.id)">{{practice.name}}</a></li>
-                    </ul>
+                    </ol>
                     </div>
                 </div>
             </div>
