@@ -19,6 +19,7 @@
         searchPracticeName: '',
         searchPracticeAddress: '',
         searchVeterinarianName: '',
+        searchSpecialtyName: '',
 
         practices: null,
         practice: {
@@ -47,6 +48,13 @@
             imageUrl: null,
             practices: [],
             specialties: []
+        },
+
+        specialties: null,
+        specialty: {
+            name: '',
+            description: '',
+            veterinarians: [],
         },
     },
 
@@ -79,7 +87,7 @@
                 case 'Consultations':
                     this.consultationsVisible = true;
                     break;
-                case 'Specialities':
+                case 'Specialties':
                     this.specialtiesVisible = true;
                     break;
                 case 'Medications':
@@ -104,7 +112,7 @@
             this.hasError = false;
             this.loading = true;
 
-            const practicesUrl = `${this.baseUrl}/Practic`;
+            const practicesUrl = `${this.baseUrl}/Practice`;
             this.practices = await axios.get(practicesUrl)
                 .then(response => response.data.practices)
                 .catch(error => {
@@ -150,8 +158,10 @@
             this.practices = await axios.get(searchUrl)
                 .then(response => response.data.practices)
                 .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.message;
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }      
                 })
                 .finally(() => { this.loading = false; });
         },
@@ -173,13 +183,16 @@
             this.practices = await axios.get(searchUrl)
                 .then(response => response.data.practices)
                 .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.message;
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }      
                 })
                 .finally(() => { this.loading = false; });
         },
-//#endregion Practices
+        //#endregion Practices
 
+        //#region Veterinarians
         getVeterinarians: async function () {
             this.setNav('Veterinarians');
             this.pageTitle = 'Veterinarians';
@@ -228,11 +241,83 @@
             this.veterinarians = await axios.get(searchUrl)
                 .then(response => response.data.veterinarians)
                 .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }      
+                })
+                .finally(() => { this.loading = false; });
+        },
+
+        //#endregion Veterinarians
+
+        //#region Specialty
+        getSpecialties: async function () {
+            this.setNav('Specialties');
+            this.pageTitle = 'Specialties';
+
+            this.hasError = false;
+            this.loading = true;
+
+            const specialtiesUrl = `${this.baseUrl}/Specialty`;
+            this.specialties = await axios.get(specialtiesUrl)
+                .then(response => response.data.specialties)
+                .catch(error => {
                     this.hasError = true;
                     this.errorMessage = error.message;
                 })
                 .finally(() => { this.loading = false; });
         },
+
+        showSpecialtyInfo: async function (id) {
+            this.hasError = false;
+            this.loading = true;
+
+            const specialtyUrl = `${this.baseUrl}/Specialty/${id}`;
+            this.specialty = await axios.get(specialtyUrl)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+
+            const specialtyVetUrl = `${this.baseUrl}/Specialty/${id}/Veterinarians`;
+            this.veterinarians = await axios.get(specialtyVetUrl)
+                .then(response => response.data.veterinarians)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+            $('#specialtyInfo').modal('show');
+        },
+
+        hideSpecialtyInfo: function () {
+            $('#specialtyInfo').modal('hide');
+        },
+
+        searchSpecialtyByName: async function () {
+            this.hasError = false;
+            this.loading = true;
+
+            if (this.searchSpecialtyName == null || this.searchSpecialtyName == '') {
+                this.getSpecialties();
+            }
+
+            const searchUrl = `${this.baseUrl}/Specialty/searchName/${this.searchSpecialtyName}`;
+            this.specialties = await axios.get(searchUrl)
+                .then(response => response.data.specialties)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }           
+                })
+                .finally(() => { this.loading = false; });
+        },
+
+
+        //#endregion Specialty
     },
 
     filters: {
