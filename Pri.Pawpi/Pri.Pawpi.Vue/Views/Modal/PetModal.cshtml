@@ -1,0 +1,31 @@
+﻿<div class="modal fade" id="petInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{pet.name}}</h5>
+                <button type="button" v-on:click="hidePetInfo" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <img v-bind:src="pet.imageUrl" v-bind:alt="pet.name" id="petImage" onerror="this.onerror=null; this.src='../assets/images/petPlaceHolder.png'" />
+                    <h5 class="card-title">{{pet.callName}}</h5>
+                    <h6>AnimalType: {{pet.animalType}}</h6>
+                    <span><b>Breed:</b> {{pet.breed}}</span><br />
+                    <span><b>Color:</b> {{pet.color}}</span><br />
+                    <span><b>Weight:</b> {{pet.weight}}kg</span><br />
+                    <span><b>Owner:</b> {{ customer.firstName }} {{ customer.lastName }}</span><br />
+                    <span><b>Email:</b> {{ customer.email }}</span>
+                </div>
+                <div class="mt-4">
+                    <h5 class="card-title  mb-0">Last Consultation:</h5>
+                    <span>{{consultation.title}} - {{consultation.dateOfConsultation | formatDate() }}<br /></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hidePetInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

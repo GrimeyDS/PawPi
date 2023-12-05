@@ -63,6 +63,10 @@ input {
     min-height: 150px;
 }
 
+#petImage {
+    width: 250px;
+}
+
 
 @media (min-width: 768px) {
     html {

@@ -10,6 +10,7 @@
         consultationsVisible: false,
         specialtiesVisible: false,
         medicationsVisible: false,
+
         loading: false,
         hasError: false,
         errorMessage: '',
@@ -18,6 +19,8 @@
 
         searchName: '',
         searchAddress: '',
+        searchBreed: '',
+        searchAnimalType: '',
         searchResults: false,
 
         practices: null,
@@ -54,6 +57,35 @@
             name: '',
             description: '',
             veterinarians: [],
+        },
+
+        pets: null,
+        pet: {
+            name: '',
+            callName: '',
+            breed: '',
+            color: '',
+            animalType: '',
+            weight: '',
+            imageUrl: null,
+            pedigreeUrl: null,
+            customer: null,
+            lastConsultation: null
+        },
+
+        customers: null,
+        customer: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            
+        },
+
+        consultations: null,
+        consultation: {
+            title: '',
+            diagnose: '',
+            date: '',
         },
     },
 
@@ -327,7 +359,129 @@
         },
         //#endregion Specialty
 
+        getPets: async function () {
+            this.setNav('Pets');
+            this.resetParameters();
 
+            const petsUrl = `${this.baseUrl}/Pet`;
+            this.pets = await axios.get(petsUrl)
+                .then(response => response.data.pets)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.pets);
+        },
+
+        showPetInfo: async function (id) {
+            this.resetParameters();
+
+            const petUrl = `${this.baseUrl}/Pet/${id}`;
+            this.pet = await axios.get(petUrl)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.customer = this.pet.customer;
+            this.consultation = this.pet.lastConsultation;
+            $('#petInfo').modal('show');
+        },
+
+        hidePetInfo: function () {
+            $('#petInfo').modal('hide');
+        },
+
+        searchPetByName: async function () {
+            this.resetParameters();
+
+            if (this.searchName.length === 0) {
+                if (this.searchBreed.length !== 0 ) {
+                    this.searchPetByBreed();
+                }
+                else if (this.searchAnimalType.length !== 0) {
+                    this.searchAnimalType();
+                }
+                else {
+                    this.getPets();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Pet/searchName/${this.searchName}`;
+            this.pets = await axios.get(searchUrl)
+                .then(response => response.data.pets)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.pets);
+        },
+
+        searchPetByBreed: async function () {
+            this.resetParameters();
+
+            if (this.searchBreed.length === 0) {
+                if (this.searchName.length !== 0) {
+                    this.searchPetByName();
+                }
+                else if (this.searchAnimalTypec) {
+                    this.searchAnimalType();
+                }
+                else {
+                    this.getPets();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Pet/searchBreed/${this.searchBreed}`;
+            this.pets = await axios.get(searchUrl)
+                .then(response => response.data.pets)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.pets);
+        },
+
+        searchPetByAnimalType: async function () {
+            this.resetParameters();
+
+            if (this.searchAnimalType.length === 0) {
+                if (this.searchNamelength !== 0) {
+                    this.searchPetByName();
+                }
+                else if (this.searchBreedlength !== 0) {
+                    this.searchAnimalType();
+                }
+                else {
+                    this.getPets();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Pet/searchAnimalType/${this.searchAnimalType}`;
+            this.pets = await axios.get(searchUrl)
+                .then(response => response.data.pets)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.pets);
+        },
     },
 
     filters: {

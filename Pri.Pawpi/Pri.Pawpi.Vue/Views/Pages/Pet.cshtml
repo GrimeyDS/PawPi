@@ -1,0 +1,27 @@
+﻿<div v-if="petsVisible" class="row">
+
+    <div class="col col-lg-10 m-auto">
+        <div class="text-center mb-5">
+            <input type="text" v-model="searchName" v-on:keyup="searchPetByName" placeholder="Search by name" />
+            <input type="text" v-model="searchBreed" v-on:keyup="searchPetByBreed" placeholder="Search by breed" />
+            <input type="text" v-model="searchAnimalType" v-on:keyup="searchPetByAnimalType" placeholder="Search by animal type" />
+        </div>
+
+        <div v-if="searchResults">
+            <div v-for="pet in pets" id="card">
+                <div class="card" style="width: 18rem;" v-on:click="showPetInfo(pet.id)">
+                    <img class="card-img-top" v-bind:src="pet.imageUrl" v-bind:alt="pet.name" onerror="this.onerror=null; this.src='../assets/images/petPlaceHolder.png'">
+                    <div class="card-body" id="vet-body">
+                        <h5 class="card-title">{{pet.name}}</h5>
+                        <h6>{{pet.callName}} <br /> </h6>
+                        <span>{{pet.animalType}} <br /> </span>
+                        <span>{{pet.breed}} <br /> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else class="alert alert-secondary m-auto w-50 text-center" id="error">
+            Geen resultaten gevonden.
+        </div>
+    </div>
+</div>
