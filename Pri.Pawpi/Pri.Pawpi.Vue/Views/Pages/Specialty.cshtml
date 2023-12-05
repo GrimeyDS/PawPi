@@ -1,19 +1,23 @@
 ﻿<div v-if="specialtiesVisible" class="row">
 
     <div class="col col-lg-8 m-auto">
-        <div class="text-center">
-            <input type="text" v-model="searchSpecialtyName" v-on:keyup="searchSpecialtyByName" placeholder="Search by name" />
+        <div class="text-center mb-5">
+            <input type="text" v-model="searchName" v-on:keyup="searchSpecialtyByName" placeholder="Search by name" />
         </div>
 
-
-        <div v-for="specialty in specialties">
-            <div class="card m-3">
-                <h5 class="card-header">{{specialty.name}}</h5>
-                <div class="card-body">
-                    <p class="card-text">{{ specialty.description }}</p>
-                    <a href="#" v-on:click="showSpecialtyInfo(specialty.id)" class="btn btn-primary">See veterinarians</a>
+        <div v-if="searchResults">
+            <div v-for="specialty in specialties">
+                <div class="card m-3">
+                    <h5 class="card-header">{{specialty.name}}</h5>
+                    <div class="card-body">
+                        <p class="card-text">{{ specialty.description }}</p>
+                        <a href="#" v-on:click="showSpecialtyInfo(specialty.id)" class="btn btn-primary">See veterinarians</a>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div v-else class="alert alert-secondary m-auto w-50 text-center" id="error">
+            Geen resultaten gevonden.
         </div>
     </div>
 </div>
