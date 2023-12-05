@@ -16,10 +16,9 @@
 
         baseUrl: 'https://localhost:7031/api',
 
-        searchPracticeName: '',
-        searchPracticeAddress: '',
-        searchVeterinarianName: '',
-        searchSpecialtyName: '',
+        searchName: '',
+        searchAddress: '',
+        searchResults: false,
 
         practices: null,
         practice: {
@@ -71,6 +70,8 @@
             this.specialtiesVisible = false;
             this.medicationsVisible = false;
 
+            this.pageTitle = navItem;
+
             switch (navItem) {
                 case 'Practices':
                     this.practicesVisible = true;
@@ -104,13 +105,21 @@
             this.pageTitle = 'Home';
         },
 
+        resetParameters: function () {
+            this.hasError = false;
+            this.loading = true;
+            this.searchResults = true;
+        },
+
+        checkSearchResults: function (results) {
+            if (results.length < 1)
+                this.searchResults = false;
+        },
+
         //#region Practices
         getPractices: async function () {
             this.setNav('Practices');
-            this.pageTitle = 'Practices';
-
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
             const practicesUrl = `${this.baseUrl}/Practice`;
             this.practices = await axios.get(practicesUrl)
@@ -120,11 +129,12 @@
                     this.errorMessage = error.message;
                 })
                 .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.practices);
         },
 
         showPracticeInfo: async function (id) {
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
             const practiceUrl = `${this.baseUrl}/Practice/${id}`;
             this.practice = await axios.get(practiceUrl)
@@ -142,11 +152,10 @@
         },
 
         searchPracticeByName: async function () {
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
-            if (this.searchPracticeName == null || this.searchPracticeName == '') {
-                if (this.searchPracticeAddress == null || this.searchPracticeAddress == '') {
+            if (this.searchName == null || this.searchName == '') {
+                if (this.searchAddress == null || this.searchAddress == '') {
                     this.getPractices();
                 }
                 else {
@@ -154,7 +163,7 @@
                 }
             }
 
-            const searchUrl = `${this.baseUrl}/Practice/searchName/${this.searchPracticeName}`;
+            const searchUrl = `${this.baseUrl}/Practice/searchName/${this.searchName}`;
             this.practices = await axios.get(searchUrl)
                 .then(response => response.data.practices)
                 .catch(error => {
@@ -164,14 +173,15 @@
                     }      
                 })
                 .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.practices);
         },
 
         searchPracticeByAddress: async function () {
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
-            if (this.searchPracticeAddress == null || this.searchPracticeAddress == '') {
-                if (this.searchPracticeName == null || this.searchPracticeName == '') {
+            if (this.searchAddress == null || this.searchAddress == '') {
+                if (this.searchName == null || this.searchName == '') {
                     this.getPractices();
                 }
                 else {
@@ -179,7 +189,7 @@
                 }
             }
 
-            const searchUrl = `${this.baseUrl}/Practice/searchAddress/${this.searchPracticeAddress}`;
+            const searchUrl = `${this.baseUrl}/Practice/searchAddress/${this.searchAddress}`;
             this.practices = await axios.get(searchUrl)
                 .then(response => response.data.practices)
                 .catch(error => {
@@ -189,16 +199,15 @@
                     }      
                 })
                 .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.practices);
         },
         //#endregion Practices
 
         //#region Veterinarians
         getVeterinarians: async function () {
             this.setNav('Veterinarians');
-            this.pageTitle = 'Veterinarians';
-
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
             const veterinariansUrl = `${this.baseUrl}/Veterinarian`;
             this.veterinarians = await axios.get(veterinariansUrl)
@@ -208,11 +217,12 @@
                     this.errorMessage = error.message;
                 })
                 .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.veterinarians);
         },
 
         showVeterinarianInfo: async function (id) {
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
             const vetUrl = `${this.baseUrl}/Veterinarian/${id}`;
             this.veterinarian = await axios.get(vetUrl)
@@ -230,14 +240,13 @@
         },
 
         searchVeterinarianByName: async function () {
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
-            if (this.searchVeterinarianName == null || this.searchVeterinarianName == '') {
+            if (this.searchName == null || this.searchName == '') {
                 this.getVeterinarians();
             }
 
-            const searchUrl = `${this.baseUrl}/Veterinarian/searchName/${this.searchVeterinarianName}`;
+            const searchUrl = `${this.baseUrl}/Veterinarian/searchName/${this.searchName}`;
             this.veterinarians = await axios.get(searchUrl)
                 .then(response => response.data.veterinarians)
                 .catch(error => {
@@ -247,6 +256,8 @@
                     }      
                 })
                 .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.veterinarians);
         },
 
         //#endregion Veterinarians
@@ -254,10 +265,7 @@
         //#region Specialty
         getSpecialties: async function () {
             this.setNav('Specialties');
-            this.pageTitle = 'Specialties';
-
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
             const specialtiesUrl = `${this.baseUrl}/Specialty`;
             this.specialties = await axios.get(specialtiesUrl)
@@ -267,11 +275,12 @@
                     this.errorMessage = error.message;
                 })
                 .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.specialties);
         },
 
         showSpecialtyInfo: async function (id) {
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
             const specialtyUrl = `${this.baseUrl}/Specialty/${id}`;
             this.specialty = await axios.get(specialtyUrl)
@@ -297,14 +306,13 @@
         },
 
         searchSpecialtyByName: async function () {
-            this.hasError = false;
-            this.loading = true;
+            this.resetParameters();
 
-            if (this.searchSpecialtyName == null || this.searchSpecialtyName == '') {
+            if (this.searchName == null || this.searchName == '') {
                 this.getSpecialties();
             }
 
-            const searchUrl = `${this.baseUrl}/Specialty/searchName/${this.searchSpecialtyName}`;
+            const searchUrl = `${this.baseUrl}/Specialty/searchName/${this.searchName}`;
             this.specialties = await axios.get(searchUrl)
                 .then(response => response.data.specialties)
                 .catch(error => {
@@ -314,10 +322,12 @@
                     }           
                 })
                 .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.specialties);
         },
-
-
         //#endregion Specialty
+
+
     },
 
     filters: {
