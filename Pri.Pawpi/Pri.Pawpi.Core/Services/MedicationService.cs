@@ -42,7 +42,7 @@ namespace Pri.Pawpi.Core.Services
         {
             var medicine = await _medicationRepository.SearchByNameAsync(name);
 
-            if (medicine.Count() == 0)
+            if (medicine == null)
                 return medicine.ToErrorModel(Constants.NoMedicineFoundMessage);
 
             return medicine.ToResultModel();
@@ -52,7 +52,7 @@ namespace Pri.Pawpi.Core.Services
         {
             var medicine = await _medicationRepository.SearchBySideEffectAsync(sideEffect);
 
-            if (medicine.Count() == 0)
+            if (medicine == null)
                 return medicine.ToErrorModel(Constants.NoMedicineFoundMessage);
 
             return medicine.ToResultModel();

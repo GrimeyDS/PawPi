@@ -67,7 +67,7 @@ namespace Pri.Pawpi.Core.Services
         {
             var specialties = await _repository.SearchByNameAsync(name);
 
-            if (specialties.Count() == 0)
+            if (specialties == null)
                 return specialties.ToErrorModel(Constants.NoSpecialtyFoundMessage);
 
             return specialties.ToResultModel();
