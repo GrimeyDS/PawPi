@@ -5,7 +5,7 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="#" v-on:click="setHome" class="nav-link link-dark" v-bind:class="{ active: homeVisible }">
+            <a href="#" v-on:click="setHome" v-on:load="setHome" class="nav-link link-dark" v-bind:class="{ active: homeVisible }">
                 Home
             </a>
         </li>
