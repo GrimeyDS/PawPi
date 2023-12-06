@@ -1,0 +1,31 @@
+﻿<div v-if="medicationsVisible" class="row">
+
+    <div class="col col-lg-8 m-auto">
+        <div class="text-center mb-5">
+            <input type="text" v-model="searchName" v-on:keyup="searchMedicationByName" placeholder="Search by name" />
+            <input type="text" v-model="searchSideEffect" v-on:keyup="searchMedicationBySideEffect" placeholder="Search by side effect" />
+        </div>
+
+        <div v-if="searchResults">
+            <table class="table table-hover table-light table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="medication in medicine" v-on:click="showMedicationInfo(medication.id)">
+                        <td>{{ medication.name }}</td>
+                        <td>{{ medication.notes }}</td>
+                        <td> <img class="crudIcon" src="~/assets/images/edit.png" alt="edit" /> <img class="crudIcon" src="~/assets/images/delete.png" alt="delete" v-on:click="" /> </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-else class="alert alert-secondary m-auto w-50 text-center" id="error">
+            Geen resultaten gevonden.
+        </div>
+    </div>
+</div>
+

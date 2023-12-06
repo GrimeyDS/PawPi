@@ -21,6 +21,7 @@
         searchAddress: '',
         searchBreed: '',
         searchAnimalType: '',
+        searchSideEffect: '',
         searchResults: false,
 
         practices: null,
@@ -93,6 +94,14 @@
             diagnose: '',
             date: '',
         },
+
+        medicine: null,
+        medication: {
+            name: '',
+            notes: '',
+            sideEffects: '',
+            pets: []
+        },
     },
 
         
@@ -129,7 +138,7 @@
                 case 'Specialties':
                     this.specialtiesVisible = true;
                     break;
-                case 'Medications':
+                case 'Medicine':
                     this.medicationsVisible = true;
                     break;
                 default:
@@ -584,7 +593,91 @@
         //#endregion Customer
 
         //#region Medication
+        getMedicine: async function () {
+            this.setNav('Medicine');
+            this.resetParameters();
 
+            const medicineUrl = `${this.baseUrl}/Medication`;
+            this.medicine = await axios.get(medicineUrl)
+                .then(response => response.data.medicine)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.medicine);
+        },
+
+        showMedicationInfo: async function (id) {
+            this.resetParameters();
+
+            const medicationUrl = `${this.baseUrl}/Medication/${id}`;
+            this.medication = await axios.get(medicationUrl)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+            $('#medicationInfo').modal('show');
+        },
+
+        hideMedicationInfo: function () {
+            $('#medicationInfo').modal('hide');
+        },
+
+        searchMedicationByName: async function () {
+            this.resetParameters();
+
+            if (this.searchName == null || this.searchName == '') {
+                if (this.searchSideEffect == null || this.searchSideEffect == '') {
+                    this.getMedicine();
+                }
+                else {
+                    this.searchMedicationBySideEffect();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Medication/searchName/${this.searchName}`;
+            this.medicine = await axios.get(searchUrl)
+                .then(response => response.data.medicine)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.medicine);
+        },
+
+        searchMedicationBySideEffect: async function () {
+            this.resetParameters();
+
+            if (this.searchSideEffect == null || this.searchSideEffect == '') {
+                if (this.searchName == null || this.searchName == '') {
+                    this.getMedicine();
+                }
+                else {
+                    this.searchMedicationByName();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Medication/searchSideEffect/${this.searchSideEffect}`;
+            this.medicine = await axios.get(searchUrl)
+                .then(response => response.data.medicine)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.medicine);
+        },
 
         //#endregion Medication
     },

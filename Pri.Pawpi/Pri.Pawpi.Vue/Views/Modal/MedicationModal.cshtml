@@ -1,0 +1,21 @@
+﻿<div class="modal fade" id="medicationInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{medication.name}}</h5>
+                <button type="button" v-on:click="hideMedicationInfo" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <p><b>Note:</b> {{medication.notes}}</p>
+                    <p><b>Side Effects:</b> {{medication.sideEffect}}</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hideMedicationInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
