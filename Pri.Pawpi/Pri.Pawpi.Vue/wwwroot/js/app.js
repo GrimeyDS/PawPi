@@ -22,6 +22,7 @@
         searchBreed: '',
         searchAnimalType: '',
         searchSideEffect: '',
+        searchDiagnose: '',
         searchResults: false,
 
         practices: null,
@@ -91,8 +92,14 @@
         consultations: null,
         consultation: {
             title: '',
-            diagnose: '',
-            date: '',
+            diagnosis: '',
+            dateOfConsultation: '',
+            treatment: '',
+            notes: '',
+            veterinarianName: '',
+            petName: '',
+            imageUrl: null,
+            documentUrl: null
         },
 
         medicine: null,
@@ -680,6 +687,95 @@
         },
 
         //#endregion Medication
+
+        //region Consultations
+        getConsultations: async function () {
+            this.setNav('Consultations');
+            this.resetParameters();
+
+            const consulationsUrl = `${this.baseUrl}/Consultation`;
+            this.consultations = await axios.get(consulationsUrl)
+                .then(response => response.data.consultations)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.consultations);
+        },
+
+        showConsultationInfo: async function (id) {
+            this.resetParameters();
+
+            const consultationUrl = `${this.baseUrl}/Consultation/${id}`;
+            this.consultation = await axios.get(consultationUrl)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+            $('#consultationInfo').modal('show');
+        },
+
+        hideConsultationInfo: function () {
+            $('#consultationInfo').modal('hide');
+        },
+
+        searchConsultationByName: async function () {
+            this.resetParameters();
+
+            if (this.searchName == null || this.searchName == '') {
+                if (this.searchDiagnose == null || this.searchDiagnose == '') {
+                    this.getConsultations();
+                }
+                else {
+                    this.searchConsultationByDiagnose();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Consultation/searchTitle/${this.searchName}`;
+            this.consultations = await axios.get(searchUrl)
+                .then(response => response.data.consultations)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.consultations);
+        },
+
+        searchConsultationByDiagnose: async function () {
+            this.resetParameters();
+
+            if (this.searchDiagnose == null || this.searchDiagnose == '') {
+                if (this.searchName == null || this.searchName == '') {
+                    this.getConsultations();
+                }
+                else {
+                    this.searchConsulationByName();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Practice/searchDiagnose/${this.searchDiagnose}`;
+            this.consultations = await axios.get(searchUrl)
+                .then(response => response.data.consultations)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.consultations);
+        },
+
+        //#endregion Consultations
     },
 
     filters: {
