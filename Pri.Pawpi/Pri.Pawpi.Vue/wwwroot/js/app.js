@@ -156,7 +156,6 @@
 
         setHome: function () {
             this.setNav('');
-            this.pageTitle = 'Home';
         },
 
         resetParameters: function () {
