@@ -67,6 +67,10 @@ input {
     width: 250px;
 }
 
+.crudIcon {
+    width: 30px;
+}
+
 
 @media (min-width: 768px) {
     html {

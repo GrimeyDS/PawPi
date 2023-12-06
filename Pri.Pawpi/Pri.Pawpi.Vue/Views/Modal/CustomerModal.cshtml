@@ -1,0 +1,35 @@
+﻿<div class="modal fade" id="customerInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{customer.firstName}} {{customer.lastName}}</h5>
+                <button type="button" v-on:click="hideCustomerInfo" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h5 class="card-title">{{customer.address}}</h5>
+                    <h6>{{customer.postal}} {{customer.city}}</h6>
+                    <div class="card-text">
+                        <b>Birthdate:</b> {{ customer.birth | formatDate() }}
+                        <br />
+                        <b>E-mail:</b> {{customer.email}}
+                        <br />
+                        <b>Phone:</b> {{customer.phone}}
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h5 class="card-title  mb-0">Practice:</h5>
+                    <span>{{practice.name}}</span>
+                    <h5 class="card-title  mb-0">Specialties:</h5>
+                    <span v-for="pet in customer.pets">{{pet.name}}<br /></span>
+                    <br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hideCustomerInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -77,8 +77,14 @@
         customer: {
             firstName: '',
             lastName: '',
+            birth: '',
+            address: '',
+            city: '',
             email: '',
-            
+            phone: '',
+            postal: '',
+            pets: [],
+            practice: null
         },
 
         consultations: null,
@@ -359,6 +365,7 @@
         },
         //#endregion Specialty
 
+        //#region Pet
         getPets: async function () {
             this.setNav('Pets');
             this.resetParameters();
@@ -482,6 +489,104 @@
 
             this.checkSearchResults(this.pets);
         },
+
+        //#endregion Pet
+
+        //#region Customer
+        getCustomers: async function () {
+            this.setNav('Customers');
+            this.resetParameters();
+
+            const customersUrl = `${this.baseUrl}/Customer`;
+            this.customers = await axios.get(customersUrl)
+                .then(response => response.data.customers)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.customers);
+        },
+
+        searchCustomerByName: async function () {
+            this.resetParameters();
+
+            if (this.searchName == null || this.searchName == '') {
+                if (this.searchAddress == null || this.searchAddress == '') {
+                    this.getCustomers();
+                }
+                else {
+                    this.searchCustomerByAddress();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Customer/searchName/${this.searchName}`;
+            this.customers = await axios.get(searchUrl)
+                .then(response => response.data.customers)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.customers);
+        },
+
+        searchCustomerByAddress: async function () {
+            this.resetParameters();
+
+            if (this.searchAddress == null || this.searchAddress == '') {
+                if (this.searchName == null || this.searchName == '') {
+                    this.getCustomers();
+                }
+                else {
+                    this.searchCustomerByName();
+                }
+            }
+
+            const searchUrl = `${this.baseUrl}/Customer/searchAddress/${this.searchAddress}`;
+            this.customers = await axios.get(searchUrl)
+                .then(response => response.data.customers)
+                .catch(error => {
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.customers);
+        },
+
+        showCustomerInfo: async function (id) {
+            this.resetParameters();
+
+            const customerUrl = `${this.baseUrl}/Customer/${id}`;
+            this.customer = await axios.get(customerUrl)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.practice = this.customer.practice;
+            $('#customerInfo').modal('show');
+        },
+
+        hideCustomerInfo: function () {
+            $('#customerInfo').modal('hide');
+        },
+
+        //#endregion Customer
+
+        //#region Medication
+
+
+        //#endregion Medication
     },
 
     filters: {
