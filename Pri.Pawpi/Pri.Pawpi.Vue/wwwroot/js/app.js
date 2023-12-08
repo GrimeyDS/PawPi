@@ -12,7 +12,6 @@
         medicationsVisible: false,
         isLoggedIn: false,
         loginVisible: false,
-        isAdmin: false,
         isVet: false,
         isPractice: false,
         isCustomer: false,
@@ -187,6 +186,7 @@
 
         setHome: function () {
             this.setNav('');
+            this.resetParameters();
         },
 
         resetParameters: function () {
@@ -238,7 +238,9 @@
                 sessionStorage.setItem('id', userId);
 
                 if (userRole === 'Admin') {
-                    this.isAdmin = true;
+                    this.isPractice = true;
+                    this.isVet = true;
+                    this.isCustomer = true;
                 }
                 else if (userRole === 'Veterinarian') {
                     this.isVet = true;
@@ -266,7 +268,6 @@
             sessionStorage.removeItem('id');
             sessionStorage.removeItem('role');
             this.isLoggedIn = false;
-            this.isAdmin = false;
             this.isVet = false;
             this.isPractice = false;
             this.isCustomer = false;
@@ -540,26 +541,33 @@
 
         //#region Pet
         getPets: async function () {
-            this.setNav('Pets');
-            this.resetParameters();
+            if (sessionStorage.getItem('role') === 'Customer') {
+                this.getCustomerPets();
+            }
+            else {
+                this.setNav('Pets');
+                this.resetParameters();
 
-            const petsUrl = `${this.baseUrl}/Pet`;
-            this.pets = await axios.get(petsUrl)
-                .then(response => response.data.pets)
-                .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.message;
-                })
-                .finally(() => { this.loading = false; });
+                const headers = this.getHeaders();
+                const petsUrl = `${this.baseUrl}/Pet`;
+                this.pets = await axios.get(petsUrl, headers)
+                    .then(response => response.data.pets)
+                    .catch(error => {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    })
+                    .finally(() => { this.loading = false; });
 
-            this.checkSearchResults(this.pets);
+                this.checkSearchResults(this.pets);
+            }
         },
 
         showPetInfo: async function (id) {
             this.resetParameters();
 
+            const headers = this.getHeaders();
             const petUrl = `${this.baseUrl}/Pet/${id}`;
-            this.pet = await axios.get(petUrl)
+            this.pet = await axios.get(petUrl, headers)
                 .then(response => response.data)
                 .catch(error => {
                     this.hasError = true;
@@ -591,8 +599,9 @@
                 }
             }
 
+            const headers = this.getHeaders();
             const searchUrl = `${this.baseUrl}/Pet/searchName/${this.searchName}`;
-            this.pets = await axios.get(searchUrl)
+            this.pets = await axios.get(searchUrl, headers)
                 .then(response => response.data.pets)
                 .catch(error => {
                     if (!error.message.includes("405")) {
@@ -620,8 +629,9 @@
                 }
             }
 
+            const headers = this.getHeaders();
             const searchUrl = `${this.baseUrl}/Pet/searchBreed/${this.searchBreed}`;
-            this.pets = await axios.get(searchUrl)
+            this.pets = await axios.get(searchUrl, headers)
                 .then(response => response.data.pets)
                 .catch(error => {
                     if (!error.message.includes("405")) {
@@ -649,8 +659,9 @@
                 }
             }
 
+            const headers = this.getHeaders();
             const searchUrl = `${this.baseUrl}/Pet/searchAnimalType/${this.searchAnimalType}`;
-            this.pets = await axios.get(searchUrl)
+            this.pets = await axios.get(searchUrl, headers)
                 .then(response => response.data.pets)
                 .catch(error => {
                     if (!error.message.includes("405")) {
@@ -670,8 +681,9 @@
             this.setNav('Customers');
             this.resetParameters();
 
+            const headers = this.getHeaders();
             const customersUrl = `${this.baseUrl}/Customer`;
-            this.customers = await axios.get(customersUrl)
+            this.customers = await axios.get(customersUrl, headers)
                 .then(response => response.data.customers)
                 .catch(error => {
                     this.hasError = true;
@@ -713,8 +725,9 @@
                 }
             }
 
+            const headers = this.getHeaders();
             const searchUrl = `${this.baseUrl}/Customer/searchName/${this.searchName}`;
-            this.customers = await axios.get(searchUrl)
+            this.customers = await axios.get(searchUrl, headers)
                 .then(response => response.data.customers)
                 .catch(error => {
                     if (!error.message.includes("405")) {
@@ -739,8 +752,9 @@
                 }
             }
 
+            const headers = this.getHeaders();
             const searchUrl = `${this.baseUrl}/Customer/searchAddress/${this.searchAddress}`;
-            this.customers = await axios.get(searchUrl)
+            this.customers = await axios.get(searchUrl, headers)
                 .then(response => response.data.customers)
                 .catch(error => {
                     if (!error.message.includes("405")) {
@@ -782,8 +796,10 @@
             this.setNav('Medicine');
             this.resetParameters();
 
+            const headers = this.getHeaders();
+
             const medicineUrl = `${this.baseUrl}/Medication`;
-            this.medicine = await axios.get(medicineUrl)
+            this.medicine = await axios.get(medicineUrl, headers)
                 .then(response => response.data.medicine)
                 .catch(error => {
                     this.hasError = true;
@@ -797,8 +813,9 @@
         showMedicationInfo: async function (id) {
             this.resetParameters();
 
+            const headers = this.getHeaders();
             const medicationUrl = `${this.baseUrl}/Medication/${id}`;
-            this.medication = await axios.get(medicationUrl)
+            this.medication = await axios.get(medicationUrl, headers)
                 .then(response => response.data)
                 .catch(error => {
                     this.hasError = true;
@@ -824,8 +841,9 @@
                 }
             }
 
+            const headers = this.getHeaders();
             const searchUrl = `${this.baseUrl}/Medication/searchName/${this.searchName}`;
-            this.medicine = await axios.get(searchUrl)
+            this.medicine = await axios.get(searchUrl, headers)
                 .then(response => response.data.medicine)
                 .catch(error => {
                     if (!error.message.includes("405")) {
@@ -850,8 +868,9 @@
                 }
             }
 
+            const headers = this.getHeaders();
             const searchUrl = `${this.baseUrl}/Medication/searchSideEffect/${this.searchSideEffect}`;
-            this.medicine = await axios.get(searchUrl)
+            this.medicine = await axios.get(searchUrl, headers)
                 .then(response => response.data.medicine)
                 .catch(error => {
                     if (!error.message.includes("405")) {
@@ -871,8 +890,9 @@
             this.setNav('Consultations');
             this.resetParameters();
 
+            const headers = this.getHeaders();
             const consulationsUrl = `${this.baseUrl}/Consultation`;
-            this.consultations = await axios.get(consulationsUrl)
+            this.consultations = await axios.get(consulationsUrl, headers)
                 .then(response => response.data.consultations)
                 .catch(error => {
                     this.hasError = true;
@@ -886,8 +906,9 @@
         showConsultationInfo: async function (id) {
             this.resetParameters();
 
+            const headers = this.getHeaders();
             const consultationUrl = `${this.baseUrl}/Consultation/${id}`;
-            this.consultation = await axios.get(consultationUrl)
+            this.consultation = await axios.get(consultationUrl, headers)
                 .then(response => response.data)
                 .catch(error => {
                     this.hasError = true;
@@ -913,8 +934,9 @@
                 }
             }
 
+            const headers = this.getHeaders();
             const searchUrl = `${this.baseUrl}/Consultation/searchTitle/${this.searchName}`;
-            this.consultations = await axios.get(searchUrl)
+            this.consultations = await axios.get(searchUrl, headers)
                 .then(response => response.data.consultations)
                 .catch(error => {
                     if (!error.message.includes("405")) {
@@ -939,8 +961,9 @@
                 }
             }
 
+            const headers = this.getHeaders();
             const searchUrl = `${this.baseUrl}/Practice/searchDiagnose/${this.searchDiagnose}`;
-            this.consultations = await axios.get(searchUrl)
+            this.consultations = await axios.get(searchUrl, headers)
                 .then(response => response.data.consultations)
                 .catch(error => {
                     if (!error.message.includes("405")) {

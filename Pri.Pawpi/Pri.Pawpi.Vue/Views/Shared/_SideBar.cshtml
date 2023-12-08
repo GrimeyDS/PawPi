@@ -19,17 +19,17 @@
                 Veterinarians
             </a>
         </li>
-        <li>
+        <li v-if="isVet || isPractice">
             <a href="#" v-on:click="getCustomers" v-bind:class="{ active: customersVisible }" class="nav-link link-dark">
                 Customers
             </a>
         </li>
-        <li>
+        <li v-if="isVet || isPractice || isCustomer">
             <a href="#" v-on:click="getPets" v-bind:class="{ active: petsVisible }" class="nav-link link-dark">
                 Pets
             </a>
         </li>
-        <li>
+        <li v-if="isVet || isPractice">
             <a href="#" v-on:click="getConsultations" v-bind:class="{ active: consultationsVisible }" class="nav-link link-dark">
                 Consultations
             </a>
@@ -39,7 +39,7 @@
                 Specialties
             </a>
         </li>
-        <li>
+        <li v-if="isVet || isPractice">
             <a href="#" v-on:click="getMedicine" v-bind:class="{ active: medicationsVisible }" class="nav-link link-dark">
                 Medication
             </a>
