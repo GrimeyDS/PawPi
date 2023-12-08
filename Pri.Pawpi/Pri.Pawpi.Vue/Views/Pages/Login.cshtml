@@ -1,7 +1,12 @@
 ﻿<div id="login" v-if="isLoggedIn">
+    <button v-if="isCustomer" v-on:click="getCustomerPets" class="btn btn-secondary">Pets</button>
+    <button v-if="isVet" v-on:click="getVetConsultations" class="btn btn-secondary">Consultations</button>
+    <button v-if="isVet" v-on:click="getVetSpecialties" class="btn btn-secondary">Specialties</button>
+    <button v-if="isVet" v-on:click="getVetPractices" class="btn btn-secondary">Practices</button>
+    <button v-if="isPractice" v-on:click="getPracticeCustomers" class="btn btn-secondary">Customers</button>
+    <button v-if="isPractice" v-on:click="getPracticeVets" class="btn btn-secondary">Veterinarians</button>
     <button v-on:click="getProfile" class="btn btn-secondary">Profile</button>
-    <button v-on:click="getCustomerPets" class="btn btn-secondary">Pets</button>
-    <button v-on:click="logout" class="btn btn-secondary">Logout</button>
+    <button v-on:click="logout" class="btn btn-danger">Logout</button>
 </div>
 <div v-else id="login">
     <form v-on:submit.prevent="login" id="login">

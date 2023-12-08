@@ -186,7 +186,8 @@
 
         setHome: function () {
             this.setNav('');
-            this.resetParameters();
+            this.hasError = false;
+            this.loading = false;
         },
 
         resetParameters: function () {
@@ -209,6 +210,9 @@
             }
             else if (role == 'Veterinarian') {
                 this.showVeterinarianInfo(id);
+            }
+            else if (role == 'Practice') {
+                this.showPracticeInfo(id);
             }
             else {
                 this.hasError = true;
@@ -343,6 +347,44 @@
             this.checkSearchResults(this.practices);
         },
 
+        getPracticeCustomers: async function () {
+            this.setNav('Customers');
+            this.resetParameters();
+
+            const practiceId = sessionStorage.getItem('id');
+            const headers = this.getHeaders();
+
+            const customersUrl = `${this.baseUrl}/Practice/${practiceId}/Customers`;
+            this.customers = await axios.get(customersUrl, headers)
+                .then(response => response.data.customers)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.response.data;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.customers);
+        },
+
+        getPracticeVets: async function () {
+            this.setNav('Veterinarians');
+            this.resetParameters();
+
+            const practiceId = sessionStorage.getItem('id');
+            const headers = this.getHeaders();
+
+            const vetsUrl = `${this.baseUrl}/Practice/${practiceId}/Veterinarians`;
+            this.veterinarians = await axios.get(vetsUrl, headers)
+                .then(response => response.data.veterinarians)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.response.data;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.veterinarians);
+        },
+
         showPracticeInfo: async function (id) {
             this.resetParameters();
 
@@ -471,6 +513,64 @@
 
             this.checkSearchResults(this.veterinarians);
         },
+
+        getVetConsultations: async function () {
+            this.setNav('Consultations');
+            this.resetParameters();
+
+            const vetId = sessionStorage.getItem('id');
+            const headers = this.getHeaders();
+
+            const consultationsUrl = `${this.baseUrl}/Veterinarian/${vetId}/Consultations`;
+            this.consultations = await axios.get(consultationsUrl, headers)
+                .then(response => response.data.consultations)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.response.data;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.consultations);
+        },
+
+        getVetSpecialties: async function () {
+            this.setNav('Specialties');
+            this.resetParameters();
+
+            const vetId = sessionStorage.getItem('id');
+            const headers = this.getHeaders();
+
+            const specialtiesUrl = `${this.baseUrl}/Veterinarian/${vetId}/Specialties`;
+            this.specialties = await axios.get(specialtiesUrl, headers)
+                .then(response => response.data.specialties)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.response.data;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.specialties);
+        },
+
+        getVetPractices: async function () {
+            this.setNav('Practices');
+            this.resetParameters();
+
+            const vetId = sessionStorage.getItem('id');
+            const headers = this.getHeaders();
+
+            const practiceUrl = `${this.baseUrl}/Veterinarian/${vetId}/Practices`;
+            this.practices = await axios.get(practiceUrl, headers)
+                .then(response => response.data.practices)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.response.data;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.practices);
+        },
+
 
         //#endregion Veterinarians
 
@@ -962,7 +1062,7 @@
             }
 
             const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Practice/searchDiagnose/${this.searchDiagnose}`;
+            const searchUrl = `${this.baseUrl}/Consultation/searchDiagnose/${this.searchDiagnose}`;
             this.consultations = await axios.get(searchUrl, headers)
                 .then(response => response.data.consultations)
                 .catch(error => {
