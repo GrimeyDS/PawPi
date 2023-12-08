@@ -1,12 +1,17 @@
 ﻿<div id="title" class="row">
-    <h1>{{pageTitle}}</h1>
+    <h1 id="header">{{pageTitle}}</h1>
+    <partial name="../Pages/Login.cshtml" />
 </div>
 
 <div v-if="hasError" class="alert alert-danger m-auto w-50 text-center" id="error"> 
     {{errorMessage}}
 </div>
 
-<br/>
+<div v-if="loading" id="spinnerContainer">
+    <div class="text-primary spinner-grow" id="spinner" role="status">
+        <span class="sr-only"></span>
+    </div>
+</div>
 
 <partial name="../Pages/Home.cshtml" />
 
@@ -18,11 +23,8 @@
 <partial name="../Pages/Medication.cshtml" />
 <partial name="../Pages/Consultation.cshtml" />
 
-<div v-if="loading" id="spinnerContainer">
-    <div class="text-primary spinner-grow" id="spinner" role="status">
-        <span class="sr-only"></span>
-    </div>
-</div>
+<partial name="../Modal/VeterinarianModal.cshtml" />
+<partial name="../Modal/CustomerModal.cshtml" />
 
 
 @* End of vue app instance *@

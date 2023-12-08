@@ -10,6 +10,31 @@
         consultationsVisible: false,
         specialtiesVisible: false,
         medicationsVisible: false,
+        isLoggedIn: false,
+        loginVisible: false,
+        isAdmin: false,
+        isVet: false,
+        isPractice: false,
+        isCustomer: false,
+
+        loginDto: {
+            username: '',
+            password: ''
+        },
+
+        registerCustomerDto: {
+            username: '',
+            password: '',
+            repeatpassword: '',
+            email: '',
+            firstName: '',
+            lastName: '',
+            birth: '',
+            address: '',
+            city: '',
+            phone: '',
+            postal: '',
+        },
 
         loading: false,
         hasError: false,
@@ -109,9 +134,15 @@
             sideEffects: '',
             pets: []
         },
+
+        head: '',
     },
 
-        
+    created: function () {
+        if (sessionStorage.getItem('token') !== null) {
+            this.isLoggedIn = true;
+        }
+    },
 
     methods: {
         setNav: function (navItem) {
@@ -168,6 +199,131 @@
             if (results.length < 1)
                 this.searchResults = false;
         },
+
+        getProfile: function () {
+            const role = sessionStorage.getItem('role');
+            const id = sessionStorage.getItem('id');
+
+            if (role === 'Customer') {
+                this.showCustomerInfo(id);
+            }
+            else if (role == 'Veterinarian') {
+                this.showVeterinarianInfo(id);
+            }
+            else {
+                this.hasError = true;
+                this.errorMessage = role;
+            }
+        },
+
+        //#region Identity
+        login: async function () {
+            this.resetParameters();
+
+            const loginUrl = `${this.baseUrl}/Account/Login`;
+            const token = await axios.post(loginUrl, this.loginDto)
+                .then(response => response.data.token)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = "Please provide a correct username and password.";
+                });
+
+            if (token !== undefined) {
+                sessionStorage.setItem('token', token);
+                const headers = this.getHeaders();
+
+                const userRole = await axios.get(`${this.baseUrl}/Account/GetRole`, headers).then(response => response.data).catch(error => { this.hasError = true; this.errorMessage = "Role not found" });
+                const userId = await axios.get(`${this.baseUrl}/Account/GetId`, headers).then(response => response.data).catch(error => { this.hasError = true; this.errorMessage = "Id not found" });
+                sessionStorage.setItem('role', userRole);
+                sessionStorage.setItem('id', userId);
+
+                if (userRole === 'Admin') {
+                    this.isAdmin = true;
+                }
+                else if (userRole === 'Veterinarian') {
+                    this.isVet = true;
+                }
+                else if (userRole === 'Practice') {
+                    this.isPractice = true;
+                }
+                else {
+                    this.isCustomer = true;
+                }
+
+                this.isLoggedIn = true;
+                this.loginVisible = false;
+
+                this.loginDto.username = '';
+                this.loginDto.password = '';
+            }
+            
+
+            this.loading = false;
+        },
+
+        logout: function () {
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('id');
+            sessionStorage.removeItem('role');
+            this.isLoggedIn = false;
+            this.isAdmin = false;
+            this.isVet = false;
+            this.isPractice = false;
+            this.isCustomer = false;
+            this.setHome();
+        },
+
+        registerCustomer: async function () {
+            this.resetParameters();
+
+            if (this.registerDto.username === '' || this.registerDto.password === '' || this.registerDto.repeatpassword === '' || this.registerDto.email === '' || this.registerDto.firstName === '' || this.registerDto.lastName === '' || this.registerDto.birth === '' || this.registerDto.address === '' || this.registerDto.city === '' || this.registerDto.phone === '' || this.registerDto.postal === '') {
+                this.hasError = true;
+                this.errorMessage = 'Please provide all the required information.';
+            }
+            else if (this.registerDto.password !== this.registerDto.repeatpassword) {
+                this.hasError = true;
+                this.errorMessage = 'Passwords do not match.';
+            }
+            else {
+                const registerUrl = `${this.baseUrl}/Account/RegisterCustomer`;
+                const token = await axios.post(registerUrl, this.registerDto)
+                    .then(response => response.data)
+                    .catch(error => {
+                        this.hasError = true;
+                        this.errorMessage += error.response.data[0].description;
+                    });
+
+                if (token !== undefined) {
+
+
+                    sessionStorage.setItem('token', token);
+                    this.isLoggedIn = true;
+                    this.loginVisible = false;
+                }
+            }
+            this.loading = false;
+        },
+
+        getHeaders: function () {
+            const headers = {
+                'headers': {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                }
+            };
+            return headers;
+        },
+
+        showRegisterForm: function () {
+            $('#registerForm').modal('show');
+        },
+
+        hideRegisterForm: function () {
+            this.hasError = false;
+            this.errorMessage = '';
+            $('#registerForm').modal('hide');
+        },
+
+        //#endregion Identity
 
         //#region Practices
         getPractices: async function () {
@@ -255,6 +411,8 @@
 
             this.checkSearchResults(this.practices);
         },
+
+
         //#endregion Practices
 
         //#region Veterinarians
@@ -524,6 +682,25 @@
             this.checkSearchResults(this.customers);
         },
 
+        getCustomerPets: async function () {
+            this.setNav('Pets');
+            this.resetParameters();
+
+            const customerId = sessionStorage.getItem('id');
+            const headers = this.getHeaders();
+
+            const petsUrl = `${this.baseUrl}/Customer/${customerId}/Pets`;
+            this.pets = await axios.get(petsUrl, headers)
+                .then(response => response.data.pets)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.response.data;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.pets);
+        },
+
         searchCustomerByName: async function () {
             this.resetParameters();
 
@@ -579,8 +756,10 @@
         showCustomerInfo: async function (id) {
             this.resetParameters();
 
+            const headers = this.getHeaders();
+
             const customerUrl = `${this.baseUrl}/Customer/${id}`;
-            this.customer = await axios.get(customerUrl)
+            this.customer = await axios.get(customerUrl, headers)
                 .then(response => response.data)
                 .catch(error => {
                     this.hasError = true;
@@ -687,7 +866,7 @@
 
         //#endregion Medication
 
-        //region Consultations
+        //#region Consultation
         getConsultations: async function () {
             this.setNav('Consultations');
             this.resetParameters();
@@ -774,7 +953,7 @@
             this.checkSearchResults(this.consultations);
         },
 
-        //#endregion Consultations
+        //#endregion Consultation
     },
 
     filters: {
