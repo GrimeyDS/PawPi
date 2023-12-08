@@ -128,8 +128,18 @@
                     </div>
                     <div class="form-group">
                         <label>Practice:</label>
-                        <select name="Practice" v-model="registerVetDto.practiceIds" multiple>
-                            <option v-for="practice in practices" :value="practice.id">{{practice.name}}</option>
+                        <select v-model="registerVetDto.practiceIds" multiple>
+                            <option v-for="practice in practices":value="practice.id">
+                                {{ practice.name }}
+                            </option>
+                        </select> 
+                    </div>
+                    <div class="form-group">
+                        <label>Specialty:</label>
+                        <select v-model="registerVetDto.specialtyIds" multiple>
+                            <option v-for="specialty in specialties":value="specialty.id">
+                                {{ specialty.name }}
+                            </option>
                         </select>
                     </div>
                 </form>

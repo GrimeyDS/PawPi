@@ -283,31 +283,36 @@
         },
 
         registration: async function (url, dto) {
-            await axios.post(url, dto)
-                .then(response => response.data)
-                .catch(error => {
-                    this.hasInputError = true;
-                    const errors = error.response.data.errors;
-                    if (errors === undefined) {
-                        this.errorMessage = error.response.data[0].description;
-                    }
-                    else {
-                        for (const [key, value] of Object.entries(errors)) {
-                            this.errorMessage += `${key}: ${value} \n`;
-                        }
+            const headers = this.getHeaders();
 
-                        if (this.errorMessage.includes('System.DateTime')) {
-                            this.errorMessage = 'Please provide a valid date of birth in the past.';
+            const token = await axios.post(url, dto, headers)
+                    .then(response => response.data)
+                    .catch(error => {
+                        this.hasInputError = true;
+                        const errors = error.response.data.errors;
+                        if (errors === undefined) {
+                            this.errorMessage = error.response.data[0].description;
                         }
-                        else if (this.errorMessage.includes('practiceId')) {
-                            this.errorMessage = 'Please select a practice.';
+                        else {
+                            for (const [key, value] of Object.entries(errors)) {
+                                this.errorMessage += `${key}: ${value} \n`;
+                            }
+
+                            if (this.errorMessage.includes('System.DateTime')) {
+                                this.errorMessage = 'Please provide a valid date of birth in the past.';
+                            }
+                            else if (this.errorMessage.includes('practiceId')) {
+                                this.errorMessage = 'Please select a practice.';
+                            }
                         }
-                    }
-                });
-            this.hideRegisterForm();
-            this.success = true;
-            this.errorMessage = 'Registration successful! Please login.';
-            this.setHome();
+                    });
+
+            if (token !== undefined) {
+                this.hideRegisterForm();
+                this.success = true;
+                this.errorMessage = 'Registration successful! Please login.';
+                this.setHome();
+            }
         },
 
         registerCustomer: async function () {
@@ -337,19 +342,28 @@
             this.resetParameters();
             this.loading = true;
 
-            if (this.isPractice) {
-                $('#registerVetForm').modal('show');
-            }
-            else {
+            const practicesUrl = `${this.baseUrl}/Practice`;
+            this.practices = await axios.get(practicesUrl)
+                .then(response => response.data.practices)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
 
-                const practicesUrl = `${this.baseUrl}/Practice`;
-                this.practices = await axios.get(practicesUrl)
-                    .then(response => response.data.practices)
+            if (this.isPractice) {
+                const specialtiesUrl = `${this.baseUrl}/Specialty`;
+                this.specialties = await axios.get(specialtiesUrl)
+                    .then(response => response.data.specialties)
                     .catch(error => {
                         this.hasError = true;
                         this.errorMessage = error.message;
                     })
                     .finally(() => { this.loading = false; });
+
+                $('#registerVetForm').modal('show');
+            }
+            else {
                 $('#registerCustomerForm').modal('show');
             }
 
@@ -358,6 +372,7 @@
         hideRegisterForm: function () {
             this.hasError = false;
             this.errorMessage = '';
+            this.loading = false;
             if (this.isPractice) {
                 $('#registerVetForm').modal('hide');
             }

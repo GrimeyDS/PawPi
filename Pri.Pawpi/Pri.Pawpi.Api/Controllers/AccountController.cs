@@ -107,7 +107,7 @@ namespace Pri.Pawpi.Api.Controllers
 
         [Authorize(Policy = "Practice")]
         [HttpPost("RegisterVeterinarian")]
-        public async Task<IActionResult> Register([FromForm] VeterinarianRegisterRequestDto accountRegisterDto)
+        public async Task<IActionResult> Register(VeterinarianRegisterRequestDto accountRegisterDto)
         {
             var user = new ApplicationUser
             {
