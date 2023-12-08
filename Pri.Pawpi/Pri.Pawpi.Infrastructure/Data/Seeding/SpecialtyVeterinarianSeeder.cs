@@ -13,6 +13,8 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                 new { SpecialtiesId = 2, VeterinariansId = 4 },
                 new { SpecialtiesId = 3, VeterinariansId = 5 },
                 new { SpecialtiesId = 3, VeterinariansId = 1 },
+                new { SpecialtiesId = 3, VeterinariansId = 999 },
+                new { SpecialtiesId = 4, VeterinariansId = 999 },
                 new { SpecialtiesId = 1, VeterinariansId = 3 }
                 );
         }

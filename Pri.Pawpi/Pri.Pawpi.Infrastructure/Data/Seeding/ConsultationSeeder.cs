@@ -67,10 +67,29 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                     DateOfConsultation = DateTime.Now,
                     VeterinarianId =3,
                     PetId = 2
-                }
-                );
-                
-                
+                },
+                new Consultation
+                {
+                    Id = 6,
+                    Title = "Vaccinatie",
+                    Diagnosis = "Vaccinatie",
+                    Treatment = "test",
+                    Notes = "test",
+                    DateOfConsultation = DateTime.Now,
+                    VeterinarianId = 999,
+                    PetId = 17
+                },
+                new Consultation
+                {
+                    Id = 7,
+                    Title = "Tanden",
+                    Diagnosis = "Tanden zijn slecht onderhouden",
+                    Treatment = "Medicatie en poeten",
+                    Notes = "",
+                    DateOfConsultation = DateTime.Now,
+                    VeterinarianId = 999,
+                    PetId = 16
+                });
         }
     }
 }
