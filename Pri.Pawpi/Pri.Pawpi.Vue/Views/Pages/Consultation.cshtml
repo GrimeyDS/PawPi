@@ -2,8 +2,8 @@
 
     <div class="col col-lg-8 m-auto">
         <div class="text-center mb-5">
-            <input type="text" v-model="searchName" v-on:keyup="searchConsultationByName" placeholder="Search by title" />
-            <input type="text" v-model="searchDiagnose" v-on:keyup="searchConsultationByDiagnose" placeholder="Search by diagnose" />
+            <input id="searchInput" type="text" v-model="searchName" v-on:keyup="searchConsultationByName" placeholder="Search by title" />
+            <input id="searchInput" type="text" v-model="searchDiagnose" v-on:keyup="searchConsultationByDiagnose" placeholder="Search by diagnose" />
         </div>
 
         <div v-if="searchResults">

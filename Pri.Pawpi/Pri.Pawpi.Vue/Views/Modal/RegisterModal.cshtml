@@ -1,0 +1,144 @@
+﻿<div class="modal fade" id="registerCustomerForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Registration:</h5>
+                <button type="button" v-on:click="hideRegisterForm" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div v-if="hasInputError" class="alert alert-danger m-auto" id="formError">
+                    {{errorMessage}}
+                </div>
+                <form>
+                    <div class="form-group">
+                        <label>E-mail:</label>
+                        <input v-model="registerCustomerDto.email" type="text" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input v-model="registerCustomerDto.password" type="password" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Repeat password:</label>
+                        <input v-model="registerCustomerDto.repeatPassword" type="password" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>First name:</label>
+                        <input v-model="registerCustomerDto.firstName" type="text" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Last name:</label>
+                        <input v-model="registerCustomerDto.lastName" type="text" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Birthdate:</label>
+                        <input v-model="registerCustomerDto.birth" type="date" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Address:</label>
+                        <input v-model="registerCustomerDto.address" type="text" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>City:</label>
+                        <input v-model="registerCustomerDto.city" type="text" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Postal:</label>
+                        <input v-model="registerCustomerDto.postal" type="text" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input v-model="registerCustomerDto.phone" type="text" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Practice:</label>
+                        <select name="Practice" v-model="registerCustomerDto.practiceId">
+                            <option v-for="practice in practices":value="practice.id">{{practice.name}}</option>
+                        </select>
+                    </div>
+               </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hideRegisterForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" v-on:click="registerCustomer" class="btn btn-primary">Register</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="registerVetForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Registration:</h5>
+                <button type="button" v-on:click="hideRegisterForm" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div v-if="hasInputError" class="alert alert-danger m-auto" id="formError">
+                    {{errorMessage}}
+                </div>
+                <form>
+                    <div class="form-group">
+                        <label>E-mail:</label>
+                        <input v-model="registerVetDto.email" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input v-model="registerVetDto.password" type="password" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Repeat password:</label>
+                        <input v-model="registerVetDto.repeatPassword" type="password" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>First name:</label>
+                        <input v-model="registerVetDto.firstName" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Last name:</label>
+                        <input v-model="registerVetDto.lastName" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Birthdate:</label>
+                        <input v-model="registerVetDto.birth" type="date" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Address:</label>
+                        <input v-model="registerVetDto.address" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>City:</label>
+                        <input v-model="registerVetDto.city" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Postal:</label>
+                        <input v-model="registerVetDto.postal" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input v-model="registerVetDto.phone" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Practice:</label>
+                        <select name="Practice" v-model="registerVetDto.practiceIds" multiple>
+                            <option v-for="practice in practices" :value="practice.id">{{practice.name}}</option>
+                        </select>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hideRegisterForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" v-on:click="registerVeterinarian" class="btn btn-primary">Register</button>
+            </div>
+        </div>
+    </div>
+</div>

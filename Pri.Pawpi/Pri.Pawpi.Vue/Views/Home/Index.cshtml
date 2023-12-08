@@ -6,6 +6,9 @@
 <div v-if="hasError" class="alert alert-danger m-auto w-50 text-center" id="error"> 
     {{errorMessage}}
 </div>
+<div v-if="success" class="alert alert-success m-auto w-50 text-center" id="error">
+    {{errorMessage}}
+</div>
 
 <div v-if="loading" id="spinnerContainer">
     <div class="text-primary spinner-grow" id="spinner" role="status">
@@ -26,6 +29,7 @@
 <partial name="../Modal/VeterinarianModal.cshtml" />
 <partial name="../Modal/CustomerModal.cshtml" />
 <partial name="../Modal/PracticeModal.cshtml" />
+<partial name="../Modal/RegisterModal.cshtml" />
 
 
 @* End of vue app instance *@

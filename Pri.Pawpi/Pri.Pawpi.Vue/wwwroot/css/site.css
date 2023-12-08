@@ -23,6 +23,17 @@ h1 {
     width: 400px;
 }
 
+#registerBtn {
+    margin-top: 5px;
+    height: 34px;
+}
+
+#formError {
+    width: 100%;
+    white-space: pre-line;
+    padding: 3px;
+}
+
 #practiceLogo {
     width: 140px;
     height: 150px;
@@ -48,7 +59,7 @@ h1 {
     margin-right: 0;
 }
 
-input {
+#searchInput {
     display: inline-block;
     width: 350px;
     height: 30px;

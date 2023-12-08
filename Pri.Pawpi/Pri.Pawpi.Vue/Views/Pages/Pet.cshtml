@@ -2,9 +2,9 @@
 
     <div class="col col-lg-10 m-auto">
         <div class="text-center mb-5" v-if="!isCustomer">
-            <input type="text" v-model="searchName" v-on:keyup="searchPetByName" placeholder="Search by name" />
-            <input type="text" v-model="searchBreed" v-on:keyup="searchPetByBreed" placeholder="Search by breed" />
-            <input type="text" v-model="searchAnimalType" v-on:keyup="searchPetByAnimalType" placeholder="Search by animal type" />
+            <input id="searchInput" type="text" v-model="searchName" v-on:keyup="searchPetByName" placeholder="Search by name" />
+            <input id="searchInput" type="text" v-model="searchBreed" v-on:keyup="searchPetByBreed" placeholder="Search by breed" />
+            <input id="searchInput" type="text" v-model="searchAnimalType" v-on:keyup="searchPetByAnimalType" placeholder="Search by animal type" />
         </div>
 
         <div v-if="searchResults">

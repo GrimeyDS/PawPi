@@ -22,21 +22,41 @@
         },
 
         registerCustomerDto: {
-            username: '',
-            password: '',
-            repeatpassword: '',
-            email: '',
             firstName: '',
             lastName: '',
             birth: '',
             address: '',
             city: '',
+            email: '',
             phone: '',
             postal: '',
+            petIds: [],
+            practiceId: [],
+            password: '',
+            repeatPassword: ''
+        },
+
+        registerVetDto: {
+            firstName: '',
+            lastName: '',
+            birth: '',
+            address: '',
+            city: '',
+            email: '',
+            phone: '',
+            postal: '',
+            consultationIds: [],
+            specialtyIds: [],
+            practiceIds: [],
+            image: null,
+            password: '',
+            repeatPassword: ''
         },
 
         loading: false,
         hasError: false,
+        success: false,
+        hasInputError: false,
         errorMessage: '',
 
         baseUrl: 'https://localhost:7031/api',
@@ -133,8 +153,6 @@
             sideEffects: '',
             pets: []
         },
-
-        head: '',
     },
 
     created: function () {
@@ -192,8 +210,11 @@
 
         resetParameters: function () {
             this.hasError = false;
+            this.hasInputError = false;
             this.loading = true;
             this.searchResults = true;
+            this.errorMessage = '';
+            this.success = false;
         },
 
         checkSearchResults: function (results) {
@@ -201,24 +222,7 @@
                 this.searchResults = false;
         },
 
-        getProfile: function () {
-            const role = sessionStorage.getItem('role');
-            const id = sessionStorage.getItem('id');
 
-            if (role === 'Customer') {
-                this.showCustomerInfo(id);
-            }
-            else if (role == 'Veterinarian') {
-                this.showVeterinarianInfo(id);
-            }
-            else if (role == 'Practice') {
-                this.showPracticeInfo(id);
-            }
-            else {
-                this.hasError = true;
-                this.errorMessage = role;
-            }
-        },
 
         //#region Identity
         login: async function () {
@@ -278,35 +282,46 @@
             this.setHome();
         },
 
+        registration: async function (url, dto) {
+            await axios.post(url, dto)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0].description;
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid date of birth in the past.';
+                        }
+                        else if (this.errorMessage.includes('practiceId')) {
+                            this.errorMessage = 'Please select a practice.';
+                        }
+                    }
+                });
+            this.hideRegisterForm();
+            this.success = true;
+            this.errorMessage = 'Registration successful! Please login.';
+            this.setHome();
+        },
+
         registerCustomer: async function () {
             this.resetParameters();
 
-            if (this.registerDto.username === '' || this.registerDto.password === '' || this.registerDto.repeatpassword === '' || this.registerDto.email === '' || this.registerDto.firstName === '' || this.registerDto.lastName === '' || this.registerDto.birth === '' || this.registerDto.address === '' || this.registerDto.city === '' || this.registerDto.phone === '' || this.registerDto.postal === '') {
-                this.hasError = true;
-                this.errorMessage = 'Please provide all the required information.';
-            }
-            else if (this.registerDto.password !== this.registerDto.repeatpassword) {
-                this.hasError = true;
-                this.errorMessage = 'Passwords do not match.';
-            }
-            else {
-                const registerUrl = `${this.baseUrl}/Account/RegisterCustomer`;
-                const token = await axios.post(registerUrl, this.registerDto)
-                    .then(response => response.data)
-                    .catch(error => {
-                        this.hasError = true;
-                        this.errorMessage += error.response.data[0].description;
-                    });
+            const registerUrl = `${this.baseUrl}/Account/RegisterCustomer`;
+            await this.registration(registerUrl, this.registerCustomerDto);
+        },
 
-                if (token !== undefined) {
+        registerVeterinarian: async function () {
+            this.resetParameters();
 
-
-                    sessionStorage.setItem('token', token);
-                    this.isLoggedIn = true;
-                    this.loginVisible = false;
-                }
-            }
-            this.loading = false;
+            const registerUrl = `${this.baseUrl}/Account/RegisterVeterinarian`;
+            await this.registration(registerUrl, this.registerVetDto);
         },
 
         getHeaders: function () {
@@ -318,14 +333,56 @@
             return headers;
         },
 
-        showRegisterForm: function () {
-            $('#registerForm').modal('show');
+        showRegisterForm: async function () {
+            this.resetParameters();
+            this.loading = true;
+
+            if (this.isPractice) {
+                $('#registerVetForm').modal('show');
+            }
+            else {
+
+                const practicesUrl = `${this.baseUrl}/Practice`;
+                this.practices = await axios.get(practicesUrl)
+                    .then(response => response.data.practices)
+                    .catch(error => {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    })
+                    .finally(() => { this.loading = false; });
+                $('#registerCustomerForm').modal('show');
+            }
+
         },
 
         hideRegisterForm: function () {
             this.hasError = false;
             this.errorMessage = '';
-            $('#registerForm').modal('hide');
+            if (this.isPractice) {
+                $('#registerVetForm').modal('hide');
+            }
+            else {
+                $('#registerCustomerForm').modal('hide');
+            }
+        },
+
+        getProfile: function () {
+            const role = sessionStorage.getItem('role');
+            const id = sessionStorage.getItem('id');
+
+            if (role === 'Customer') {
+                this.showCustomerInfo(id);
+            }
+            else if (role == 'Veterinarian') {
+                this.showVeterinarianInfo(id);
+            }
+            else if (role == 'Practice') {
+                this.showPracticeInfo(id);
+            }
+            else {
+                this.hasError = true;
+                this.errorMessage = role;
+            }
         },
 
         //#endregion Identity
