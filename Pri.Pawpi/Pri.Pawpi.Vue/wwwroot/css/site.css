@@ -63,7 +63,7 @@ h1 {
     display: inline-block;
     width: 350px;
     height: 30px;
-    margin: auto auto;
+    margin-left: auto auto;
     padding: 10px 45px;
     background: white url(../assets/images/search.png) no-repeat 15px center;
     background-size: 15px 15px;
@@ -96,7 +96,7 @@ h1 {
     margin-right: 5px;
     margin-left: auto;
     height: 30px;
-    width: 600px;
+    width: 1000px;
     float: right;
     text-align: right
 }

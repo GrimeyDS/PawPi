@@ -222,8 +222,6 @@
                 this.searchResults = false;
         },
 
-
-
         //#region Identity
         login: async function () {
             this.resetParameters();
@@ -248,7 +246,6 @@
                 if (userRole === 'Admin') {
                     this.isPractice = true;
                     this.isVet = true;
-                    this.isCustomer = true;
                 }
                 else if (userRole === 'Veterinarian') {
                     this.isVet = true;
@@ -403,58 +400,85 @@
         //#endregion Identity
 
         //#region Practices
-        getPractices: async function () {
-            this.setNav('Practices');
-            this.resetParameters();
+        addPractice: async function () {
+            const headers = this.getHeaders();
 
-            const practicesUrl = `${this.baseUrl}/Practice`;
-            this.practices = await axios.get(practicesUrl)
+            const url = `${this.baseUrl}/Practice`;
+
+            const newPractice = await axios.post(url, this.practice, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0].description;
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid time.';
+                        }
+                        else if (this.errorMessage.includes('veterinarianid')) {
+                            this.errorMessage = 'Please select a valid veterinarian.';
+                        }
+                    }
+                });
+
+            if (newPractice !== undefined) {
+                this.hidePracticeInfo();
+                this.success = true;
+                this.errorMessage = 'Practice added successfully.';
+                this.getAllPractices();
+            }
+        },
+
+        hideAddPractice: function () {
+            $('#addPractice').modal('hide');
+        },
+
+        getPractices: async function (url) {
+            this.resetParameters();
+            const headers = this.getHeaders();
+
+            this.practices = await axios.get(url)
                 .then(response => response.data.practices)
                 .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.message;
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
                 })
                 .finally(() => { this.loading = false; });
 
             this.checkSearchResults(this.practices);
         },
 
+        getAllPractices: async function () {
+            this.setNav('Practices');
+            const practicesUrl = `${this.baseUrl}/Practice`;
+
+            await this.getPractices(practicesUrl);
+        },
+
         getPracticeCustomers: async function () {
             this.setNav('Customers');
-            this.resetParameters();
 
             const practiceId = sessionStorage.getItem('id');
-            const headers = this.getHeaders();
-
             const customersUrl = `${this.baseUrl}/Practice/${practiceId}/Customers`;
-            this.customers = await axios.get(customersUrl, headers)
-                .then(response => response.data.customers)
-                .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.response.data;
-                })
-                .finally(() => { this.loading = false; });
 
-            this.checkSearchResults(this.customers);
+            await this.getCustomers(customersUrl);
         },
 
         getPracticeVets: async function () {
             this.setNav('Veterinarians');
-            this.resetParameters();
 
             const practiceId = sessionStorage.getItem('id');
-            const headers = this.getHeaders();
-
             const vetsUrl = `${this.baseUrl}/Practice/${practiceId}/Veterinarians`;
-            this.veterinarians = await axios.get(vetsUrl, headers)
-                .then(response => response.data.veterinarians)
-                .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.response.data;
-                })
-                .finally(() => { this.loading = false; });
 
-            this.checkSearchResults(this.veterinarians);
+            await this.getVeterinarians(vetsUrl);
         },
 
         showPracticeInfo: async function (id) {
@@ -476,75 +500,66 @@
         },
 
         searchPracticeByName: async function () {
-            this.resetParameters();
+            let searchUrl =  '';
 
-            if (this.searchName == null || this.searchName == '') {
-                if (this.searchAddress == null || this.searchAddress == '') {
-                    this.getPractices();
-                }
-                else {
+            if (this.searchName.length === 0) {
+                if (this.searchAddress.length !== 0) {
                     this.searchPracticeByAddress();
                 }
+                else {
+                    searchUrl = `${this.baseUrl}/Practice`;
+                }
             }
-
-            const searchUrl = `${this.baseUrl}/Practice/searchName/${this.searchName}`;
-            this.practices = await axios.get(searchUrl)
-                .then(response => response.data.practices)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }      
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.practices);
+            else {
+                searchUrl = `${this.baseUrl}/Practice/searchName/${this.searchName}`;  
+            }
+            await this.getPractices(searchUrl);
         },
 
         searchPracticeByAddress: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
-            if (this.searchAddress == null || this.searchAddress == '') {
-                if (this.searchName == null || this.searchName == '') {
-                    this.getPractices();
-                }
-                else {
+            if (this.searchAddress.length === 0) {
+                if (this.searchName.length !== 0) {
                     this.searchPracticeByName();
                 }
+                else {
+                    searchUrl = `${this.baseUrl}/Practice`;
+                }
             }
-
-            const searchUrl = `${this.baseUrl}/Practice/searchAddress/${this.searchAddress}`;
-            this.practices = await axios.get(searchUrl)
-                .then(response => response.data.practices)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }      
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.practices);
+            else {
+                searchUrl = `${this.baseUrl}/Practice/searchAddress/${this.searchAddress}`;
+                
+            }
+            await this.getPractices(searchUrl);
         },
 
 
         //#endregion Practices
 
         //#region Veterinarians
-        getVeterinarians: async function () {
-            this.setNav('Veterinarians');
+        getVeterinarians: async function (url) {
             this.resetParameters();
+            const headers = this.getHeaders();
 
-            const veterinariansUrl = `${this.baseUrl}/Veterinarian`;
-            this.veterinarians = await axios.get(veterinariansUrl)
+            this.veterinarians = await axios.get(url, headers)
                 .then(response => response.data.veterinarians)
                 .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.message;
+                    if (!error.message.includes("405")) {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    }
                 })
                 .finally(() => { this.loading = false; });
 
             this.checkSearchResults(this.veterinarians);
+        },
+
+        getAllVeterinarians: async function () {
+            this.setNav('Veterinarians');
+            const veterinariansUrl = `${this.baseUrl}/Veterinarian`;
+
+            await this.getVeterinarians(veterinariansUrl);
         },
 
         showVeterinarianInfo: async function (id) {
@@ -566,93 +581,53 @@
         },
 
         searchVeterinarianByName: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
-            if (this.searchName == null || this.searchName == '') {
-                this.getVeterinarians();
+            if (this.searchName.length === 0) {
+                searchUrl = `${this.baseUrl}/Veterinarian`;
             }
-
-            const searchUrl = `${this.baseUrl}/Veterinarian/searchName/${this.searchName}`;
-            this.veterinarians = await axios.get(searchUrl)
-                .then(response => response.data.veterinarians)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }      
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.veterinarians);
+            else {
+                searchUrl = `${this.baseUrl}/Veterinarian/searchName/${this.searchName}`;
+            }
+            await this.getVeterinarians(searchUrl);
         },
 
         getVetConsultations: async function () {
             this.setNav('Consultations');
-            this.resetParameters();
 
             const vetId = sessionStorage.getItem('id');
-            const headers = this.getHeaders();
-
             const consultationsUrl = `${this.baseUrl}/Veterinarian/${vetId}/Consultations`;
-            this.consultations = await axios.get(consultationsUrl, headers)
-                .then(response => response.data.consultations)
-                .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.response.data;
-                })
-                .finally(() => { this.loading = false; });
 
-            this.checkSearchResults(this.consultations);
+            await this.getConsultations(consultationsUrl);
         },
 
         getVetSpecialties: async function () {
             this.setNav('Specialties');
-            this.resetParameters();
 
             const vetId = sessionStorage.getItem('id');
-            const headers = this.getHeaders();
-
             const specialtiesUrl = `${this.baseUrl}/Veterinarian/${vetId}/Specialties`;
-            this.specialties = await axios.get(specialtiesUrl, headers)
-                .then(response => response.data.specialties)
-                .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.response.data;
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.specialties);
+            await this.getSpecialties(specialtiesUrl);
         },
 
         getVetPractices: async function () {
             this.setNav('Practices');
-            this.resetParameters();
 
             const vetId = sessionStorage.getItem('id');
-            const headers = this.getHeaders();
-
             const practiceUrl = `${this.baseUrl}/Veterinarian/${vetId}/Practices`;
-            this.practices = await axios.get(practiceUrl, headers)
-                .then(response => response.data.practices)
-                .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.response.data;
-                })
-                .finally(() => { this.loading = false; });
 
-            this.checkSearchResults(this.practices);
+            await this.getPractices(practiceUrl);
         },
 
 
         //#endregion Veterinarians
 
         //#region Specialty
-        getSpecialties: async function () {
-            this.setNav('Specialties');
+        getSpecialties: async function (url) {
             this.resetParameters();
 
-            const specialtiesUrl = `${this.baseUrl}/Specialty`;
-            this.specialties = await axios.get(specialtiesUrl)
+            const headers = this.getHeaders();
+
+            this.specialties = await axios.get(url, headers)
                 .then(response => response.data.specialties)
                 .catch(error => {
                     this.hasError = true;
@@ -661,6 +636,13 @@
                 .finally(() => { this.loading = false; });
 
             this.checkSearchResults(this.specialties);
+        },
+
+        getAllSpecialties: async function () {
+            this.setNav('Specialties');
+            const specialtiesUrl = `${this.baseUrl}/Specialty`;
+
+            await this.getSpecialties(specialtiesUrl);
         },
 
         showSpecialtyInfo: async function (id) {
@@ -675,13 +657,7 @@
                 })
 
             const specialtyVetUrl = `${this.baseUrl}/Specialty/${id}/Veterinarians`;
-            this.veterinarians = await axios.get(specialtyVetUrl)
-                .then(response => response.data.veterinarians)
-                .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.message;
-                })
-                .finally(() => { this.loading = false; });
+            this.getVeterinarians(specialtyVetUrl);
             $('#specialtyInfo').modal('show');
         },
 
@@ -690,47 +666,43 @@
         },
 
         searchSpecialtyByName: async function () {
-            this.resetParameters();
+            let searchurl = '';
 
-            if (this.searchName == null || this.searchName == '') {
-                this.getSpecialties();
+            if (this.searchName.length === 0) {
+                searchUrl = `${this.baseUrl}/Specialty`;
             }
-
-            const searchUrl = `${this.baseUrl}/Specialty/searchName/${this.searchName}`;
-            this.specialties = await axios.get(searchUrl)
-                .then(response => response.data.specialties)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }           
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.specialties);
+            else {
+                searchUrl = `${this.baseUrl}/Specialty/searchName/${this.searchName}`;
+            }
+            await this.getSpecialties(searchUrl);
         },
         //#endregion Specialty
 
         //#region Pet
-        getPets: async function () {
+        getPets: async function (url) {
+            this.resetParameters();
+
+            const headers = this.getHeaders();
+            this.pets = await axios.get(url, headers)
+                .then(response => response.data.pets)
+                .catch(error => {
+                    this.hasError = true;
+                    this.errorMessage = error.message;
+                })
+                .finally(() => { this.loading = false; });
+
+            this.checkSearchResults(this.pets);
+        },
+
+        getAllPets: async function () {
             if (sessionStorage.getItem('role') === 'Customer') {
-                this.getCustomerPets();
+                await this.getCustomerPets();
             }
             else {
                 this.setNav('Pets');
-                this.resetParameters();
-
-                const headers = this.getHeaders();
                 const petsUrl = `${this.baseUrl}/Pet`;
-                this.pets = await axios.get(petsUrl, headers)
-                    .then(response => response.data.pets)
-                    .catch(error => {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    })
-                    .finally(() => { this.loading = false; });
 
-                this.checkSearchResults(this.pets);
+                await this.getPets(petsUrl);
             }
         },
 
@@ -757,37 +729,28 @@
         },
 
         searchPetByName: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
             if (this.searchName.length === 0) {
-                if (this.searchBreed.length !== 0 ) {
+                if (this.searchBreed.length !== 0) {
                     this.searchPetByBreed();
                 }
                 else if (this.searchAnimalType.length !== 0) {
                     this.searchAnimalType();
                 }
                 else {
-                    this.getPets();
+                    searchUrl = `${this.baseUrl}/Pet`;
                 }
             }
+            else {
+                searchUrl = `${this.baseUrl}/Pet/searchName/${this.searchName}`;
+            }
 
-            const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Pet/searchName/${this.searchName}`;
-            this.pets = await axios.get(searchUrl, headers)
-                .then(response => response.data.pets)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.pets);
+            await this.getPets(searchUrl);
         },
 
         searchPetByBreed: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
             if (this.searchBreed.length === 0) {
                 if (this.searchName.length !== 0) {
@@ -797,27 +760,18 @@
                     this.searchAnimalType();
                 }
                 else {
-                    this.getPets();
+                    searchUrl = `${this.baseUrl}/Pet`;
                 }
             }
+            else {
+                searchUrl = `${this.baseUrl}/Pet/searchBreed/${this.searchBreed}`;
+            }
 
-            const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Pet/searchBreed/${this.searchBreed}`;
-            this.pets = await axios.get(searchUrl, headers)
-                .then(response => response.data.pets)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.pets);
+            await this.getPets(searchUrl);
         },
 
         searchPetByAnimalType: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
             if (this.searchAnimalType.length === 0) {
                 if (this.searchNamelength !== 0) {
@@ -827,35 +781,24 @@
                     this.searchAnimalType();
                 }
                 else {
-                    this.getPets();
+                    searchUrl = `${this.baseUrl}/Pet`;
                 }
             }
+            else {
+                searchUrl = `${this.baseUrl}/Pet/searchAnimalType/${this.searchAnimalType}`;
+            }
 
-            const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Pet/searchAnimalType/${this.searchAnimalType}`;
-            this.pets = await axios.get(searchUrl, headers)
-                .then(response => response.data.pets)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.pets);
+            await this.getPets(searchUrl);
         },
 
         //#endregion Pet
 
         //#region Customer
-        getCustomers: async function () {
-            this.setNav('Customers');
+        getCustomers: async function (url) {
             this.resetParameters();
 
             const headers = this.getHeaders();
-            const customersUrl = `${this.baseUrl}/Customer`;
-            this.customers = await axios.get(customersUrl, headers)
+            this.customers = await axios.get(url, headers)
                 .then(response => response.data.customers)
                 .catch(error => {
                     this.hasError = true;
@@ -866,77 +809,55 @@
             this.checkSearchResults(this.customers);
         },
 
+        getAllCustomers: async function () {
+            this.setNav('Customers');
+            const customersUrl = `${this.baseUrl}/Customer`;
+
+            await this.getCustomers(customersUrl);
+        },
+
         getCustomerPets: async function () {
             this.setNav('Pets');
-            this.resetParameters();
 
             const customerId = sessionStorage.getItem('id');
-            const headers = this.getHeaders();
-
             const petsUrl = `${this.baseUrl}/Customer/${customerId}/Pets`;
-            this.pets = await axios.get(petsUrl, headers)
-                .then(response => response.data.pets)
-                .catch(error => {
-                    this.hasError = true;
-                    this.errorMessage = error.response.data;
-                })
-                .finally(() => { this.loading = false; });
 
-            this.checkSearchResults(this.pets);
+            await this.getPets(petsUrl);
         },
 
         searchCustomerByName: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
-            if (this.searchName == null || this.searchName == '') {
-                if (this.searchAddress == null || this.searchAddress == '') {
-                    this.getCustomers();
-                }
-                else {
+            if (this.searchName.length === 0) {
+                if (this.searchAddress.length !== 0) {
                     this.searchCustomerByAddress();
                 }
+                else {
+                    searchUrl = `${this.baseUrl}/Customer`;
+                }
             }
-
-            const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Customer/searchName/${this.searchName}`;
-            this.customers = await axios.get(searchUrl, headers)
-                .then(response => response.data.customers)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.customers);
+            else {
+                searchUrl = `${this.baseUrl}/Customer/searchName/${this.searchName}`;
+            }
+            await this.getCustomers(searchUrl);
         },
 
         searchCustomerByAddress: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
-            if (this.searchAddress == null || this.searchAddress == '') {
-                if (this.searchName == null || this.searchName == '') {
-                    this.getCustomers();
-                }
-                else {
+            if (this.searchAddress.length === 0) {
+                if (this.searchName.length !== 0) {
                     this.searchCustomerByName();
                 }
+                else {
+                    searchUrl = `${this.baseUrl}/Customer`;
+                }
             }
+            else {
+                searchUrl = `${this.baseUrl}/Customer/searchAddress/${this.searchAddress}`;
 
-            const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Customer/searchAddress/${this.searchAddress}`;
-            this.customers = await axios.get(searchUrl, headers)
-                .then(response => response.data.customers)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.customers);
+            }
+            await this.getCustomers(searchUrl);
         },
 
         showCustomerInfo: async function (id) {
@@ -964,14 +885,11 @@
         //#endregion Customer
 
         //#region Medication
-        getMedicine: async function () {
-            this.setNav('Medicine');
+        getMedicine: async function (url) {
             this.resetParameters();
-
             const headers = this.getHeaders();
 
-            const medicineUrl = `${this.baseUrl}/Medication`;
-            this.medicine = await axios.get(medicineUrl, headers)
+            this.medicine = await axios.get(url, headers)
                 .then(response => response.data.medicine)
                 .catch(error => {
                     this.hasError = true;
@@ -980,6 +898,13 @@
                 .finally(() => { this.loading = false; });
 
             this.checkSearchResults(this.medicine);
+        },
+
+        getAllMedicine: async function () {
+            this.setNav('Medicine');
+            const medicineUrl = `${this.baseUrl}/Medication`;
+
+            await this.getMedicine(medicineUrl);
         },
 
         showMedicationInfo: async function (id) {
@@ -1002,69 +927,48 @@
         },
 
         searchMedicationByName: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
-            if (this.searchName == null || this.searchName == '') {
-                if (this.searchSideEffect == null || this.searchSideEffect == '') {
-                    this.getMedicine();
-                }
-                else {
+            if (this.searchName.length === 0) {
+                if (this.searchSideEffect.length !== 0) {
                     this.searchMedicationBySideEffect();
                 }
+                else {
+                    searchUrl = `${this.baseUrl}/Medication`;
+                }
             }
-
-            const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Medication/searchName/${this.searchName}`;
-            this.medicine = await axios.get(searchUrl, headers)
-                .then(response => response.data.medicine)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.medicine);
+            else {
+                searchUrl = `${this.baseUrl}/Medication/searchName/${this.searchName}`;
+            }
+            await this.getMedicine(searchUrl);
         },
 
         searchMedicationBySideEffect: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
-            if (this.searchSideEffect == null || this.searchSideEffect == '') {
-                if (this.searchName == null || this.searchName == '') {
-                    this.getMedicine();
-                }
-                else {
+            if (this.searchSideEffect.length === 0) {
+                if (this.searchName.length !== 0) {
                     this.searchMedicationByName();
                 }
+                else {
+                    searchUrl = `${this.baseUrl}/Medication`;
+                }
             }
+            else {
+                searchUrl = `${this.baseUrl}/Medication/searchSideEffect/${this.searchSideEffect}`;
 
-            const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Medication/searchSideEffect/${this.searchSideEffect}`;
-            this.medicine = await axios.get(searchUrl, headers)
-                .then(response => response.data.medicine)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.medicine);
+            }
+            await this.getMedicine(searchUrl);
         },
 
         //#endregion Medication
 
         //#region Consultation
-        getConsultations: async function () {
-            this.setNav('Consultations');
+        getConsultations: async function (url) {
             this.resetParameters();
 
             const headers = this.getHeaders();
-            const consulationsUrl = `${this.baseUrl}/Consultation`;
-            this.consultations = await axios.get(consulationsUrl, headers)
+            this.consultations = await axios.get(url, headers)
                 .then(response => response.data.consultations)
                 .catch(error => {
                     this.hasError = true;
@@ -1073,6 +977,13 @@
                 .finally(() => { this.loading = false; });
 
             this.checkSearchResults(this.consultations);
+        },
+
+        getAllConsultations: async function () {
+            this.setNav('Consultations');
+            const consultationsUrl = `${this.baseUrl}/Consultation`;
+
+            await this.getConsultations(consultationsUrl);
         },
 
         showConsultationInfo: async function (id) {
@@ -1095,57 +1006,38 @@
         },
 
         searchConsultationByName: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
-            if (this.searchName == null || this.searchName == '') {
-                if (this.searchDiagnose == null || this.searchDiagnose == '') {
-                    this.getConsultations();
-                }
-                else {
+            if (this.searchName.length === 0) {
+                if (this.searchDiagnose.length !== 0) {
                     this.searchConsultationByDiagnose();
                 }
+                else {
+                    searchUrl = `${this.baseUrl}/Consultation`;
+                }
             }
-
-            const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Consultation/searchTitle/${this.searchName}`;
-            this.consultations = await axios.get(searchUrl, headers)
-                .then(response => response.data.consultations)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.consultations);
+            else {
+                searchUrl = `${this.baseUrl}/Consultation/searchTitle/${this.searchName}`;
+            }
+            await this.getConsultations(searchUrl);
         },
 
         searchConsultationByDiagnose: async function () {
-            this.resetParameters();
+            let searchUrl = '';
 
-            if (this.searchDiagnose == null || this.searchDiagnose == '') {
-                if (this.searchName == null || this.searchName == '') {
-                    this.getConsultations();
+            if (this.searchDiagnose.length === 0) {
+                if (this.searchName.length !== 0) {
+                    this.searchConsultationByName();
                 }
                 else {
-                    this.searchConsulationByName();
+                    searchUrl = `${this.baseUrl}/Consultation`;
                 }
             }
+            else {
+                searchUrl = `${this.baseUrl}/Consultation/searchDiagnose/${this.searchDiagnose}`;
 
-            const headers = this.getHeaders();
-            const searchUrl = `${this.baseUrl}/Consultation/searchDiagnose/${this.searchDiagnose}`;
-            this.consultations = await axios.get(searchUrl, headers)
-                .then(response => response.data.consultations)
-                .catch(error => {
-                    if (!error.message.includes("405")) {
-                        this.hasError = true;
-                        this.errorMessage = error.message;
-                    }
-                })
-                .finally(() => { this.loading = false; });
-
-            this.checkSearchResults(this.consultations);
+            }
+            await this.getConsultations(searchUrl);
         },
 
         //#endregion Consultation
