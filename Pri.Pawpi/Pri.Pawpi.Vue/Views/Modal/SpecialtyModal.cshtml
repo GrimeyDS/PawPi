@@ -22,3 +22,43 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addSpecialtyForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add Specialty</h5>
+                <button type="button" v-on:click="hideSpecialtyForm" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div v-if="hasInputError" class="alert alert-danger m-auto" id="formError">
+                    {{errorMessage}}
+                </div>
+                <form>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input v-model="specialty.name" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input v-model="specialty.description" type="text" class="form-control" />
+                    </div>
+                </form>
+                <div class="form-group">
+                    <label>Veterinarians:</label>
+                    <select v-model="specialty.veterinarianIds" multiple>
+                        <option v-for="vet in veterinarians" :value="vet.id">
+                            {{ vet.firstName }} - {{ vet.lastName }}
+                        </option>
+                    </select>
+                </div>
+             </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hideSpecialtyForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" v-on:click="addSpecialty" class="btn btn-primary">Add Specialty</button>
+            </div>
+        </div>
+    </div>
+</div>

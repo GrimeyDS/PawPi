@@ -5,6 +5,10 @@
             <input id="searchInput" type="text" v-model="searchName" v-on:keyup="searchSpecialtyByName" placeholder="Search by name" />
         </div>
 
+        <div class="text-end">
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showSpecialtyForm" v-if="isVet" /></a>
+        </div>
+
         <div v-if="searchResults">
             <div v-for="specialty in specialties">
                 <div class="card m-3">

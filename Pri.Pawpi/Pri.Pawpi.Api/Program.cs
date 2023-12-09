@@ -55,7 +55,7 @@ builder.Services.AddCors(options =>
 // Add services to the container
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "admin"));
+    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
     options.AddPolicy("Practice", policy => policy.RequireAssertion(context =>
     {
         if (context.User.Claims.Count() == 0)

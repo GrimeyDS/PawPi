@@ -108,7 +108,7 @@ namespace Pri.Pawpi.Api.Controllers
 
         [HttpPost]
         [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> Create([FromForm] PracticeCreateDto practiceCreateDto)
+        public async Task<IActionResult> Create(PracticeCreateDto practiceCreateDto)
         {
             var practiceModel = practiceCreateDto.MapModel();
 

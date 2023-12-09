@@ -7,7 +7,7 @@
         </div>
 
         <div class="text-end">
-            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="addPractice" v-if="isPractice && isVet"/></a>
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showAddPracticeForm" v-if="isPractice && isVet" /></a>
         </div>
 
         <div v-if="searchResults">

@@ -79,8 +79,9 @@
             postal: '',
             openTime: '',
             closeTime: '',
-            logoUrl: null,
-            veterinarians: []
+            logoUrl: "",
+            veterinarianIds: [],
+            customerIds: []
         },
 
         veterinarians: null,
@@ -102,7 +103,7 @@
         specialty: {
             name: '',
             description: '',
-            veterinarians: [],
+            veterinarianIds: [],
         },
 
         pets: null,
@@ -162,6 +163,8 @@
     },
 
     methods: {
+
+        //#region General functions
         setNav: function (navItem) {
             this.homeVisible = false;
             this.practicesVisible = false;
@@ -221,6 +224,8 @@
             if (results.length < 1)
                 this.searchResults = false;
         },
+
+        //#endregion General functions
 
         //#region Identity
         login: async function () {
@@ -428,15 +433,22 @@
                 });
 
             if (newPractice !== undefined) {
-                this.hidePracticeInfo();
+                this.hideAddPracticeForm();
                 this.success = true;
                 this.errorMessage = 'Practice added successfully.';
-                this.getAllPractices();
+                
             }
         },
 
-        hideAddPractice: function () {
-            $('#addPractice').modal('hide');
+        showAddPracticeForm: function () {
+            const url = `${this.baseUrl}/Veterinarian`;
+            this.getVeterinarians(url);
+            $('#addPracticeForm').modal('show');
+        },
+
+        hideAddPracticeForm: function () {
+            this.getAllPractices();
+            $('#addPracticeForm').modal('hide');
         },
 
         getPractices: async function (url) {
@@ -622,6 +634,44 @@
         //#endregion Veterinarians
 
         //#region Specialty
+        addSpecialty: async function () {
+            this.resetParameters();
+            const headers = this.getHeaders();
+
+            const url = `${this.baseUrl}/Specialty`;
+
+            const newSpecialty = await axios.post(url, this.specialty, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0].description;
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+                    }
+                });
+
+            if (newSpecialty !== undefined) {
+                this.hideSpecialtyForm();
+                this.success = true;
+                this.errorMessage = 'Specialty added successfully.';
+            }
+        },
+        showSpecialtyForm: function () {
+            const url = `${this.baseUrl}/Veterinarian`;
+            this.getVeterinarians(url);
+            $('#addSpecialtyForm').modal('show');
+        },
+
+        hideSpecialtyForm: function () {
+            this.getAllSpecialties();
+            $('#addSpecialtyForm').modal('hide');
+        },
+
         getSpecialties: async function (url) {
             this.resetParameters();
 

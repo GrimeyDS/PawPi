@@ -32,12 +32,12 @@
     </div>
 </div>
 
-<div class="modal fade" id="addPractice" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="addPracticeForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Add Practice</h5>
-                <button type="button" v-on:click="hideAddPractice" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" v-on:click="hideAddPracticeForm" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -72,16 +72,16 @@
                     </div>
                     <div class="form-group">
                         <label>Opening time:</label>
-                        <input v-model="practice.openTime" type="time" class="form-control" />
+                        <input v-model="practice.openTime" type="date" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>Closing time:</label>
-                        <input v-model="practice.closeTime" type="time" class="form-control" />
+                        <input v-model="practice.closeTime" type="date" class="form-control" />
                     </div>
 
                     <div class="form-group">
                         <label>Veterinarians:</label>
-                        <select v-model="practice.veterinarians" multiple>
+                        <select v-model="practice.veterinarianIds" multiple>
                             <option v-for="vet in veterinarians" :value="vet.id">
                                 {{ vet.firstName }} - {{ vet.lastName }}
                             </option>
@@ -90,7 +90,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" v-on:click="hidePracticeInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" v-on:click="hideAddPracticeForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" v-on:click="addPractice" class="btn btn-primary">Add Practice</button>
             </div>
         </div>
     </div>
