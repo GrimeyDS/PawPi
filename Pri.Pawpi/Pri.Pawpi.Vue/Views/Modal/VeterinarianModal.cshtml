@@ -29,6 +29,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" v-on:click.prevent="deleteVeterinarian(veterinarian.id)" v-if="isPractice" class="btn btn-danger">Delete</button>
                 <button type="button" v-on:click="hideVeterinarianInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>

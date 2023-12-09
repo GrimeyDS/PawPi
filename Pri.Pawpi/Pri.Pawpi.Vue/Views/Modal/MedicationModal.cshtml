@@ -14,6 +14,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" v-on:click.prevent="deleteMedication(medication.id)" class="btn btn-danger" v-if="isVet">Delete</button>
                 <button type="button" v-on:click="hideMedicationInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>

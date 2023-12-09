@@ -119,7 +119,8 @@
             pedigree: null,
             consultationIds: [],
             medicationIds: [],
-            customerId: null
+            customerId: null,
+            lastConsultation: null,
         },
 
         customers: null,
@@ -229,6 +230,141 @@
                 this.searchResults = false;
         },
 
+        resetRegisterCustomerDtoObject: function () {
+            this.registerCustomerDto.firstName = '';
+            this.registerCustomerDto.lastName = '';
+            this.registerCustomerDto.birth = '';
+            this.registerCustomerDto.address = '';
+            this.registerCustomerDto.city = '';
+            this.registerCustomerDto.email = '';
+            this.registerCustomerDto.phone = '';
+            this.registerCustomerDto.postal = '';
+            this.registerCustomerDto.petIds = [];
+            this.registerCustomerDto.practiceId = null;
+            this.registerCustomerDto.password = '';
+            this.registerCustomerDto.repeatPassword = '';
+        },
+
+        resetRegisterVetDtoObject: function () {
+            this.registerVetDto.firstName = '';
+            this.registerVetDto.lastName = '';
+            this.registerVetDto.birth = '';
+            this.registerVetDto.address = '';
+            this.registerVetDto.city = '';
+            this.registerVetDto.email = '';
+            this.registerVetDto.phone = '';
+            this.registerVetDto.postal = '';
+            this.registerVetDto.consultationIds = [];
+            this.registerVetDto.specialtyIds = [];
+            this.registerVetDto.practiceIds = [];
+            this.registerVetDto.image = null;
+            this.registerVetDto.password = '';
+            this.registerVetDto.repeatPassword = '';
+        },
+
+        resetPracticeObject: function () {
+            this.practice.name = '';
+            this.practice.address = '';
+            this.practice.city = '';
+            this.practice.email = '';
+            this.practice.phone = '';
+            this.practice.postal = '';
+            this.practice.openTime = '';
+            this.practice.closeTime = '';
+            this.practice.logoUrl = null;
+            this.practice.veterinarianIds = [];
+            this.practice.customerIds = [];
+        },
+
+        resetVetObject: function () {
+            this.veterinarian.firstName = '';
+            this.veterinarian.lastName = '';
+            this.veterinarian.birth = '';
+            this.veterinarian.address = '';
+            this.veterinarian.city = '';
+            this.veterinarian.email = '';
+            this.veterinarian.phone = '';
+            this.veterinarian.postal = '';
+            this.veterinarian.imageUrl = null;
+            this.veterinarian.consultationIds = [];
+            this.veterinarian.specialtyIds = [];
+            this.veterinarian.practiceIds = [];
+        },
+
+        resetSpecialtyObjects: function () {
+            this.specialty.name = '';
+            this.specialty.description = '';
+            this.specialty.veterinarianIds = [];
+        },
+
+        resetPetObject: function () {
+            this.pet.name = '';
+            this.pet.callName = '';
+            this.pet.breed = '';
+            this.pet.color = '';
+            this.pet.animalType = '';
+            this.pet.weight = '';
+            this.pet.image = null;
+            this.pet.pedigree = null;
+            this.pet.consultationIds = [];
+            this.pet.medicationIds = [];
+            this.pet.customerId = null;
+        },
+
+        resetCustomerObject: function () {
+            this.customer.firstName = '';
+            this.customer.lastName = '';
+            this.customer.birth = '';
+            this.customer.address = '';
+            this.customer.city = '';
+            this.customer.email = '';
+            this.customer.phone = '';
+            this.customer.postal = '';
+            this.customer.petIds = [];
+            this.customer.practiceId = null;
+        },
+
+        resetConsultationObject: function () {
+            this.consultation.title = '';
+            this.consultation.diagnosis = '';
+            this.consultation.dateOfConsultation = '';
+            this.consultation.treatment = '';
+            this.consultation.notes = '';
+            this.consultation.image = null;
+            this.consultation.document = null;
+            this.consultation.veterinarianId = null;
+            this.consultation.petId = null;
+        },
+
+        resetMedicationObject: function () {
+            this.medication.name = '';
+            this.medication.notes = '';
+            this.medication.sideEffects = '';
+            this.medication.dosage = '';
+            this.medication.frequency = '';
+            this.medication.petIds = [];
+        },
+
+        deleteItem: async function (url) {
+            if (confirm('are you sure?')) {
+                this.resetParameters();
+
+                const headers = this.getHeaders();
+
+                const deleteItem = await axios.delete(url, headers)
+                    .then(response => response.data)
+                    .catch(error => {
+                        this.hasError = true;
+                        this.errorMessage = error.message;
+                    })
+                    .finally(() => { this.loading = false; });
+
+                if (deleteItem !== undefined) {
+                    return true;
+                }
+            }
+            return false;
+        },
         //#endregion General functions
 
         //#region Identity
@@ -389,35 +525,11 @@
             this.errorMessage = '';
             this.loading = false;
             if (this.isPractice) {
-                this.registerVetDto.firstName = '';
-                this.registerVetDto.lastName = '';
-                this.registerVetDto.birth = '';
-                this.registerVetDto.address = '';
-                this.registerVetDto.city = '';
-                this.registerVetDto.email = '';
-                this.registerVetDto.phone = '';
-                this.registerVetDto.postal = '';
-                this.registerVetDto.consultationIds = [];
-                this.registerVetDto.specialtyIds = [];
-                this.registerVetDto.practiceIds = [];
-                this.registerVetDto.image = null;
-                this.registerVetDto.password = '';
-                this.registerVetDto.repeatPassword = '';
+                this.resetRegisterVetDtoObject();
                 $('#registerVetForm').modal('hide');
             }
             else {
-                this.registerCustomerDto.firstName = '';
-                this.registerCustomerDto.lastName = '';
-                this.registerCustomerDto.birth = '';
-                this.registerCustomerDto.address = '';
-                this.registerCustomerDto.city = '';
-                this.registerCustomerDto.email = '';
-                this.registerCustomerDto.phone = '';
-                this.registerCustomerDto.postal = '';
-                this.registerCustomerDto.petIds = [];
-                this.registerCustomerDto.practiceId = null;
-                this.registerCustomerDto.password = '';
-                this.registerCustomerDto.repeatPassword = '';
+                this.resetRegisterCustomerDtoObject();
                 $('#registerCustomerForm').modal('hide');
             }
         },
@@ -444,6 +556,24 @@
         //#endregion Identity
 
         //#region Practices
+        deletePractice: async function (id) {
+            const url = `${this.baseUrl}/Practice/${id}`;
+
+            if (await this.deleteItem(url)) {
+                this.success = true;
+                this.errorMessage = 'Practice deleted successfully.';
+            }
+           else {
+                this.hasError = true;
+                this.errorMessage = 'Practice not deleted.';
+            }
+
+
+            this.hidePracticeInfo();
+            this.resetPracticeObject();
+
+        },
+
         addPractice: async function () {
             const headers = this.getHeaders();
 
@@ -486,17 +616,7 @@
 
         hideAddPracticeForm: async function () {
             await this.getAllPractices();
-            this.practice.name = '';
-            this.practice.address = '';
-            this.practice.city = '';
-            this.practice.email = '';
-            this.practice.phone = '';
-            this.practice.postal = '';
-            this.practice.openTime = '';
-            this.practice.closeTime = '';
-            this.practice.logoUrl = null;
-            this.practice.veterinarianIds = [];
-            this.practice.customerIds = [];
+            this.resetPracticeObject();
             $('#addPracticeForm').modal('hide');
         },
 
@@ -553,10 +673,12 @@
                     this.errorMessage = error.message;
                 })
                 .finally(() => { this.loading = false; });
+
             $('#practiceInfo').modal('show');
         },
 
         hidePracticeInfo: function () {
+            this.resetPracticeObject();
             $('#practiceInfo').modal('hide');
         },
 
@@ -594,11 +716,26 @@
             }
             await this.getPractices(searchUrl);
         },
-
-
         //#endregion Practices
 
         //#region Veterinarians
+        deleteVeterinarian: async function (id) {
+            const url = `${this.baseUrl}/Veterinarian/${id}`;
+
+            if (await this.deleteItem(url)) {
+                this.success = true;
+                this.errorMessage = 'Veterinarian deleted successfully.';
+            }
+            else {
+                this.hasError = true;
+                this.errorMessage = 'Veterinarian not deleted.';
+            }
+
+            this.hideVeterinarianInfo();
+            this.resetVetObject();
+
+        },
+
         addVeterinarian: async function () {
             this.resetParameters();
             const headers = this.getHeaders();
@@ -646,18 +783,7 @@
 
         hideVeterinarianForm: async function () {
             await this.getAllVeterinarians();
-            this.veterinarian.firstName = '';
-            this.veterinarian.lastName = '';
-            this.veterinarian.birth = '';
-            this.veterinarian.address = '';
-            this.veterinarian.city = '';
-            this.veterinarian.email = '';
-            this.veterinarian.phone = '';
-            this.veterinarian.postal = '';
-            this.veterinarian.imageUrl = null;
-            this.veterinarian.consultationIds = [];
-            this.veterinarian.specialtyIds = [];
-            this.veterinarian.practiceIds = [];
+            this.resetVetObject();
             $('#addVeterinarianForm').modal('hide');
         },
 
@@ -700,6 +826,7 @@
         },
 
         hideVeterinarianInfo: function () {
+            this.resetVetObject();
             $('#veterinarianInfo').modal('hide');
         },
 
@@ -745,6 +872,22 @@
         //#endregion Veterinarians
 
         //#region Specialty
+        deleteSpecialty: async function (id) {
+            const url = `${this.baseUrl}/Specialty/${id}`;
+
+            if (await this.deleteItem(url)) {
+                this.success = true;
+                this.errorMessage = 'Specialty deleted successfully.';
+            }
+            else {
+                this.hasError = true;
+                this.errorMessage = 'Specialty not deleted.';
+            }
+
+            this.hideSpecialtyInfo();
+            this.resetSpecialtyObjects();
+        },
+
         addSpecialty: async function () {
             this.resetParameters();
             const headers = this.getHeaders();
@@ -781,9 +924,7 @@
 
         hideSpecialtyForm: async function () {
             await this.getAllSpecialties();
-            this.specialty.name = '';
-            this.specialty.description = '';
-            this.specialty.veterinarianIds = [];
+            this.resetSpecialtyObjects();
             $('#addSpecialtyForm').modal('hide');
         },
 
@@ -827,6 +968,7 @@
         },
 
         hideSpecialtyInfo: function () {
+            this.resetSpecialtyObjects();
             $('#specialtyInfo').modal('hide');
         },
 
@@ -844,6 +986,22 @@
         //#endregion Specialty
 
         //#region Pet
+        deletePet: async function (id) {
+            const url = `${this.baseUrl}/Pet/${id}`;
+
+            if (await this.deleteItem(url)) {
+                this.success = true;
+                this.errorMessage = 'Pet deleted successfully.';
+            }
+            else {
+                this.errorMessage = 'Pet not deleted.';
+                this.hasError = true;
+            }
+
+            this.hidePetInfo();
+            this.resetPetObject();
+        },
+
         addPet: async function () {
             this.resetParameters();
             const headers = this.getHeaders();
@@ -886,17 +1044,7 @@
 
         hidePetForm: async function () {
             await this.getAllPets();
-            this.pet.name = '';
-            this.pet.callName = '';
-            this.pet.breed = '';
-            this.pet.color = '';
-            this.pet.animalType = '';
-            this.pet.weight = '';
-            this.pet.image = null;
-            this.pet.pedigree = null;
-            this.pet.consultationIds = [];
-            this.pet.medicationIds = [];
-            this.pet.customerId = null;
+            this.resetPetObject();
             $('#addPetForm').modal('hide');
         },
 
@@ -941,11 +1089,20 @@
                 .finally(() => { this.loading = false; });
 
             this.customer = this.pet.customer;
-            this.consultation = this.pet.lastConsultation;
+
+            if (this.pet.lastConsultation !== null) {
+                this.consultation = this.pet.lastConsultation;
+            }
+            else {
+                this.consultation.title = "no consultation yet";
+                this.consultation.dateOfConsultation = "";
+            }
+            
             $('#petInfo').modal('show');
         },
 
         hidePetInfo: function () {
+            this.resetPetObject();
             $('#petInfo').modal('hide');
         },
 
@@ -1015,6 +1172,22 @@
         //#endregion Pet
 
         //#region Customer
+        deleteCustomer: async function (id) {
+            const url = `${this.baseUrl}/Customer/${id}`;
+
+            if (await this.deleteItem(url)) {
+                this.success = true;
+                this.errorMessage = 'Customer deleted successfully.';
+            }
+            else {
+                this.errorMessage = 'Customer not deleted.';
+                this.hasError = true;
+            }
+
+            this.hideCustomerForm();
+            this.resetCustomerObject();
+        },
+
         addCustomer: async function () {
             this.resetParameters();
             const headers = this.getHeaders();
@@ -1058,16 +1231,7 @@
 
         hideCustomerForm: async function () {
             await this.getAllCustomers();
-            this.customer.firstName = '';
-            this.customer.lastName = '';
-            this.customer.birth = '';
-            this.customer.address = '';
-            this.customer.city = '';
-            this.customer.email = '';
-            this.customer.phone = '';
-            this.customer.postal = '';
-            this.customer.petIds = [];
-            this.customer.practiceId = null;
+            this.resetCustomerObject();
             $('#addCustomerForm').modal('hide');
         },
 
@@ -1156,12 +1320,29 @@
         },
 
         hideCustomerInfo: function () {
+            this.resetCustomerObject();
             $('#customerInfo').modal('hide');
         },
 
         //#endregion Customer
 
         //#region Medication
+        deleteMedication: async function (id) {
+            const url = `${this.baseUrl}/Medication/${id}`;
+
+            if (await this.deleteItem(url)) {
+                this.success = true;
+                this.errorMessage = 'Medication deleted successfully.';
+            }
+            else {
+                this.errorMessage = 'Medication not deleted.';
+                this.hasError = true;
+            }
+
+            this.hideMedicationInfo();
+            this.resetMedicationObject();
+        },
+
         addMedication: async function () {
             this.resetParameters();
             const headers = this.getHeaders();
@@ -1196,14 +1377,10 @@
 
         hideMedicationForm: async function () {
             await this.getAllMedicine();
-            this.medication.name = '';
-            this.medication.notes = '';
-            this.medication.sideEffects = '';
-            this.medication.dosage = '';
-            this.medication.frequency = '';
-            this.medication.petIds = [];
+            this.resetMedicationObject();
             $('#addMedicationForm').modal('hide');
         },
+
         getMedicine: async function (url) {
             this.resetParameters();
             const headers = this.getHeaders();
@@ -1242,6 +1419,7 @@
         },
 
         hideMedicationInfo: function () {
+            this.resetMedicationObject();
             $('#medicationInfo').modal('hide');
         },
 
@@ -1283,6 +1461,22 @@
         //#endregion Medication
 
         //#region Consultation
+        deleteConsultation: async function (id) {
+            const url = `${this.baseUrl}/Consultation/${id}`;  
+
+            if (await this.deleteItem(url)) {
+                this.success = true;
+                this.errorMessage = 'Consultation deleted successfully.';
+            }
+            else {
+                this.errorMessage = 'Consultation not deleted.';
+                this.hasError = true;
+            }
+
+            this.hideConsultationInfo();
+            this.resetConsultationObject();
+        },
+
         addConsultation: async function () {
             this.resetParameters();
             const headers = this.getHeaders();
@@ -1326,20 +1520,13 @@
             const petUrl = `${this.baseUrl}/Pet`;
             await this.getVeterinarians(vetUrl);
             await this.getPets(petUrl);
+            this.consultation.title = '';
             $('#addConsultationForm').modal('show');
         },
 
         hideConsultationForm: async function () {
             await this.getAllConsultations();
-            this.consultation.title = '';
-            this.consultation.diagnosis = '';
-            this.consultation.dateOfConsultation = '';
-            this.consultation.treatment = '';
-            this.consultation.notes = '';
-            this.consultation.image = null;
-            this.consultation.document = null;
-            this.consultation.veterinarianId = null;
-            this.consultation.petId = null;
+            this.resetConsultationObject();
             $('#addConsultationForm').modal('hide');
         },
 
@@ -1381,6 +1568,7 @@
         },
 
         hideConsultationInfo: function () {
+            this.resetConsultationObject();
             $('#consultationInfo').modal('hide');
         },
 
