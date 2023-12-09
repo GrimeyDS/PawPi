@@ -358,12 +358,7 @@
                         this.errorMessage = error.message;
                     })
                     .finally(() => { this.loading = false; });
-
-                if (deleteItem !== undefined) {
-                    return true;
-                }
             }
-            return false;
         },
         //#endregion General functions
 
@@ -558,23 +553,24 @@
         //#region Practices
         deletePractice: async function (id) {
             const url = `${this.baseUrl}/Practice/${id}`;
+            await this.deleteItem(url);
 
-            if (await this.deleteItem(url)) {
+            if (this.hasError) {
+                await this.getAllPractices();
+                this.errorMessage = 'Practice not deleted.';
+                this.hasError = true;
+            }
+            else {
+                await this.getAllPractices();
                 this.success = true;
                 this.errorMessage = 'Practice deleted successfully.';
             }
-           else {
-                this.hasError = true;
-                this.errorMessage = 'Practice not deleted.';
-            }
-
 
             this.hidePracticeInfo();
-            this.resetPracticeObject();
-
         },
 
         addPractice: async function () {
+            this.resetParameters();
             const headers = this.getHeaders();
 
             const url = `${this.baseUrl}/Practice`;
@@ -601,6 +597,7 @@
                 });
 
             if (newPractice !== undefined) {
+                await this.getAllPractices();
                 this.hideAddPracticeForm();
                 this.success = true;
                 this.errorMessage = 'Practice added successfully.';
@@ -614,8 +611,7 @@
             $('#addPracticeForm').modal('show');
         },
 
-        hideAddPracticeForm: async function () {
-            await this.getAllPractices();
+        hideAddPracticeForm: function () {
             this.resetPracticeObject();
             $('#addPracticeForm').modal('hide');
         },
@@ -721,19 +717,20 @@
         //#region Veterinarians
         deleteVeterinarian: async function (id) {
             const url = `${this.baseUrl}/Veterinarian/${id}`;
+            await this.deleteItem(url);
 
-            if (await this.deleteItem(url)) {
+            if (this.hasError) {
+                await this.getAllVeterinarians();
+                this.errorMessage = 'Veterinarian not deleted.';
+                this.hasError = true;
+            }
+            else {
+                await this.getAllVeterinarians();
                 this.success = true;
                 this.errorMessage = 'Veterinarian deleted successfully.';
             }
-            else {
-                this.hasError = true;
-                this.errorMessage = 'Veterinarian not deleted.';
-            }
 
             this.hideVeterinarianInfo();
-            this.resetVetObject();
-
         },
 
         addVeterinarian: async function () {
@@ -767,6 +764,7 @@
                 });
 
             if (newVeterinarian !== undefined) {
+                await this.getAllVeterinarians();
                 this.hideVeterinarianForm();
                 this.success = true;
                 this.errorMessage = 'Veterinarian added successfully.';
@@ -781,8 +779,7 @@
             $('#addVeterinarianForm').modal('show');
         },
 
-        hideVeterinarianForm: async function () {
-            await this.getAllVeterinarians();
+        hideVeterinarianForm: function () {
             this.resetVetObject();
             $('#addVeterinarianForm').modal('hide');
         },
@@ -874,18 +871,20 @@
         //#region Specialty
         deleteSpecialty: async function (id) {
             const url = `${this.baseUrl}/Specialty/${id}`;
+            await this.deleteItem(url);
 
-            if (await this.deleteItem(url)) {
+            if (this.hasError) {
+                await this.getAllSpecialties();
+                this.errorMessage = 'Specialty not deleted.';
+                this.hasError = true;
+            }
+            else {
+                await this.getAllSpecialties();
                 this.success = true;
                 this.errorMessage = 'Specialty deleted successfully.';
             }
-            else {
-                this.hasError = true;
-                this.errorMessage = 'Specialty not deleted.';
-            }
 
             this.hideSpecialtyInfo();
-            this.resetSpecialtyObjects();
         },
 
         addSpecialty: async function () {
@@ -910,6 +909,7 @@
                 });
 
             if (newSpecialty !== undefined) {
+                await this.getAllSpecialties();
                 this.hideSpecialtyForm();
                 this.success = true;
                 this.errorMessage = 'Specialty added successfully.';
@@ -922,8 +922,7 @@
             $('#addSpecialtyForm').modal('show');
         },
 
-        hideSpecialtyForm: async function () {
-            await this.getAllSpecialties();
+        hideSpecialtyForm: function () {
             this.resetSpecialtyObjects();
             $('#addSpecialtyForm').modal('hide');
         },
@@ -988,18 +987,20 @@
         //#region Pet
         deletePet: async function (id) {
             const url = `${this.baseUrl}/Pet/${id}`;
+            await this.deleteItem(url);
 
-            if (await this.deleteItem(url)) {
-                this.success = true;
-                this.errorMessage = 'Pet deleted successfully.';
-            }
-            else {
+            if (this.hasError) {
+                await this.getAllPets();
                 this.errorMessage = 'Pet not deleted.';
                 this.hasError = true;
             }
+            else {
+                await this.getAllPets();
+                this.success = true;
+                this.errorMessage = 'Pet deleted successfully.';
+            }
 
             this.hidePetInfo();
-            this.resetPetObject();
         },
 
         addPet: async function () {
@@ -1030,6 +1031,7 @@
                 });
 
             if (newPet !== undefined) {
+                await this.getAllPets();
                 this.hidePetForm();
                 this.success = true;
                 this.errorMessage = 'Pet added successfully.';
@@ -1042,8 +1044,7 @@
             $('#addPetForm').modal('show');
         },
 
-        hidePetForm: async function () {
-            await this.getAllPets();
+        hidePetForm: function () {
             this.resetPetObject();
             $('#addPetForm').modal('hide');
         },
@@ -1174,18 +1175,20 @@
         //#region Customer
         deleteCustomer: async function (id) {
             const url = `${this.baseUrl}/Customer/${id}`;
+            await this.deleteItem(url);
 
-            if (await this.deleteItem(url)) {
-                this.success = true;
-                this.errorMessage = 'Customer deleted successfully.';
-            }
-            else {
+            if (this.hasError) {
+                await this.getAllCustomers();
                 this.errorMessage = 'Customer not deleted.';
                 this.hasError = true;
             }
+            else {
+                await this.getAllCustomers();
+                this.success = true;
+                this.errorMessage = 'Customer deleted successfully.';
+            }
 
-            this.hideCustomerForm();
-            this.resetCustomerObject();
+            this.hideCustomerInfo();
         },
 
         addCustomer: async function () {
@@ -1217,6 +1220,7 @@
                 });
 
             if (newCustomer !== undefined) {
+                await this.getAllCustomers();
                 this.hideCustomerForm();
                 this.success = true;
                 this.errorMessage = 'Customer added successfully.';
@@ -1229,8 +1233,7 @@
             $('#addCustomerForm').modal('show');
         },
 
-        hideCustomerForm: async function () {
-            await this.getAllCustomers();
+        hideCustomerForm: function () {
             this.resetCustomerObject();
             $('#addCustomerForm').modal('hide');
         },
@@ -1329,18 +1332,20 @@
         //#region Medication
         deleteMedication: async function (id) {
             const url = `${this.baseUrl}/Medication/${id}`;
+            await this.deleteItem(url);
 
-            if (await this.deleteItem(url)) {
-                this.success = true;
-                this.errorMessage = 'Medication deleted successfully.';
-            }
-            else {
+            if (this.hasError) {
+                await this.getAllMedicine();
                 this.errorMessage = 'Medication not deleted.';
                 this.hasError = true;
             }
+            else {
+                await this.getAllMedicine();
+                this.success = true;
+                this.errorMessage = 'Medication deleted successfully.';
+            }
 
             this.hideMedicationInfo();
-            this.resetMedicationObject();
         },
 
         addMedication: async function () {
@@ -1365,18 +1370,18 @@
                 });
 
             if (newMedication !== undefined) {
+                await this.getAllMedicine();
                 this.hideMedicationForm();
                 this.success = true;
                 this.errorMessage = 'Medication added successfully.';
             }
         },
 
-        showMedicationForm: async function () {
+        showMedicationForm: function () {
             $('#addMedicationForm').modal('show');
         },
 
-        hideMedicationForm: async function () {
-            await this.getAllMedicine();
+        hideMedicationForm: function () {
             this.resetMedicationObject();
             $('#addMedicationForm').modal('hide');
         },
@@ -1462,19 +1467,21 @@
 
         //#region Consultation
         deleteConsultation: async function (id) {
-            const url = `${this.baseUrl}/Consultation/${id}`;  
+            const url = `${this.baseUrl}/Consultation/${id}`;
+            await this.deleteItem(url);
 
-            if (await this.deleteItem(url)) {
-                this.success = true;
-                this.errorMessage = 'Consultation deleted successfully.';
-            }
-            else {
+            if (this.hasError) {
+                await this.getAllConsultations();
                 this.errorMessage = 'Consultation not deleted.';
                 this.hasError = true;
             }
+            else {
+                await this.getAllConsultations();
+                this.success = true;
+                this.errorMessage = 'Consultation deleted successfully.';
+            }
 
             this.hideConsultationInfo();
-            this.resetConsultationObject();
         },
 
         addConsultation: async function () {
@@ -1509,6 +1516,7 @@
                 });
 
             if (newConsultation !== undefined) {
+                await this.getAllConsultations();
                 this.hideConsultationForm();
                 this.success = true;
                 this.errorMessage = 'Consultation added successfully.';
@@ -1524,8 +1532,7 @@
             $('#addConsultationForm').modal('show');
         },
 
-        hideConsultationForm: async function () {
-            await this.getAllConsultations();
+        hideConsultationForm: function () {
             this.resetConsultationObject();
             $('#addConsultationForm').modal('hide');
         },
