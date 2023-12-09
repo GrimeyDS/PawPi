@@ -95,8 +95,9 @@
             phone: '',
             postal: '',
             imageUrl: null,
-            practices: [],
-            specialties: []
+            consultationIds: [],
+            specialtyIds: [],
+            practiceIds: [],
         },
 
         specialties: null,
@@ -114,10 +115,11 @@
             color: '',
             animalType: '',
             weight: '',
-            imageUrl: null,
-            pedigreeUrl: null,
-            customer: null,
-            lastConsultation: null
+            image: null,
+            pedigree: null,
+            consultationIds: [],
+            medicationIds: [],
+            customerId: null
         },
 
         customers: null,
@@ -130,8 +132,8 @@
             email: '',
             phone: '',
             postal: '',
-            pets: [],
-            practice: null
+            petIds: [],
+            practiceId: null
         },
 
         consultations: null,
@@ -141,10 +143,10 @@
             dateOfConsultation: '',
             treatment: '',
             notes: '',
-            veterinarianName: '',
-            petName: '',
-            imageUrl: null,
-            documentUrl: null
+            image: null,
+            document: null,
+            veterinarianId: null,
+            petId: null
         },
 
         medicine: null,
@@ -152,7 +154,9 @@
             name: '',
             notes: '',
             sideEffects: '',
-            pets: []
+            dosage: '',
+            frequency: '',
+            petIds: []
         },
     },
 
@@ -292,19 +296,28 @@
                     .catch(error => {
                         this.hasInputError = true;
                         const errors = error.response.data.errors;
+                        if( url.includes('Veterinarian')) {
+                            if (this.registerVetDto.practiceIds.length === 0) {
+                                this.errorMessage += 'Please select a valid practice. \n';
+                            }
+                            if (this.registerVetDto.specialtyIds.length === 0) {
+                                this.errorMessage += 'Please select a valid specialty. \n';
+                            }
+                        }
                         if (errors === undefined) {
-                            this.errorMessage = error.response.data[0].description;
+                            this.errorMessage += error.response.data[0];
                         }
                         else {
                             for (const [key, value] of Object.entries(errors)) {
-                                this.errorMessage += `${key}: ${value} \n`;
+                                this.errorMessage += `\n ${key}: ${value}`;
                             }
-
                             if (this.errorMessage.includes('System.DateTime')) {
-                                this.errorMessage = 'Please provide a valid date of birth in the past.';
+                                this.errorMessage = 'Please provide a valid birthday.';
                             }
-                            else if (this.errorMessage.includes('practiceId')) {
-                                this.errorMessage = 'Please select a practice.';
+                            if (url.includes('Customer')) {
+                                if (this.registerCustomerDto.practiceId == 0) {
+                                    this.errorMessage = 'Please select a valid practice. \n';
+                                }
                             }
                         }
                     });
@@ -376,9 +389,35 @@
             this.errorMessage = '';
             this.loading = false;
             if (this.isPractice) {
+                this.registerVetDto.firstName = '';
+                this.registerVetDto.lastName = '';
+                this.registerVetDto.birth = '';
+                this.registerVetDto.address = '';
+                this.registerVetDto.city = '';
+                this.registerVetDto.email = '';
+                this.registerVetDto.phone = '';
+                this.registerVetDto.postal = '';
+                this.registerVetDto.consultationIds = [];
+                this.registerVetDto.specialtyIds = [];
+                this.registerVetDto.practiceIds = [];
+                this.registerVetDto.image = null;
+                this.registerVetDto.password = '';
+                this.registerVetDto.repeatPassword = '';
                 $('#registerVetForm').modal('hide');
             }
             else {
+                this.registerCustomerDto.firstName = '';
+                this.registerCustomerDto.lastName = '';
+                this.registerCustomerDto.birth = '';
+                this.registerCustomerDto.address = '';
+                this.registerCustomerDto.city = '';
+                this.registerCustomerDto.email = '';
+                this.registerCustomerDto.phone = '';
+                this.registerCustomerDto.postal = '';
+                this.registerCustomerDto.petIds = [];
+                this.registerCustomerDto.practiceId = null;
+                this.registerCustomerDto.password = '';
+                this.registerCustomerDto.repeatPassword = '';
                 $('#registerCustomerForm').modal('hide');
             }
         },
@@ -415,19 +454,18 @@
                 .catch(error => {
                     this.hasInputError = true;
                     const errors = error.response.data.errors;
+                    if (this.practice.veterinarianIds.length === 0) {
+                        this.errorMessage += 'Please select a valid veterinarian. \n';
+                    }
                     if (errors === undefined) {
-                        this.errorMessage = error.response.data[0].description;
+                        this.errorMessage += error.response.data[0];
                     }
                     else {
                         for (const [key, value] of Object.entries(errors)) {
-                            this.errorMessage += `${key}: ${value} \n`;
+                            this.errorMessage += `\n ${key}: ${value}`;
                         }
-
                         if (this.errorMessage.includes('System.DateTime')) {
                             this.errorMessage = 'Please provide a valid time.';
-                        }
-                        else if (this.errorMessage.includes('veterinarianid')) {
-                            this.errorMessage = 'Please select a valid veterinarian.';
                         }
                     }
                 });
@@ -440,14 +478,25 @@
             }
         },
 
-        showAddPracticeForm: function () {
+        showAddPracticeForm: async function () {
             const url = `${this.baseUrl}/Veterinarian`;
-            this.getVeterinarians(url);
+            await this.getVeterinarians(url);
             $('#addPracticeForm').modal('show');
         },
 
-        hideAddPracticeForm: function () {
-            this.getAllPractices();
+        hideAddPracticeForm: async function () {
+            await this.getAllPractices();
+            this.practice.name = '';
+            this.practice.address = '';
+            this.practice.city = '';
+            this.practice.email = '';
+            this.practice.phone = '';
+            this.practice.postal = '';
+            this.practice.openTime = '';
+            this.practice.closeTime = '';
+            this.practice.logoUrl = null;
+            this.practice.veterinarianIds = [];
+            this.practice.customerIds = [];
             $('#addPracticeForm').modal('hide');
         },
 
@@ -550,6 +599,68 @@
         //#endregion Practices
 
         //#region Veterinarians
+        addVeterinarian: async function () {
+            this.resetParameters();
+            const headers = this.getHeaders();
+
+            const url = `${this.baseUrl}/Veterinarian`;
+
+            const newVeterinarian = await axios.post(url, this.veterinarian, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (this.veterinarian.practiceIds.length === 0) {
+                        this.errorMessage += 'Please select a valid practice. \n';
+                    }
+                    if (this.veterinarian.specialtyIds.length === 0) {
+                        this.errorMessage += 'Please select a valid specialty. \n';
+                    }
+                    if (errors === undefined) {
+                        this.errorMessage += error.response.data[0]
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `\n ${key}: ${value}`;
+                        }
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid birthday.';
+                        }
+                    }
+                });
+
+            if (newVeterinarian !== undefined) {
+                this.hideVeterinarianForm();
+                this.success = true;
+                this.errorMessage = 'Veterinarian added successfully.';
+            }
+        },
+
+        showVeterinarianForm: async function () {
+            const specialtyUrl = `${this.baseUrl}/Specialty`;
+            const practiceUrl = `${this.baseUrl}/Practice`;
+            await this.getSpecialties(specialtyUrl);
+            await this.getPractices(practiceUrl);
+            $('#addVeterinarianForm').modal('show');
+        },
+
+        hideVeterinarianForm: async function () {
+            await this.getAllVeterinarians();
+            this.veterinarian.firstName = '';
+            this.veterinarian.lastName = '';
+            this.veterinarian.birth = '';
+            this.veterinarian.address = '';
+            this.veterinarian.city = '';
+            this.veterinarian.email = '';
+            this.veterinarian.phone = '';
+            this.veterinarian.postal = '';
+            this.veterinarian.imageUrl = null;
+            this.veterinarian.consultationIds = [];
+            this.veterinarian.specialtyIds = [];
+            this.veterinarian.practiceIds = [];
+            $('#addVeterinarianForm').modal('hide');
+        },
+
         getVeterinarians: async function (url) {
             this.resetParameters();
             const headers = this.getHeaders();
@@ -646,7 +757,7 @@
                     this.hasInputError = true;
                     const errors = error.response.data.errors;
                     if (errors === undefined) {
-                        this.errorMessage = error.response.data[0].description;
+                        this.errorMessage = error.response.data[0];
                     }
                     else {
                         for (const [key, value] of Object.entries(errors)) {
@@ -661,14 +772,18 @@
                 this.errorMessage = 'Specialty added successfully.';
             }
         },
-        showSpecialtyForm: function () {
+
+        showSpecialtyForm: async function () {
             const url = `${this.baseUrl}/Veterinarian`;
-            this.getVeterinarians(url);
+            await this.getVeterinarians(url);
             $('#addSpecialtyForm').modal('show');
         },
 
-        hideSpecialtyForm: function () {
-            this.getAllSpecialties();
+        hideSpecialtyForm: async function () {
+            await this.getAllSpecialties();
+            this.specialty.name = '';
+            this.specialty.description = '';
+            this.specialty.veterinarianIds = [];
             $('#addSpecialtyForm').modal('hide');
         },
 
@@ -729,6 +844,62 @@
         //#endregion Specialty
 
         //#region Pet
+        addPet: async function () {
+            this.resetParameters();
+            const headers = this.getHeaders();
+
+            const url = `${this.baseUrl}/Pet`;
+
+            const newPet = await axios.post(url, this.pet, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+                        if (this.errorMessage.includes('weight')) {
+                            this.errorMessage = 'Please provide a valid weight.';
+                        }
+                        else if (this.errorMessage.includes('customerId')) {
+                            this.errorMessage = 'Please select a valid customer.';
+                        }
+                    }
+                });
+
+            if (newPet !== undefined) {
+                this.hidePetForm();
+                this.success = true;
+                this.errorMessage = 'Pet added successfully.';
+            }
+        },
+
+        showPetForm: async function () {
+            const customerUrls = `${this.baseUrl}/Customer`;
+            await this.getCustomers(customerUrls);
+            $('#addPetForm').modal('show');
+        },
+
+        hidePetForm: async function () {
+            await this.getAllPets();
+            this.pet.name = '';
+            this.pet.callName = '';
+            this.pet.breed = '';
+            this.pet.color = '';
+            this.pet.animalType = '';
+            this.pet.weight = '';
+            this.pet.image = null;
+            this.pet.pedigree = null;
+            this.pet.consultationIds = [];
+            this.pet.medicationIds = [];
+            this.pet.customerId = null;
+            $('#addPetForm').modal('hide');
+        },
+
         getPets: async function (url) {
             this.resetParameters();
 
@@ -844,6 +1015,62 @@
         //#endregion Pet
 
         //#region Customer
+        addCustomer: async function () {
+            this.resetParameters();
+            const headers = this.getHeaders();
+
+            const url = `${this.baseUrl}/Customer`;
+
+            const newCustomer = await axios.post(url, this.customer, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `\n${key}: ${value}`;
+                        }
+
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid birthday.';
+                        }
+                        else if (this.errorMessage.includes('practiceId')) {
+                            this.errorMessage = 'Please select a valid practice.';
+                        }
+                    }
+                });
+
+            if (newCustomer !== undefined) {
+                this.hideCustomerForm();
+                this.success = true;
+                this.errorMessage = 'Customer added successfully.';
+            }
+        },
+
+        showCustomerForm: async function () {
+            const practiceUrl = `${this.baseUrl}/Practice`;
+            await this.getPractices(practiceUrl);
+            $('#addCustomerForm').modal('show');
+        },
+
+        hideCustomerForm: async function () {
+            await this.getAllCustomers();
+            this.customer.firstName = '';
+            this.customer.lastName = '';
+            this.customer.birth = '';
+            this.customer.address = '';
+            this.customer.city = '';
+            this.customer.email = '';
+            this.customer.phone = '';
+            this.customer.postal = '';
+            this.customer.petIds = [];
+            this.customer.practiceId = null;
+            $('#addCustomerForm').modal('hide');
+        },
+
         getCustomers: async function (url) {
             this.resetParameters();
 
@@ -935,6 +1162,48 @@
         //#endregion Customer
 
         //#region Medication
+        addMedication: async function () {
+            this.resetParameters();
+            const headers = this.getHeaders();
+
+            const url = `${this.baseUrl}/Medication`;
+
+            const newMedication = await axios.post(url, this.medication, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+                    }
+                });
+
+            if (newMedication !== undefined) {
+                this.hideMedicationForm();
+                this.success = true;
+                this.errorMessage = 'Medication added successfully.';
+            }
+        },
+
+        showMedicationForm: async function () {
+            $('#addMedicationForm').modal('show');
+        },
+
+        hideMedicationForm: async function () {
+            await this.getAllMedicine();
+            this.medication.name = '';
+            this.medication.notes = '';
+            this.medication.sideEffects = '';
+            this.medication.dosage = '';
+            this.medication.frequency = '';
+            this.medication.petIds = [];
+            $('#addMedicationForm').modal('hide');
+        },
         getMedicine: async function (url) {
             this.resetParameters();
             const headers = this.getHeaders();
@@ -1014,6 +1283,66 @@
         //#endregion Medication
 
         //#region Consultation
+        addConsultation: async function () {
+            this.resetParameters();
+            const headers = this.getHeaders();
+
+            const url = `${this.baseUrl}/Consultation`;
+
+            const newConsultation = await axios.post(url, this.consultation, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid date.';
+                        }
+                        else if (this.errorMessage.includes('veterinarianId')) {
+                            this.errorMessage = 'Please select a valid veterinarian.';
+                        }
+                        else if (this.errorMessage.includes('petId')) {
+                            this.errorMessage = 'Please select a valid pet.';
+                        }
+                    }
+                });
+
+            if (newConsultation !== undefined) {
+                this.hideConsultationForm();
+                this.success = true;
+                this.errorMessage = 'Consultation added successfully.';
+            }
+        },
+
+        showConsultationForm: async function () {
+            const vetUrl = `${this.baseUrl}/Veterinarian`;
+            const petUrl = `${this.baseUrl}/Pet`;
+            await this.getVeterinarians(vetUrl);
+            await this.getPets(petUrl);
+            $('#addConsultationForm').modal('show');
+        },
+
+        hideConsultationForm: async function () {
+            await this.getAllConsultations();
+            this.consultation.title = '';
+            this.consultation.diagnosis = '';
+            this.consultation.dateOfConsultation = '';
+            this.consultation.treatment = '';
+            this.consultation.notes = '';
+            this.consultation.image = null;
+            this.consultation.document = null;
+            this.consultation.veterinarianId = null;
+            this.consultation.petId = null;
+            $('#addConsultationForm').modal('hide');
+        },
+
         getConsultations: async function (url) {
             this.resetParameters();
 

@@ -6,6 +6,10 @@
             <input id="searchInput" type="text" v-model="searchAddress" v-on:keyup="searchCustomerByAddress" placeholder="Search by address" />
         </div>
 
+        <div class="text-end">
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showCustomerForm" v-if="isPractice || isVet" /></a>
+        </div>
+
         <div v-if="searchResults">
             <table class="table table-hover table-light table-bordered">
                 <thead class="table-primary">
@@ -15,7 +19,6 @@
                         <th scope="col">Address</th>
                         <th scope="col">City</th>
                         <th scope="col">Email</th>
-                        <th scopt="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,7 +28,6 @@
                         <td>{{ customer.address }}</td>
                         <td>{{ customer.city }}</td>
                         <td>{{ customer.email }}</td>
-                        <td> <img class="crudIcon" src="~/assets/images/edit.png" alt="edit"/> <img class="crudIcon" src="~/assets/images/delete.png" alt="delete" v-on:click="" /> </td>
                     </tr>
                 </tbody>
             </table>

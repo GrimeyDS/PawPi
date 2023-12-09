@@ -103,8 +103,6 @@ namespace Pri.Pawpi.Core.Services
 
             if (!pets.CheckIfIdsExist(modelPetIds))
                 return Constants.UnknownPetMessage;
-            if (!pets.CheckIdsInput(modelPetIds))
-                return Constants.NoPetMessage;
 
             var petsToLink = pets.Where(p => modelPetIds.Contains(p.Id)).ToList();
 

@@ -161,10 +161,6 @@ namespace Pri.Pawpi.Core.Services
             if (!customers.CheckIfIdExists(model.CustomerId))
                 return Constants.UnknownCustomerMessage;
 
-            if (!consultations.CheckIdsInput(modelConsultationIds))
-                return Constants.NoConsultationMessage;
-            if (!medicine.CheckIdsInput(modelMedicineIds))
-                return Constants.NoMedicineMessage;
             if (model.CustomerId == 0)
                 return Constants.NoCustomerMessage;
 

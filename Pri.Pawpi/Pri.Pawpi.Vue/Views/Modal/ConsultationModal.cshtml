@@ -24,3 +24,64 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addConsultationForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add Consultation</h5>
+                <button type="button" v-on:click="hideConsultationForm" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div v-if="hasInputError" class="alert alert-danger m-auto" id="formError">
+                    {{errorMessage}}
+                </div>
+                <form>
+                    <div class="form-group">
+                        <label>Title:</label>
+                        <input v-model="consultation.title" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Date of consultation:</label>
+                        <input v-model="consultation.dateOfConsultation" type="date" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Diagnose:</label>
+                        <input v-model="consultation.diagnosis" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Treatment:</label>
+                        <input v-model="consultation.treatment" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Notes:</label>
+                        <input v-model="consultation.notes" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Notes:</label>
+                        <input v-model="consultation.notes" type="text" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Veterinarian:</label>
+                        <select name="Veterinarian" v-model="consultation.veterinarianId">
+                            <option v-for="vet in veterinarians" :value="vet.id">{{vet.firstName}} {{vet.lastName}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pet:</label>
+                        <select name="Pet" v-model="consultation.petId">
+                            <option v-for="pet in pets" :value="pet.id">{{pet.name}}</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hideConsultationForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" v-on:click="addConsultation" class="btn btn-primary">Add Consultation</button>
+            </div>
+        </div>
+    </div>
+</div>

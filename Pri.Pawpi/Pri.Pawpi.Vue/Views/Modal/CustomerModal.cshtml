@@ -33,3 +33,66 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addCustomerForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add Customer</h5>
+                <button type="button" v-on:click="hideCustomerForm" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div v-if="hasInputError" class="alert alert-danger m-auto" id="formError">
+                    {{errorMessage}}
+                </div>
+                <form>
+                    <div class="form-group">
+                        <label>First name:</label>
+                        <input v-model="customer.firstName" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Last name:</label>
+                        <input v-model="customer.lastName" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail:</label>
+                        <input v-model="customer.email" type="email" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input v-model="customer.phone" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Address:</label>
+                        <input v-model="customer.address" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>City:</label>
+                        <input v-model="customer.city" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Postal:</label>
+                        <input v-model="customer.postal" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Birthday:</label>
+                        <input v-model="customer.birth" type="date" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Practice:</label>
+                        <select name="Practice" v-model="customer.practiceId">
+                            <option v-for="practice in practices" :value="practice.id">{{practice.name}}</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hideCustomerForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" v-on:click="addCustomer" class="btn btn-primary">Add Customer</button>
+            </div>
+        </div>
+    </div>
+</div>

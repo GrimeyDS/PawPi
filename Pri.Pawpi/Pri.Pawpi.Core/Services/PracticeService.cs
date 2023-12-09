@@ -136,8 +136,6 @@ namespace Pri.Pawpi.Core.Services
 
             if (!vets.CheckIdsInput(modelVetsIds))
                 return Constants.NoVeterinarianMessage;
-            if (!customers.CheckIdsInput(modelCustomerIds))
-                return Constants.NoCustomerMessage;
 
             var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
             var vetsToLink = vets.Where(v => modelVetsIds.Contains(v.Id)).ToList();

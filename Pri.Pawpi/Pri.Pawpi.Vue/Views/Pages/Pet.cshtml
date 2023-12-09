@@ -7,6 +7,10 @@
             <input id="searchInput" type="text" v-model="searchAnimalType" v-on:keyup="searchPetByAnimalType" placeholder="Search by animal type" />
         </div>
 
+        <div class="text-end">
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showPetForm" v-if="isPractice || isVet" /></a>
+        </div>
+
         <div v-if="searchResults">
             <div v-for="pet in pets" id="card">
                 <div class="card" style="width: 18rem;" v-on:click="showPetInfo(pet.id)">

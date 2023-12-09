@@ -112,7 +112,7 @@ namespace Pri.Pawpi.Api.Controllers
 
         [HttpPost]
         [Authorize(Policy = "Practice")]
-        public async Task<IActionResult> Create([FromForm] VeterinarianCreateDto veterinarianCreateDto)
+        public async Task<IActionResult> Create(VeterinarianCreateDto veterinarianCreateDto)
         {
             var veterinarianModel = veterinarianCreateDto.MapModel();
 
@@ -126,7 +126,7 @@ namespace Pri.Pawpi.Api.Controllers
 
         [HttpPut]
         [Authorize(Policy = "Practice/Veterinarian")]
-        public async Task<IActionResult> Update([FromForm] VeterinarianUpdateDto veterinarianUpdateDto)
+        public async Task<IActionResult> Update(VeterinarianUpdateDto veterinarianUpdateDto)
         {
             var veterinarianModel = veterinarianUpdateDto.MapModel();
 

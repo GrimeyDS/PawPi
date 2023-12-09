@@ -6,6 +6,10 @@
             <input id="searchInput" type="text" v-model="searchSideEffect" v-on:keyup="searchMedicationBySideEffect" placeholder="Search by side effect" />
         </div>
 
+        <div class="text-end">
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showMedicationForm" v-if="isVet" /></a>
+        </div>
+
         <div v-if="searchResults">
             <table class="table table-hover table-light table-bordered">
                 <thead class="table-primary">
@@ -18,7 +22,6 @@
                     <tr v-for="medication in medicine" v-on:click="showMedicationInfo(medication.id)">
                         <td>{{ medication.name }}</td>
                         <td>{{ medication.notes }}</td>
-                        <td> <img class="crudIcon" src="~/assets/images/edit.png" alt="edit" /> <img class="crudIcon" src="~/assets/images/delete.png" alt="delete" v-on:click="" /> </td>
                     </tr>
                 </tbody>
             </table>
