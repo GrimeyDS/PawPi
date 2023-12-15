@@ -54,6 +54,7 @@
         },
 
         loading: false,
+        isUpdate: false,
         hasError: false,
         success: false,
         hasInputError: false,
@@ -71,6 +72,7 @@
 
         practices: null,
         practice: {
+            id: '',
             name: '',
             address: '',
             city: '',
@@ -79,7 +81,7 @@
             postal: '',
             openTime: '',
             closeTime: '',
-            logoUrl: "",
+            logoUrl: null,
             veterinarianIds: [],
             customerIds: []
         },
@@ -168,6 +170,10 @@
     },
 
     methods: {
+
+        handleFileChange(event) {
+            this.practice.logoUrl = event.target.files[0];
+        },
 
         //#region General functions
         setNav: function (navItem) {
@@ -403,7 +409,7 @@
                 this.loginDto.username = '';
                 this.loginDto.password = '';
             }
-            
+
 
             this.loading = false;
         },
@@ -423,35 +429,35 @@
             const headers = this.getHeaders();
 
             const token = await axios.post(url, dto, headers)
-                    .then(response => response.data)
-                    .catch(error => {
-                        this.hasInputError = true;
-                        const errors = error.response.data.errors;
-                        if( url.includes('Veterinarian')) {
-                            if (this.registerVetDto.practiceIds.length === 0) {
-                                this.errorMessage += 'Please select a valid practice. \n';
-                            }
-                            if (this.registerVetDto.specialtyIds.length === 0) {
-                                this.errorMessage += 'Please select a valid specialty. \n';
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (url.includes('Veterinarian')) {
+                        if (this.registerVetDto.practiceIds.length === 0) {
+                            this.errorMessage += 'Please select a valid practice. \n';
+                        }
+                        if (this.registerVetDto.specialtyIds.length === 0) {
+                            this.errorMessage += 'Please select a valid specialty. \n';
+                        }
+                    }
+                    if (errors === undefined) {
+                        this.errorMessage += error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `\n ${key}: ${value}`;
+                        }
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid birthday.';
+                        }
+                        if (url.includes('Customer')) {
+                            if (this.registerCustomerDto.practiceId == 0) {
+                                this.errorMessage = 'Please select a valid practice. \n';
                             }
                         }
-                        if (errors === undefined) {
-                            this.errorMessage += error.response.data[0];
-                        }
-                        else {
-                            for (const [key, value] of Object.entries(errors)) {
-                                this.errorMessage += `\n ${key}: ${value}`;
-                            }
-                            if (this.errorMessage.includes('System.DateTime')) {
-                                this.errorMessage = 'Please provide a valid birthday.';
-                            }
-                            if (url.includes('Customer')) {
-                                if (this.registerCustomerDto.practiceId == 0) {
-                                    this.errorMessage = 'Please select a valid practice. \n';
-                                }
-                            }
-                        }
-                    });
+                    }
+                });
 
             if (token !== undefined) {
                 this.hideRegisterForm();
@@ -478,6 +484,16 @@
         getHeaders: function () {
             const headers = {
                 'headers': {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                }
+            };
+            return headers;
+        },
+
+        getFormHeaders: function () {
+            const headers = {
+                'headers': {
+                    'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             };
@@ -551,6 +567,69 @@
         //#endregion Identity
 
         //#region Practices
+        updatePractice: async function () {
+            this.resetParameters();
+            const headers = this.getFormHeaders();
+
+            const url = `${this.baseUrl}/Practice`;
+
+            let formData = this.getPracticeFormData();
+
+            const updatedPractice = await axios.put(url, formData, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (this.practice.veterinarianIds.length === 0) {
+                        this.errorMessage += 'Please select a valid veterinarian. \n';
+                    }
+                    if (errors === undefined) {
+                        this.errorMessage += error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `\n ${key}: ${value}`;
+                        }
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid time.';
+                        }
+                    }
+                });
+
+            if (updatedPractice !== undefined) {
+                await this.getAllPractices();
+                this.hideAddPracticeForm();
+                this.success = true;
+                this.errorMessage = 'Practice updated successfully.';
+            }
+        },
+
+        getPracticeFormData: function () {
+            let formData = new FormData();
+
+            formData.append('id', this.practice.id);
+            formData.append('name', this.practice.name);
+            formData.append('address', this.practice.address);
+            formData.append('city', this.practice.city);
+            formData.append('email', this.practice.email);
+            formData.append('phone', this.practice.phone);
+            formData.append('postal', this.practice.postal);
+            formData.append('openTime', this.practice.openTime);
+            formData.append('closeTime', this.practice.closeTime);
+            formData.append('logo', this.practice.logoUrl);
+            this.practice.veterinarianIds.forEach(v => { formData.append('veterinarianIds', v); });
+            
+
+            return formData;
+        },
+
+        showUpdatePracticeForm: async function () {
+            const url = `${this.baseUrl}/Veterinarian`;
+            await this.getVeterinarians(url);
+            this.isUpdate = true;
+            $('#addPracticeForm').modal('show');
+        },
+
         deletePractice: async function (id) {
             const url = `${this.baseUrl}/Practice/${id}`;
             await this.deleteItem(url);
@@ -571,11 +650,13 @@
 
         addPractice: async function () {
             this.resetParameters();
-            const headers = this.getHeaders();
+            const headers = this.getFormHeaders();
 
             const url = `${this.baseUrl}/Practice`;
 
-            const newPractice = await axios.post(url, this.practice, headers)
+            let formData = this.getPracticeFormData();
+
+            const newPractice = await axios.post(url, formData, headers)
                 .then(response => response.data)
                 .catch(error => {
                     this.hasInputError = true;
@@ -599,6 +680,7 @@
             if (newPractice !== undefined) {
                 await this.getAllPractices();
                 this.hideAddPracticeForm();
+                this.hidePracticeInfo();
                 this.success = true;
                 this.errorMessage = 'Practice added successfully.';
                 
@@ -612,6 +694,7 @@
         },
 
         hideAddPracticeForm: function () {
+            this.isUpdate = false;
             this.resetPracticeObject();
             $('#addPracticeForm').modal('hide');
         },

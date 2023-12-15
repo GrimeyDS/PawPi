@@ -140,7 +140,7 @@ namespace Pri.Pawpi.Core.Services
             var customersToLink = customers.Where(c => modelCustomerIds.Contains(c.Id)).ToList();
             var vetsToLink = vets.Where(v => modelVetsIds.Contains(v.Id)).ToList();
 
-            practice.Customers = customersToLink;
+            //practice.Customers = customersToLink;
             practice.Veterinarians = vetsToLink;
 
             return string.Empty;

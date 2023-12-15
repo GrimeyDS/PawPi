@@ -13,6 +13,6 @@ namespace Pri.Pawpi.Api.Dtos.Practice.Response
         public DateTime? OpenTime { get; set; }
         public DateTime? CloseTime { get; set; }
         public string LogoUrl { get; set; }
-        public IEnumerable<VeterinarianBaseDto> Veterinarians { get; set; }
+        public IEnumerable<VeterinarianBaseDto> VeterinarianIds { get; set; }
     }
 }

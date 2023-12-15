@@ -269,7 +269,7 @@ namespace Pri.Pawpi.Api.Extensions
                 OpenTime = practice.OpenTime,
                 CloseTime = practice.CloseTime,
                 LogoUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Logos/Practice/{practice.Logo}",
-                Veterinarians = practice.Veterinarians.MapBaseDto()
+                VeterinarianIds = practice.Veterinarians.MapBaseDto()
             };
         }
 
