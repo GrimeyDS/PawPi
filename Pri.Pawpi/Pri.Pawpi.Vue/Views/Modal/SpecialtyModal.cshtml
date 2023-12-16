@@ -9,7 +9,8 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <div class="card-text" v-for="vet in veterinarians">
+                    <div v-if="veterinarians === undefined || veterinarians === null">No vets available</div>
+                    <div v-else class="card-text" v-for="vet in veterinarians">
                         <h5 >{{vet.firstName}} {{vet.lastName}}<br /></h5>
                         <span v-for="prac in vet.practices">{{prac.name}}<br/></span>
                         <br/>
@@ -17,6 +18,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" v-on:click="showUpdateSpecialtyForm" v-if="isVet" class="btn btn-warning">Update</button>
                 <button type="button" v-on:click.prevent="deleteSpecialty(specialty.id)" v-if="isVet" class="btn btn-danger">Delete</button>
                 <button type="button" v-on:click="hideSpecialtyInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
@@ -58,7 +60,8 @@
              </div>
             <div class="modal-footer">
                 <button type="button" v-on:click="hideSpecialtyForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" v-on:click="addSpecialty" class="btn btn-primary">Add Specialty</button>
+                <button type="button" v-on:click="addSpecialty" v-if="!isUpdate" class="btn btn-primary">Add Specialty</button>
+                <button type="button" v-on:click="updateSpecialty" v-if="isUpdate" class="btn btn-primary">Update Specialty</button>
             </div>
         </div>
     </div>

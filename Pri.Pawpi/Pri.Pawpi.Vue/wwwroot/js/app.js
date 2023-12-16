@@ -181,6 +181,14 @@
             this.veterinarian.imageUrl = event.target.files[0];
         },
 
+        handlePetImageChange(event) {
+            this.practice.image = event.target.files[0];
+        },
+
+        handlePetPedigreeChange(event) {
+            this.veterinarian.pedigree = event.target.files[0];
+        },
+
         //#region General functions
         setNav: function (navItem) {
             this.homeVisible = false;
@@ -711,7 +719,7 @@
                 .catch(error => {
                     if (!error.message.includes("405")) {
                         this.hasError = true;
-                        this.errorMessage = error.message;
+                        this.errorMessage = error.response.data[0];
                     }
                 })
                 .finally(() => { this.loading = false; });
@@ -948,7 +956,7 @@
                 .catch(error => {
                     if (!error.message.includes("405")) {
                         this.hasError = true;
-                        this.errorMessage = error.message;
+                        this.errorMessage = error.response.data[0];
                     }
                 })
                 .finally(() => { this.loading = false; });
@@ -1024,7 +1032,42 @@
         //#endregion Veterinarians
 
         //#region Specialty
+        updateSpecialty: async function () {
+            this.resetParameters();
+            const headers = this.getHeaders();
 
+            const url = `${this.baseUrl}/Specialty`;
+
+            const updatedSpec = await axios.put(url, this.specialty, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+                    }
+                });
+
+            if (updatedSpec !== undefined) {
+                await this.getAllSpecialties();
+                this.hideSpecialtyForm();
+                this.isUpdate = false;
+                this.success = true;
+                this.errorMessage = 'Specialty updated successfully.';
+                this.hideSpecialtyInfo();
+            }
+        },
+
+        showUpdateSpecialtyForm: async function () {
+            this.isUpdate = true;
+            $('#specialtyInfo').modal('hide');
+            this.showSpecialtyForm();
+        },
 
         deleteSpecialty: async function (id) {
             const url = `${this.baseUrl}/Specialty/${id}`;
@@ -1080,7 +1123,7 @@
         },
 
         hideSpecialtyForm: function () {
-            this.resetSpecialtyObjects();
+            this.hideSpecialtyInfo();
             $('#addSpecialtyForm').modal('hide');
         },
 
@@ -1093,7 +1136,7 @@
                 .then(response => response.data.specialties)
                 .catch(error => {
                     this.hasError = true;
-                    this.errorMessage = error.message;
+                    this.errorMessage = error.response.data[0];
                 })
                 .finally(() => { this.loading = false; });
 
@@ -1120,6 +1163,7 @@
 
             const specialtyVetUrl = `${this.baseUrl}/Specialty/${id}/Veterinarians`;
             this.getVeterinarians(specialtyVetUrl);
+
             $('#specialtyInfo').modal('show');
         },
 
@@ -1142,6 +1186,67 @@
         //#endregion Specialty
 
         //#region Pet
+        getPetFormData: function () {
+            let formData = new FormData();
+
+            formData.append('id', this.pet.id);
+            formData.append('name', this.pet.name);
+            formData.append('callName', this.pet.callName);
+            formData.append('breed', this.pet.breed);
+            formData.append('color', this.pet.color);
+            formData.append('animalType', this.pet.animalType);
+            formData.append('weight', this.pet.weight);
+            formData.append('image', this.pet.image);
+            formData.append('pedigree', this.pet.pedigree);
+            formData.append('customerId', this.pet.customerId);
+
+            return formData;
+        },
+
+        updatePet: async function () {
+            this.resetParameters();
+            const headers = this.getFormHeaders();
+
+            const url = `${this.baseUrl}/Pet`;
+
+            let formData = this.getPetFormData();
+
+            const updatedPet = await axios.put(url, formData, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+                        if (this.errorMessage.includes('weight')) {
+                            this.errorMessage = 'Please provide a valid weight.';
+                        }
+                        else if (this.errorMessage.includes('customerId')) {
+                            this.errorMessage = 'Please select a valid customer.';
+                        }
+                    }
+                });
+
+            if (updatedPet !== undefined) {
+                await this.getAllPets();
+                this.hidePetForm();
+                this.isUpdate = false;
+                this.success = true;
+                this.errorMessage = 'Pet updated successfully.';
+                this.hidePetInfo();
+            }
+        },
+
+        showUpdatePetForm: async function () {
+            this.isUpdate = true;
+            this.showPetForm();
+        },
+
         deletePet: async function (id) {
             const url = `${this.baseUrl}/Pet/${id}`;
             await this.deleteItem(url);
@@ -1162,11 +1267,13 @@
 
         addPet: async function () {
             this.resetParameters();
-            const headers = this.getHeaders();
+            const headers = this.getFormHeaders();
 
             const url = `${this.baseUrl}/Pet`;
 
-            const newPet = await axios.post(url, this.pet, headers)
+            let formData = this.getPetFormData();
+
+            const newPet = await axios.post(url, formData, headers)
                 .then(response => response.data)
                 .catch(error => {
                     this.hasInputError = true;
@@ -1214,7 +1321,7 @@
                 .then(response => response.data.pets)
                 .catch(error => {
                     this.hasError = true;
-                    this.errorMessage = error.message;
+                    this.errorMessage = error.response.data[0];
                 })
                 .finally(() => { this.loading = false; });
 
@@ -1403,7 +1510,7 @@
                 .then(response => response.data.customers)
                 .catch(error => {
                     this.hasError = true;
-                    this.errorMessage = error.message;
+                    this.errorMessage = error.response.data[0];
                 })
                 .finally(() => { this.loading = false; });
 
@@ -1551,7 +1658,7 @@
                 .then(response => response.data.medicine)
                 .catch(error => {
                     this.hasError = true;
-                    this.errorMessage = error.message;
+                    this.errorMessage = error.response.data[0];
                 })
                 .finally(() => { this.loading = false; });
 
@@ -1702,7 +1809,7 @@
                 .then(response => response.data.consultations)
                 .catch(error => {
                     this.hasError = true;
-                    this.errorMessage = error.message;
+                    this.errorMessage = error.response.data[0];
                 })
                 .finally(() => { this.loading = false; });
 
