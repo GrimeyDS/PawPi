@@ -14,11 +14,14 @@
                     <p><b>Treatment:</b> {{consultation.treatment}}</p>
                     <p><b>Note:</b> {{consultation.notes}}</p>
                     <p><b>Date:</b> {{consultation.dateOfConsultation | formatDate() }}</p>
-                    <p><b>Veterinarian:</b> {{consultation.veterinarianName}}</p>
+                    <span><b>Image: </b> {{ consultation.imageUrl }} </span><br />
+                    <span><b>Document: </b> {{ consultation.documentUrl }} </span><br />
+                    <p><b>Veterinarian:</b> {{ consultation.veterinarianName }}</p>
 
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" v-on:click="showUpdateConsultationForm" v-if="isVet" class="btn btn-warning">Update</button>
                 <button type="button" v-on:click.prevent="deleteConsultation(consultation.id)" v-if="isVet" class="btn btn-danger">Delete</button>
                 <button type="button" v-on:click="hideConsultationInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
@@ -30,7 +33,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Add Consultation</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Consultation</h5>
                 <button type="button" v-on:click="hideConsultationForm" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -72,11 +75,22 @@
                             <option v-for="pet in pets" :value="pet.id">{{pet.name}}</option>
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label>Image:</label>
+                        <input v-on:change="handleConsultImageChange" type="file" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Document:</label>
+                        <input v-on:change="handleConsultDocChange" type="file" class="form-control" />
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" v-on:click="hideConsultationForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" v-on:click="addConsultation" class="btn btn-primary">Add Consultation</button>
+                <button type="button" v-on:click="addConsultation" v-if="!isUpdate" class="btn btn-primary">Add Consultation</button>
+                <button type="button" v-on:click="updateConsultation" v-if="isUpdate" class="btn btn-primary">Update Consultation</button>
             </div>
         </div>
     </div>

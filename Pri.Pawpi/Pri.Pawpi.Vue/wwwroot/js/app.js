@@ -119,8 +119,8 @@
             color: '',
             animalType: '',
             weight: '',
-            image: null,
-            pedigree: null,
+            imageUrl: null,
+            pedigreeUrl: null,
             consultationIds: [],
             medicationIds: [],
             customerId: null,
@@ -148,8 +148,8 @@
             dateOfConsultation: '',
             treatment: '',
             notes: '',
-            image: null,
-            document: null,
+            imageUrl: null,
+            documentUrl: null,
             veterinarianId: null,
             petId: null
         },
@@ -182,12 +182,41 @@
         },
 
         handlePetImageChange(event) {
-            this.practice.image = event.target.files[0];
+            this.pet.imageUrl = event.target.files[0];
         },
 
         handlePetPedigreeChange(event) {
-            this.veterinarian.pedigree = event.target.files[0];
+            this.pet.pedigreeUrl = event.target.files[0];
         },
+
+        handleConsultImageChange(event) {
+            this.consultation.imageUrl = event.target.files[0];
+        },
+
+        handleConsultDocChange(event) {
+            this.consultation.documentUrl = event.target.files[0];
+        },
+
+        //downloadFile(url) {
+        //    axios({
+        //        url: url, // Download File URL Goes Here
+        //        method: 'GET',
+        //        responseType: 'blob',
+        //        headers: {
+        //            'Access-Control-Allow-Origin': '*',
+        //            'Access-Control-Allow-Methods': ' GET, PUT, POST, DELETE, OPTIONS',
+        //            'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
+        //            'Access-Control-Allow-Credentials': 'false',
+        //        },
+        //    }).then((res) => {
+        //        var FILE = window.URL.createObjectURL(new Blob([res.data]));
+        //        var docUrl = document.createElement('x');
+        //        docUrl.href = FILE;
+        //        docUrl.setAttribute('download', 'file.pdf');
+        //        document.body.appendChild(docUrl);
+        //        docUrl.click();
+        //    });
+        //},
 
         //#region General functions
         setNav: function (navItem) {
@@ -842,10 +871,10 @@
                 .catch(error => {
                     this.hasInputError = true;
                     const errors = error.response.data.errors;
-                    if (this.veterinarian.practiceIds.length === 0) {
+                    if (this.veterinarian.practices.length === 0) {
                         this.errorMessage += 'Please select a valid practice. \n';
                     }
-                    if (this.veterinarian.specialtyIds.length === 0) {
+                    if (this.veterinarian.specialties.length === 0) {
                         this.errorMessage += 'Please select a valid specialty. \n';
                     }
                     if (errors === undefined) {
@@ -907,10 +936,10 @@
                 .catch(error => {
                     this.hasInputError = true;
                     const errors = error.response.data.errors;
-                    if (this.veterinarian.practiceIds.length === 0) {
+                    if (this.veterinarian.practices.length === 0) {
                         this.errorMessage += 'Please select a valid practice. \n';
                     }
-                    if (this.veterinarian.specialtyIds.length === 0) {
+                    if (this.veterinarian.specialties.length === 0) {
                         this.errorMessage += 'Please select a valid specialty. \n';
                     }
                     if (errors === undefined) {
@@ -1196,8 +1225,8 @@
             formData.append('color', this.pet.color);
             formData.append('animalType', this.pet.animalType);
             formData.append('weight', this.pet.weight);
-            formData.append('image', this.pet.image);
-            formData.append('pedigree', this.pet.pedigree);
+            formData.append('image', this.pet.imageUrl);
+            formData.append('pedigree', this.pet.pedigreeUrl);
             formData.append('customerId', this.pet.customerId);
 
             return formData;
@@ -1244,6 +1273,7 @@
 
         showUpdatePetForm: async function () {
             this.isUpdate = true;
+            $('#petInfo').modal('hide');
             this.showPetForm();
         },
 
@@ -1437,6 +1467,50 @@
         //#endregion Pet
 
         //#region Customer
+        updateCustomer: async function () {
+            this.resetParameters();
+            const headers = this.getHeaders();
+
+            const url = `${this.baseUrl}/Customer`;
+
+            const updatedCustomer = await axios.put(url, this.customer, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `\n${key}: ${value}`;
+                        }
+
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid birthday.';
+                        }
+                        else if (this.errorMessage.includes('practiceId')) {
+                            this.errorMessage = 'Please select a valid practice.';
+                        }
+                    }
+                });
+
+            if (updatedCustomer !== undefined) {
+                await this.getAllCustomers();
+                this.hideCustomerForm();
+                this.success = true;
+                this.isUpdate = false;
+                this.errorMessage = 'Customer updated successfully.';
+                this.hideCustomerInfo();
+            }
+        },
+
+        showUpdateCustomerForm: async function () {
+            this.isUpdate = true;
+            $('#customerInfo').modal('hide');
+            this.showCustomerForm();
+        },
+
         deleteCustomer: async function (id) {
             const url = `${this.baseUrl}/Customer/${id}`;
             await this.deleteItem(url);
@@ -1583,6 +1657,7 @@
                 .finally(() => { this.loading = false; });
 
             this.practice = this.customer.practice;
+            this.practice.veterinarianIds = [];
             $('#customerInfo').modal('show');
         },
 
@@ -1730,6 +1805,72 @@
         //#endregion Medication
 
         //#region Consultation
+        getConsultFormData: function () {
+            let formData = new FormData();
+
+            formData.append('id', this.consultation.id);
+            formData.append('title', this.consultation.title);
+            formData.append('dateOfConsultation', this.consultation.dateOfConsultation);
+            formData.append('petId', this.consultation.petId);
+            formData.append('veterinarianId', this.consultation.veterinarianId);
+            formData.append('Diagnosis', this.consultation.diagnosis);
+            formData.append('treatment', this.consultation.treatment);
+            formData.append('notes', this.consultation.notes);
+            formData.append('image', this.consultation.imageUrl);
+            formData.append('document', this.consultation.documentUrl);
+
+            return formData;
+        },
+
+        updateConsultation: async function () {
+            this.resetParameters();
+            const headers = this.getFormHeaders();
+
+            const url = `${this.baseUrl}/Consultation`;
+
+            let formData = this.getConsultFormData();
+
+            const updateConsult = await axios.put(url, formData, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid date.';
+                        }
+                        else if (this.errorMessage.includes('veterinarianId')) {
+                            this.errorMessage = 'Please select a valid veterinarian.';
+                        }
+                        else if (this.errorMessage.includes('petId')) {
+                            this.errorMessage = 'Please select a valid pet.';
+                        }
+                    }
+                });
+
+            if (updateConsult !== undefined) {
+                await this.getAllConsultations();
+                this.hideConsultationForm();
+                this.isUpdate = false;
+                this.success = true;
+                this.errorMessage = 'Consultation updated successfully.';
+                this.hideConsultationInfo();
+            }
+        },
+
+        showUpdateConsultationForm: async function () {
+            this.isUpdate = true;
+            $('#consultationInfo').modal('hide');
+            this.showConsultationForm();
+        },
+
         deleteConsultation: async function (id) {
             const url = `${this.baseUrl}/Consultation/${id}`;
             await this.deleteItem(url);
@@ -1750,11 +1891,13 @@
 
         addConsultation: async function () {
             this.resetParameters();
-            const headers = this.getHeaders();
+            const headers = this.getFormHeaders();
 
             const url = `${this.baseUrl}/Consultation`;
 
-            const newConsultation = await axios.post(url, this.consultation, headers)
+            let formData = this.getConsultFormData();
+
+            const newConsultation = await axios.post(url, formData, headers)
                 .then(response => response.data)
                 .catch(error => {
                     this.hasInputError = true;
@@ -1792,7 +1935,6 @@
             const petUrl = `${this.baseUrl}/Pet`;
             await this.getVeterinarians(vetUrl);
             await this.getPets(petUrl);
-            this.consultation.title = '';
             $('#addConsultationForm').modal('show');
         },
 

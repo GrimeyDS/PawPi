@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" v-on:click="showUpdateSpecialtyForm" v-if="isVet" class="btn btn-warning">Update</button>
+                <button type="button" v-on:click="showUpdateSpecialtyForm" v-if="isVet || isPractice" class="btn btn-warning">Update</button>
                 <button type="button" v-on:click.prevent="deleteSpecialty(specialty.id)" v-if="isVet" class="btn btn-danger">Delete</button>
                 <button type="button" v-on:click="hideSpecialtyInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
@@ -30,7 +30,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Add Specialty</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Specialty</h5>
                 <button type="button" v-on:click="hideSpecialtyForm" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -61,7 +61,7 @@
             <div class="modal-footer">
                 <button type="button" v-on:click="hideSpecialtyForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" v-on:click="addSpecialty" v-if="!isUpdate" class="btn btn-primary">Add Specialty</button>
-                <button type="button" v-on:click="updateSpecialty" v-if="isUpdate" class="btn btn-primary">Update Specialty</button>
+                <button type="button" v-on:click="updateSpecialty" v-if="isUpdate" class="btn btn-primary">Update Pet</button>
             </div>
         </div>
     </div>

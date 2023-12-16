@@ -214,8 +214,8 @@ namespace Pri.Pawpi.Api.Extensions
                 Color = pet.Color,
                 AnimalType = pet.AnimalType,
                 Weight = pet.Weight,
-                ImageUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Pets/{pet.ImageFile}",
-                PedigreeUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Pedigrees/Pets/{pet.PedigreeFile}",
+                ImageUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Pet/{pet.ImageFile}",
+                PedigreeUrl = pet.PedigreeFile is not null ? $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Pedigrees/Pet/{pet.PedigreeFile}" : "",
                 Customer= pet.Customer.MapBaseDto(),
                 LastConsultation = pet.Consultations.MapBaseDto().LastOrDefault(),
             };
@@ -322,8 +322,8 @@ namespace Pri.Pawpi.Api.Extensions
                 DateOfConsultation = con.DateOfConsultation.Date,
                 VeterinarianName = con.Veterinarian.FirstName + " " + con.Veterinarian.LastName,
                 PetName = con.Pet.Name,
-                ImageUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Consultation/{con.ImageFile}",
-                DocumentUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Documents/Consultation/{con.DocumentFile}"
+                ImageUrl = con.ImageFile is not null ? $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Consultation/{con.ImageFile}" : "",
+                DocumentUrl = con.DocumentFile is not null ?  $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Documents/Consultation/{con.DocumentFile}" : "",
             };
         }
 

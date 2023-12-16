@@ -28,6 +28,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" v-on:click="showUpdateCustomerForm" v-if="isVet || isPractice" class="btn btn-warning">Update</button>
                 <button type="button" v-on:click.prevent="deleteCustomer(customer.id)" v-if="isVet || isPractice" class="btn btn-danger">Delete</button>
                 <button type="button" v-on:click="hideCustomerInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
@@ -39,7 +40,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Add Customer</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Customer</h5>
                 <button type="button" v-on:click="hideCustomerForm" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -92,7 +93,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" v-on:click="hideCustomerForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" v-on:click="addCustomer" class="btn btn-primary">Add Customer</button>
+                <button type="button" v-on:click="addCustomer" v-if="!isUpdate" class="btn btn-primary">Add Customer</button>
+                <button type="button" v-on:click="updateCustomer" v-if="isUpdate" class="btn btn-primary">Update Customer</button>
             </div>
         </div>
     </div>

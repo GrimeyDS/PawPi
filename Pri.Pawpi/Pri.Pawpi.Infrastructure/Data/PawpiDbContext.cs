@@ -62,19 +62,19 @@ namespace Pri.Pawpi.Infrastructure.Data
                         .HasMaxLength(50);
             modelBuilder.Entity<Veterinarian>()
                         .Property(v => v.Phone)
-                        .IsRequired(true)
+                        .IsRequired(false)
                         .HasMaxLength(50);
             modelBuilder.Entity<Veterinarian>()
                         .Property(v => v.Address)
-                        .IsRequired(true)
+                        .IsRequired(false)
                         .HasMaxLength(100);
             modelBuilder.Entity<Veterinarian>()
                         .Property(v => v.City)
-                        .IsRequired(true)
+                        .IsRequired(false)
                         .HasMaxLength(50);
             modelBuilder.Entity<Veterinarian>()
                         .Property(v => v.Postal)
-                        .IsRequired(true)
+                        .IsRequired(false)
                         .HasMaxLength(50);
             modelBuilder.Entity<Veterinarian>()
                         .Property(v => v.Birth)
@@ -96,19 +96,19 @@ namespace Pri.Pawpi.Infrastructure.Data
                         .HasMaxLength(50);
             modelBuilder.Entity<Customer>()
                         .Property(c => c.Phone)
-                        .IsRequired(true)
+                        .IsRequired(false)
                         .HasMaxLength(50);
             modelBuilder.Entity<Customer>()
                         .Property(c => c.Address)
-                        .IsRequired(true)
+                        .IsRequired(false)
                         .HasMaxLength(100);
             modelBuilder.Entity<Customer>()
                      .Property(c => c.City)
-                        .IsRequired(true)
+                        .IsRequired(false)
                         .HasMaxLength(50);
             modelBuilder.Entity<Customer>()
                         .Property(c => c.Postal)
-                        .IsRequired(true)
+                        .IsRequired(false)
                         .HasMaxLength(50);
             modelBuilder.Entity<Customer>()
                         .Property(c => c.Birth)

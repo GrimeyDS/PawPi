@@ -204,7 +204,7 @@ namespace Pri.Pawpi.Core.Services
             if (model.Pedigree is null)
                 return string.Empty;
 
-            var pedigreeResult = await _fileService.StoreFile<Pet>(model.Image, "Pedigrees");
+            var pedigreeResult = await _fileService.StoreFile<Pet>(model.Pedigree, "Pedigrees");
             if (!pedigreeResult.IsSuccess)
                 return pedigreeResult.Error;
 

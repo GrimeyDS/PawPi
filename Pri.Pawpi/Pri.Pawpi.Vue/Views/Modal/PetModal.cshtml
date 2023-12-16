@@ -15,6 +15,7 @@
                     <span><b>Breed:</b> {{pet.breed}}</span><br />
                     <span><b>Color:</b> {{pet.color}}</span><br />
                     <span><b>Weight:</b> {{pet.weight}}kg</span><br />
+                    <span><b>Pedigree: </b> {{pet.pedigreeUrl}} </span><br />
                     <span><b>Owner:</b> {{ customer.firstName }} {{ customer.lastName }}</span><br />
                     <span><b>Email:</b> {{ customer.email }}</span>
                 </div>
@@ -24,6 +25,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" v-on:click="showUpdatePetForm" v-if="isVet" class="btn btn-warning">Update</button>
                 <button type="button" v-on:click.prevent="deletePet(pet.id)" v-if="isVet || isPractice" class="btn btn-danger">Delete</button>
                 <button type="button" v-on:click="hidePetInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
@@ -35,7 +37,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Add Pet</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Pet</h5>
                 <button type="button" v-on:click="hidePetForm" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -76,11 +78,22 @@
                             <option v-for="customer in customers" :value="customer.id">{{customer.firstName}} {{customer.lastName}}</option>
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label>Picture:</label>
+                        <input v-on:change="handlePetImageChange" type="file" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pedigree:</label>
+                        <input v-on:change="handlePetPedigreeChange" type="file" class="form-control" />
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" v-on:click="hidePetForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" v-on:click="addPet" class="btn btn-primary">Add Pet</button>
+                <button type="button" v-on:click="addPet" v-if="!isUpdate" class="btn btn-primary">Add Pet</button>
+                <button type="button" v-on:click="updatePet" v-if="isUpdate" class="btn btn-primary">Update Pet</button>
             </div>
         </div>
     </div>
