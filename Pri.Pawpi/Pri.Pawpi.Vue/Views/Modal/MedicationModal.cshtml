@@ -11,9 +11,12 @@
                 <div>
                     <p><b>Note:</b> {{medication.notes}}</p>
                     <p><b>Side Effects:</b> {{medication.sideEffects}}</p>
+                    <p><b>Dosage:</b> {{medication.dosage}}</p>
+                    <p><b>Frequency:</b> {{medication.frequency}}</p>
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" v-on:click="showUpdateMedicationForm" v-if="isVet" class="btn btn-warning">Update</button>
                 <button type="button" v-on:click.prevent="deleteMedication(medication.id)" class="btn btn-danger" v-if="isVet">Delete</button>
                 <button type="button" v-on:click="hideMedicationInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
@@ -25,7 +28,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Add Medication</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Medication</h5>
                 <button type="button" v-on:click="hideMedicationForm" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -59,7 +62,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" v-on:click="hideMedicationForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" v-on:click="addMedication" class="btn btn-primary">Add Medication</button>
+                <button type="button" v-on:click="addMedication" v-if="!isUpdate" class="btn btn-primary">Add Medication</button>
+                <button type="button" v-on:click="updateMedication" v-if="isUpdate" class="btn btn-primary">Update Medication</button>
             </div>
         </div>
     </div>

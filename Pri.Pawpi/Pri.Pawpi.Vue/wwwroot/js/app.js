@@ -1669,6 +1669,42 @@
         //#endregion Customer
 
         //#region Medication
+        updateMedication: async function () {
+            this.resetParameters();
+            const headers = this.getHeaders();
+
+            const url = `${this.baseUrl}/Medication`;
+
+            const updatedMed = await axios.put(url, this.medication, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (errors === undefined) {
+                        this.errorMessage = error.response.data[0];
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `${key}: ${value} \n`;
+                        }
+                    }
+                });
+
+            if (updatedMed !== undefined) {
+                await this.getAllMedicine();
+                this.hideMedicationForm();
+                this.isUpdate = false;
+                this.success = true;
+                this.errorMessage = 'Medication updated successfully.';
+                this.hideMedicationInfo();
+            }
+        },
+
+        showUpdateMedicationForm: async function () {
+            this.isUpdate = true;
+            $('#medicationInfo').modal('hide');
+            this.showMedicationForm();
+        },
         deleteMedication: async function (id) {
             const url = `${this.baseUrl}/Medication/${id}`;
             await this.deleteItem(url);
