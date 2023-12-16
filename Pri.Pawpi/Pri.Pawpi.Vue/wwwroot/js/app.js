@@ -642,7 +642,6 @@
             if (updatedPractice !== undefined) {
                 await this.getAllPractices();
                 this.hideAddPracticeForm();
-                this.isUpdate = false;
                 this.success = true;
                 this.errorMessage = 'Practice updated successfully.';
                 this.hidePracticeInfo();
@@ -670,6 +669,7 @@
 
         showUpdatePracticeForm: async function () {
             this.isUpdate = true;
+            $('#practiceInfo').modal('hide');
             this.showAddPracticeForm();
         },
 
@@ -736,6 +736,7 @@
 
         hideAddPracticeForm: function () {
             this.hidePracticeInfo();
+            this.isUpdate = false;
             $('#addPracticeForm').modal('hide');
         },
 
@@ -893,7 +894,6 @@
             if (updatedVet !== undefined) {
                 await this.getAllVeterinarians();
                 this.hideVeterinarianForm();
-                this.isUpdate = false;
                 this.success = true;
                 this.errorMessage = 'Veterinarian updated successfully.';
                 this.hideVeterinarianInfo();
@@ -902,6 +902,7 @@
 
         showUpdateVeterinarianForm: async function () {
             this.isUpdate = true;
+            $('#veterinarianInfo').modal('hide');
             this.showVeterinarianForm();
         },
 
@@ -973,6 +974,7 @@
 
         hideVeterinarianForm: function () {
             this.hideVeterinarianInfo();
+            this.isUpdate = false;
             $('#addVeterinarianForm').modal('hide');
         },
 
@@ -1085,7 +1087,6 @@
             if (updatedSpec !== undefined) {
                 await this.getAllSpecialties();
                 this.hideSpecialtyForm();
-                this.isUpdate = false;
                 this.success = true;
                 this.errorMessage = 'Specialty updated successfully.';
                 this.hideSpecialtyInfo();
@@ -1153,6 +1154,7 @@
 
         hideSpecialtyForm: function () {
             this.hideSpecialtyInfo();
+            this.isUpdate = false;
             $('#addSpecialtyForm').modal('hide');
         },
 
@@ -1264,7 +1266,6 @@
             if (updatedPet !== undefined) {
                 await this.getAllPets();
                 this.hidePetForm();
-                this.isUpdate = false;
                 this.success = true;
                 this.errorMessage = 'Pet updated successfully.';
                 this.hidePetInfo();
@@ -1340,6 +1341,7 @@
 
         hidePetForm: function () {
             this.resetPetObject();
+            this.isUpdate = false;
             $('#addPetForm').modal('hide');
         },
 
@@ -1499,7 +1501,6 @@
                 await this.getAllCustomers();
                 this.hideCustomerForm();
                 this.success = true;
-                this.isUpdate = false;
                 this.errorMessage = 'Customer updated successfully.';
                 this.hideCustomerInfo();
             }
@@ -1573,6 +1574,7 @@
 
         hideCustomerForm: function () {
             this.resetCustomerObject();
+            this.isUpdate = false;
             $('#addCustomerForm').modal('hide');
         },
 
@@ -1693,7 +1695,6 @@
             if (updatedMed !== undefined) {
                 await this.getAllMedicine();
                 this.hideMedicationForm();
-                this.isUpdate = false;
                 this.success = true;
                 this.errorMessage = 'Medication updated successfully.';
                 this.hideMedicationInfo();
@@ -1758,6 +1759,7 @@
 
         hideMedicationForm: function () {
             this.resetMedicationObject();
+            this.isUpdate = false;
             $('#addMedicationForm').modal('hide');
         },
 
@@ -1894,7 +1896,6 @@
             if (updateConsult !== undefined) {
                 await this.getAllConsultations();
                 this.hideConsultationForm();
-                this.isUpdate = false;
                 this.success = true;
                 this.errorMessage = 'Consultation updated successfully.';
                 this.hideConsultationInfo();
