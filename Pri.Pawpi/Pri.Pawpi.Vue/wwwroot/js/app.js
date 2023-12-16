@@ -173,6 +173,8 @@
 
     methods: {
 
+        //#region Files
+
         handlePracticeFileChange(event) {
             this.practice.logoUrl = event.target.files[0];
         },
@@ -217,6 +219,8 @@
         //        docUrl.click();
         //    });
         //},
+
+        //#endregion Files
 
         //#region General functions
         setNav: function (navItem) {
