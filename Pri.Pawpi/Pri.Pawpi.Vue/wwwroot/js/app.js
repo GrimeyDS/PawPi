@@ -100,6 +100,8 @@
             consultationIds: [],
             specialtyIds: [],
             practiceIds: [],
+            specialties: [],
+            practices: []
         },
 
         specialties: null,
@@ -171,8 +173,12 @@
 
     methods: {
 
-        handleFileChange(event) {
+        handlePracticeFileChange(event) {
             this.practice.logoUrl = event.target.files[0];
+        },
+
+        handleVetFileChange(event) {
+            this.veterinarian.imageUrl = event.target.files[0];
         },
 
         //#region General functions
@@ -599,8 +605,10 @@
             if (updatedPractice !== undefined) {
                 await this.getAllPractices();
                 this.hideAddPracticeForm();
+                this.isUpdate = false;
                 this.success = true;
                 this.errorMessage = 'Practice updated successfully.';
+                this.hidePracticeInfo();
             }
         },
 
@@ -624,10 +632,8 @@
         },
 
         showUpdatePracticeForm: async function () {
-            const url = `${this.baseUrl}/Veterinarian`;
-            await this.getVeterinarians(url);
             this.isUpdate = true;
-            $('#addPracticeForm').modal('show');
+            this.showAddPracticeForm();
         },
 
         deletePractice: async function (id) {
@@ -680,10 +686,8 @@
             if (newPractice !== undefined) {
                 await this.getAllPractices();
                 this.hideAddPracticeForm();
-                this.hidePracticeInfo();
                 this.success = true;
                 this.errorMessage = 'Practice added successfully.';
-                
             }
         },
 
@@ -694,8 +698,7 @@
         },
 
         hideAddPracticeForm: function () {
-            this.isUpdate = false;
-            this.resetPracticeObject();
+            this.hidePracticeInfo();
             $('#addPracticeForm').modal('hide');
         },
 
@@ -798,6 +801,73 @@
         //#endregion Practices
 
         //#region Veterinarians
+        getVetFormData: function () {
+            let formData = new FormData();
+
+            formData.append('id', this.veterinarian.id);
+            formData.append('firstName', this.veterinarian.firstName);
+            formData.append('lastName', this.veterinarian.lastName);
+            formData.append('birth', this.veterinarian.birth);
+            formData.append('address', this.veterinarian.address);
+            formData.append('city', this.veterinarian.city);
+            formData.append('email', this.veterinarian.email);
+            formData.append('phone', this.veterinarian.phone);
+            formData.append('postal', this.veterinarian.postal);
+            formData.append('image', this.veterinarian.imageUrl);
+
+            this.veterinarian.specialties.forEach(s => { formData.append('specialtyIds', s); })
+            this.veterinarian.practices.forEach(p => { formData.append('practiceIds', p); })
+
+            return formData;
+        },
+
+        updateVeterinarian: async function () {
+            this.resetParameters();
+            const headers = this.getFormHeaders();
+
+            const url = `${this.baseUrl}/Veterinarian`;
+
+            let formData = this.getVetFormData();
+
+            const updatedVet = await axios.put(url, formData, headers)
+                .then(response => response.data)
+                .catch(error => {
+                    this.hasInputError = true;
+                    const errors = error.response.data.errors;
+                    if (this.veterinarian.practiceIds.length === 0) {
+                        this.errorMessage += 'Please select a valid practice. \n';
+                    }
+                    if (this.veterinarian.specialtyIds.length === 0) {
+                        this.errorMessage += 'Please select a valid specialty. \n';
+                    }
+                    if (errors === undefined) {
+                        this.errorMessage += error.response.data[0]
+                    }
+                    else {
+                        for (const [key, value] of Object.entries(errors)) {
+                            this.errorMessage += `\n ${key}: ${value}`;
+                        }
+                        if (this.errorMessage.includes('System.DateTime')) {
+                            this.errorMessage = 'Please provide a valid birthday.';
+                        }
+                    }
+                });
+
+            if (updatedVet !== undefined) {
+                await this.getAllVeterinarians();
+                this.hideVeterinarianForm();
+                this.isUpdate = false;
+                this.success = true;
+                this.errorMessage = 'Veterinarian updated successfully.';
+                this.hideVeterinarianInfo();
+            }
+        },
+
+        showUpdateVeterinarianForm: async function () {
+            this.isUpdate = true;
+            this.showVeterinarianForm();
+        },
+
         deleteVeterinarian: async function (id) {
             const url = `${this.baseUrl}/Veterinarian/${id}`;
             await this.deleteItem(url);
@@ -818,11 +888,13 @@
 
         addVeterinarian: async function () {
             this.resetParameters();
-            const headers = this.getHeaders();
+            const headers = this.getFormHeaders();
 
             const url = `${this.baseUrl}/Veterinarian`;
 
-            const newVeterinarian = await axios.post(url, this.veterinarian, headers)
+            let formData = this.getVetFormData();
+
+            const newVeterinarian = await axios.post(url, formData, headers)
                 .then(response => response.data)
                 .catch(error => {
                     this.hasInputError = true;
@@ -863,7 +935,7 @@
         },
 
         hideVeterinarianForm: function () {
-            this.resetVetObject();
+            this.hideVeterinarianInfo();
             $('#addVeterinarianForm').modal('hide');
         },
 
@@ -952,6 +1024,8 @@
         //#endregion Veterinarians
 
         //#region Specialty
+
+
         deleteSpecialty: async function (id) {
             const url = `${this.baseUrl}/Specialty/${id}`;
             await this.deleteItem(url);

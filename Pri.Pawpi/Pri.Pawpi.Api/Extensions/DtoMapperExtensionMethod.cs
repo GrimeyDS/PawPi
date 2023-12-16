@@ -34,7 +34,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = vet.Email,
                 Phone = vet.Phone,
                 Postal = vet.Postal,
-                ImageUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Veterinarians/{vet.ImageFile}",
+                ImageUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Veterinarian/{vet.ImageFile}",
                 Specialties = vet.Specialties.MapBaseDto(),
                 Practices = vet.Practices.MapBaseDto(),
             };

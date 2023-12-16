@@ -103,6 +103,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = veterinarianUpdateDto.Email,
                 Phone = veterinarianUpdateDto.Phone,
                 Postal = veterinarianUpdateDto.Postal,
+                Image = veterinarianUpdateDto.Image,
                 SpecialtyIds = veterinarianUpdateDto.SpecialtyIds,
                 ConsultationIds = veterinarianUpdateDto.ConsultationIds,
                 PracticeIds = veterinarianUpdateDto.PracticeIds
