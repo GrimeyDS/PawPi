@@ -1392,9 +1392,9 @@
         hidePetForm: function () {
             this.resetPetObject();
             this.isUpdate = false;
+            $('#addPetForm').modal('hide');
             document.getElementById('fileUploadPetPicture').value = '';
             document.getElementById('fileUploadPetPedigree').value = '';
-            $('#addPetForm').modal('hide');
         },
 
         getPets: async function (url) {
@@ -2043,8 +2043,8 @@
             this.resetConsultationObject();
             this.resetVetObject();
             this.resetPetObject();
-            document.getElementById('fileUploadPetPicture').value = '';
-            document.getElementById('fileUploadPetPedigree').value = '';
+            document.getElementById('fileUploadConsultDoc').value = '';
+            document.getElementById('fileUploadConsultImg').value = '';
             $('#addConsultationForm').modal('hide');
         },
 
