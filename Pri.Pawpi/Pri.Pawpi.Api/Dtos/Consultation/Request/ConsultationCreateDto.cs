@@ -17,8 +17,8 @@ namespace Pri.Pawpi.Api.Dtos.Consultation.Request
         public IFormFile Image { get; set; }
         public IFormFile Document { get; set; }
         [Required]
-        public int VeterinarianId { get; set; }
+        public int Veterinarian { get; set; }
         [Required]
-        public int PetId { get; set; }
+        public int Pet { get; set; }
     }
 }

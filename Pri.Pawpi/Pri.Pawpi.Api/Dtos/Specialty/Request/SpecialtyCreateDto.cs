@@ -10,6 +10,6 @@ namespace Pri.Pawpi.Api.Dtos.Specialty.Request
         public string Description { get; set; }
 
         [Required(ErrorMessage = "{0} is required")]
-        public IEnumerable<int> VeterinarianIds { get; set; }
+        public IEnumerable<int> Veterinarians { get; set; }
     }
 }

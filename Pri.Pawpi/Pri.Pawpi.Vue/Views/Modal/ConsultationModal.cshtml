@@ -14,8 +14,8 @@
                     <p><b>Treatment:</b> {{consultation.treatment}}</p>
                     <p><b>Note:</b> {{consultation.notes}}</p>
                     <p><b>Date:</b> {{consultation.dateOfConsultation | formatDate() }}</p>
-                    <span><b>Image: </b> {{ consultation.imageUrl }} </span><br />
-                    <span><b>Document: </b> {{ consultation.documentUrl }} </span><br />
+                    <span><b>Image: </b> {{ consultation.image }} </span><br />
+                    <span><b>Document: </b> {{ consultation.document }} </span><br />
                     <p><b>Veterinarian:</b> {{ consultation.veterinarianName }}</p>
 
                 </div>
@@ -69,13 +69,13 @@
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Veterinarian:</label>
-                        <select class="form-select" name="Veterinarian" v-model="consultation.veterinarianId">
+                        <select class="form-select" name="Veterinarian" v-model="veterinarian.id">
                             <option v-for="vet in veterinarians" :value="vet.id">{{vet.firstName}} {{vet.lastName}}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Pet:</label>
-                        <select class="form-select" name="Pet" v-model="consultation.petId">
+                        <select class="form-select" name="Pet" v-model="pet.id">
                             <option v-for="pet in pets" :value="pet.id">{{pet.name}}</option>
                         </select>
                     </div>

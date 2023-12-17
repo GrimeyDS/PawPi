@@ -14,7 +14,7 @@
         <div v-if="searchResults">
             <div v-for="pet in pets" id="card">
                 <div class="card" style="width: 18rem;" v-on:click="showPetInfo(pet.id)">
-                    <img class="card-img-top" v-bind:src="pet.imageUrl" v-bind:alt="pet.name" onerror="this.onerror=null; this.src='../assets/images/petPlaceHolder.png'">
+                    <img class="card-img-top" v-bind:src="pet.image" v-bind:alt="pet.name" onerror="this.onerror=null; this.src='../assets/images/petPlaceHolder.png'">
                     <div class="card-body" id="vet-body">
                         <h5 class="card-title">{{pet.name}}</h5>
                         <h6>{{pet.callName}} <br /> </h6>

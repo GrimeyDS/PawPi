@@ -12,7 +12,7 @@
         <div v-if="searchResults">
             <div v-for="veterinarian in veterinarians" id="card">
                 <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" v-on:click="showVeterinarianInfo(veterinarian.id)" v-bind:src="veterinarian.imageUrl" v-bind:alt="veterinarian.name" onerror="this.onerror=null; this.src='../assets/images/userPlaceHolder.png'">
+                    <img class="card-img-top" v-on:click="showVeterinarianInfo(veterinarian.id)" v-bind:src="veterinarian.image" v-bind:alt="veterinarian.name" onerror="this.onerror=null; this.src='../assets/images/userPlaceHolder.png'">
                     <div class="card-body" id="vet-body" v-on:click="showVeterinarianInfo(veterinarian.id)">
                         <h5 class="card-title">{{veterinarian.firstName}} {{veterinarian.lastName}}</h5>
                         <span v-for="specialties in veterinarian.specialties">{{specialties.name}} <br /> </span>

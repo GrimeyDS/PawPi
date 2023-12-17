@@ -34,7 +34,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = vet.Email,
                 Phone = vet.Phone,
                 Postal = vet.Postal,
-                ImageUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Veterinarian/{vet.ImageFile}",
+                Image = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Veterinarian/{vet.ImageFile}",
                 Specialties = vet.Specialties.MapBaseDto(),
                 Practices = vet.Practices.MapBaseDto(),
             };
@@ -179,6 +179,8 @@ namespace Pri.Pawpi.Api.Extensions
                 Name = med.Name,
                 Notes = med.Notes,
                 SideEffects = med.SideEffects,
+                Dosage = med.Dosage,
+                Frequency = med.Frequency,
                 Pets = med.Pets.MapBaseDto()
             };
         }
@@ -214,8 +216,8 @@ namespace Pri.Pawpi.Api.Extensions
                 Color = pet.Color,
                 AnimalType = pet.AnimalType,
                 Weight = pet.Weight,
-                ImageUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Pet/{pet.ImageFile}",
-                PedigreeUrl = pet.PedigreeFile is not null ? $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Pedigrees/Pet/{pet.PedigreeFile}" : "",
+                Image = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Pet/{pet.ImageFile}",
+                Pedigree = pet.PedigreeFile is not null ? $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Pedigrees/Pet/{pet.PedigreeFile}" : "",
                 Customer= pet.Customer.MapBaseDto(),
                 LastConsultation = pet.Consultations.MapBaseDto().LastOrDefault(),
             };
@@ -268,8 +270,8 @@ namespace Pri.Pawpi.Api.Extensions
                 Postal = practice.Postal,
                 OpenTime = practice.OpenTime,
                 CloseTime = practice.CloseTime,
-                LogoUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Logos/Practice/{practice.Logo}",
-                VeterinarianIds = practice.Veterinarians.MapBaseDto()
+                Logo = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Logos/Practice/{practice.Logo}",
+                Veterinarians = practice.Veterinarians.MapBaseDto()
             };
         }
 
@@ -322,8 +324,8 @@ namespace Pri.Pawpi.Api.Extensions
                 DateOfConsultation = con.DateOfConsultation.Date,
                 VeterinarianName = con.Veterinarian.FirstName + " " + con.Veterinarian.LastName,
                 PetName = con.Pet.Name,
-                ImageUrl = con.ImageFile is not null ? $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Consultation/{con.ImageFile}" : "",
-                DocumentUrl = con.DocumentFile is not null ?  $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Documents/Consultation/{con.DocumentFile}" : "",
+                Image = con.ImageFile is not null ? $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Consultation/{con.ImageFile}" : "",
+                Document = con.DocumentFile is not null ?  $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Documents/Consultation/{con.DocumentFile}" : "",
             };
         }
 

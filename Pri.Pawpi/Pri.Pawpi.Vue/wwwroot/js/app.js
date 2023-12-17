@@ -30,8 +30,8 @@
             email: '',
             phone: '',
             postal: '',
-            petIds: [],
-            practiceId: [],
+            pets: [],
+            practiceId: null,
             password: '',
             repeatPassword: ''
         },
@@ -45,9 +45,9 @@
             email: '',
             phone: '',
             postal: '',
-            consultationIds: [],
-            specialtyIds: [],
-            practiceIds: [],
+            consultations: [],
+            specialties: [],
+            practices: [],
             image: null,
             password: '',
             repeatPassword: ''
@@ -81,9 +81,9 @@
             postal: '',
             openTime: '',
             closeTime: '',
-            logoUrl: null,
-            veterinarianIds: [],
-            customerIds: []
+            logo: null,
+            veterinarians: [],
+            customers: []
         },
 
         veterinarians: null,
@@ -96,19 +96,17 @@
             email: '',
             phone: '',
             postal: '',
-            imageUrl: null,
-            consultationIds: [],
-            specialtyIds: [],
-            practiceIds: [],
+            image: null,
             specialties: [],
-            practices: []
+            practices: [],
+            consultations: []
         },
 
         specialties: null,
         specialty: {
             name: '',
             description: '',
-            veterinarianIds: [],
+            veterinarians: [],
         },
 
         pets: null,
@@ -119,11 +117,11 @@
             color: '',
             animalType: '',
             weight: '',
-            imageUrl: null,
-            pedigreeUrl: null,
-            consultationIds: [],
-            medicationIds: [],
-            customerId: null,
+            image: null,
+            pedigree: null,
+            consultations: [],
+            medicine: [],
+            customer: null,
             lastConsultation: null,
         },
 
@@ -137,7 +135,7 @@
             email: '',
             phone: '',
             postal: '',
-            petIds: [],
+            pets: [],
             practiceId: null
         },
 
@@ -148,10 +146,10 @@
             dateOfConsultation: '',
             treatment: '',
             notes: '',
-            imageUrl: null,
-            documentUrl: null,
-            veterinarianId: null,
-            petId: null
+            image: null,
+            document: null,
+            veterinarian: null,
+            pet: null
         },
 
         medicine: null,
@@ -161,8 +159,16 @@
             sideEffects: '',
             dosage: '',
             frequency: '',
-            petIds: []
+            pets: []
         },
+
+        selectedCustomers: [],
+        selectedVets: [],
+        selectedSpecialties: [],
+        selectedConsultations: [],
+        selectedPractices: [],
+        selectedMedicine: [],
+        selectedPets: [],
     },
 
     created: function () {
@@ -176,27 +182,27 @@
         //#region Files
 
         handlePracticeFileChange(event) {
-            this.practice.logoUrl = event.target.files[0];
+            this.practice.logo = event.target.files[0];
         },
 
         handleVetFileChange(event) {
-            this.veterinarian.imageUrl = event.target.files[0];
+            this.veterinarian.image = event.target.files[0];
         },
 
         handlePetImageChange(event) {
-            this.pet.imageUrl = event.target.files[0];
+            this.pet.image = event.target.files[0];
         },
 
         handlePetPedigreeChange(event) {
-            this.pet.pedigreeUrl = event.target.files[0];
+            this.pet.pedigree = event.target.files[0];
         },
 
         handleConsultImageChange(event) {
-            this.consultation.imageUrl = event.target.files[0];
+            this.consultation.image = event.target.files[0];
         },
 
         handleConsultDocChange(event) {
-            this.consultation.documentUrl = event.target.files[0];
+            this.consultation.document = event.target.files[0];
         },
 
         //downloadFile(url) {
@@ -223,6 +229,30 @@
         //#endregion Files
 
         //#region General functions
+        getSelectedIds: function () {
+            if (this.practice !== null) {
+                this.practice.veterinarians.forEach(v => { this.selectedVets.push(v.id); });
+            }
+
+            if (this.veterinarian !== null) {
+                this.veterinarian.practices.forEach(p => { this.selectedPractices.push(p.id); });
+                this.veterinarian.specialties.forEach(s => { this.selectedSpecialties.push(s.id); });
+            }
+
+
+
+        },
+
+        resetSelectedIds: function () {
+            this.selectedCustomers = [];
+            this.selectedVets = [];
+            this.selectedSpecialties = [];
+            this.selectedConsultations = [];
+            this.selectedPractices = [];
+            this.selectedMedicine = [];
+            this.selectedPets = [];
+        },
+
         setNav: function (navItem) {
             this.homeVisible = false;
             this.practicesVisible = false;
@@ -276,6 +306,11 @@
             this.searchResults = true;
             this.errorMessage = '';
             this.success = false;
+
+            document.getElementById('fileUploadPractice').value = '';
+            document.getElementById('fileUploadVet').value = '';
+            //document.getElementById('fileUploadPetPicture').value = '';
+            //document.getElementById('fileUploadPetPedigree').value = '';
         },
 
         checkSearchResults: function (results) {
@@ -292,8 +327,8 @@
             this.registerCustomerDto.email = '';
             this.registerCustomerDto.phone = '';
             this.registerCustomerDto.postal = '';
-            this.registerCustomerDto.petIds = [];
-            this.registerCustomerDto.practiceId = null;
+            this.registerCustomerDto.pets = [];
+            this.registerCustomerDto.practice = null;
             this.registerCustomerDto.password = '';
             this.registerCustomerDto.repeatPassword = '';
         },
@@ -307,15 +342,16 @@
             this.registerVetDto.email = '';
             this.registerVetDto.phone = '';
             this.registerVetDto.postal = '';
-            this.registerVetDto.consultationIds = [];
-            this.registerVetDto.specialtyIds = [];
-            this.registerVetDto.practiceIds = [];
+            this.registerVetDto.consultations = [];
+            this.registerVetDto.specialties = [];
+            this.registerVetDto.practices = [];
             this.registerVetDto.image = null;
             this.registerVetDto.password = '';
             this.registerVetDto.repeatPassword = '';
         },
 
         resetPracticeObject: function () {
+            this.practice.id = '';
             this.practice.name = '';
             this.practice.address = '';
             this.practice.city = '';
@@ -324,12 +360,13 @@
             this.practice.postal = '';
             this.practice.openTime = '';
             this.practice.closeTime = '';
-            this.practice.logoUrl = null;
-            this.practice.veterinarianIds = [];
-            this.practice.customerIds = [];
+            this.practice.logo = null;
+            this.practice.veterinarians = [];
+            this.practice.customers = [];
         },
 
         resetVetObject: function () {
+            this.veterinarian.id = '';
             this.veterinarian.firstName = '';
             this.veterinarian.lastName = '';
             this.veterinarian.birth = '';
@@ -338,19 +375,20 @@
             this.veterinarian.email = '';
             this.veterinarian.phone = '';
             this.veterinarian.postal = '';
-            this.veterinarian.imageUrl = null;
-            this.veterinarian.consultationIds = [];
-            this.veterinarian.specialtyIds = [];
-            this.veterinarian.practiceIds = [];
+            this.veterinarian.image = null;
+            this.veterinarian.consultations = [];
+            this.veterinarian.specialties = [];
+            this.veterinarian.practices = [];
         },
 
         resetSpecialtyObjects: function () {
             this.specialty.name = '';
             this.specialty.description = '';
-            this.specialty.veterinarianIds = [];
+            this.specialty.veterinarians = [];
         },
 
         resetPetObject: function () {
+            this.pet.id = '';
             this.pet.name = '';
             this.pet.callName = '';
             this.pet.breed = '';
@@ -359,12 +397,13 @@
             this.pet.weight = '';
             this.pet.image = null;
             this.pet.pedigree = null;
-            this.pet.consultationIds = [];
-            this.pet.medicationIds = [];
-            this.pet.customerId = null;
+            this.pet.consultations = [];
+            this.pet.medicine = [];
+            this.pet.customer = null;
         },
 
         resetCustomerObject: function () {
+            this.customer.id = '';
             this.customer.firstName = '';
             this.customer.lastName = '';
             this.customer.birth = '';
@@ -373,8 +412,8 @@
             this.customer.email = '';
             this.customer.phone = '';
             this.customer.postal = '';
-            this.customer.petIds = [];
-            this.customer.practiceId = null;
+            this.customer.pets = [];
+            this.customer.practice = null;
         },
 
         resetConsultationObject: function () {
@@ -385,8 +424,8 @@
             this.consultation.notes = '';
             this.consultation.image = null;
             this.consultation.document = null;
-            this.consultation.veterinarianId = null;
-            this.consultation.petId = null;
+            this.consultation.veterinarian = null;
+            this.consultation.pet = null;
         },
 
         resetMedicationObject: function () {
@@ -395,7 +434,7 @@
             this.medication.sideEffects = '';
             this.medication.dosage = '';
             this.medication.frequency = '';
-            this.medication.petIds = [];
+            this.medication.pets = [];
         },
 
         deleteItem: async function (url) {
@@ -481,10 +520,10 @@
                     this.hasInputError = true;
                     const errors = error.response.data.errors;
                     if (url.includes('Veterinarian')) {
-                        if (this.registerVetDto.practiceIds.length === 0) {
+                        if (this.registerVetDto.practices.length === 0) {
                             this.errorMessage += 'Please select a valid practice. \n';
                         }
-                        if (this.registerVetDto.specialtyIds.length === 0) {
+                        if (this.registerVetDto.specialties.length === 0) {
                             this.errorMessage += 'Please select a valid specialty. \n';
                         }
                     }
@@ -627,7 +666,7 @@
                 .catch(error => {
                     this.hasInputError = true;
                     const errors = error.response.data.errors;
-                    if (this.practice.veterinarianIds.length === 0) {
+                    if (this.practice.veterinarians.length === 0) {
                         this.errorMessage += 'Please select a valid veterinarian. \n';
                     }
                     if (errors === undefined) {
@@ -664,8 +703,8 @@
             formData.append('postal', this.practice.postal);
             formData.append('openTime', this.practice.openTime);
             formData.append('closeTime', this.practice.closeTime);
-            formData.append('logo', this.practice.logoUrl);
-            this.practice.veterinarianIds.forEach(v => { formData.append('veterinarianIds', v); });
+            formData.append('logo', this.practice.logo);
+            this.selectedVets.forEach(v => { formData.append('veterinarians', v); });
             
 
             return formData;
@@ -673,6 +712,7 @@
 
         showUpdatePracticeForm: async function () {
             this.isUpdate = true;
+            this.getSelectedIds();
             $('#practiceInfo').modal('hide');
             this.showAddPracticeForm();
         },
@@ -708,7 +748,7 @@
                 .catch(error => {
                     this.hasInputError = true;
                     const errors = error.response.data.errors;
-                    if (this.practice.veterinarianIds.length === 0) {
+                    if (this.practice.veterinarians.length === 0) {
                         this.errorMessage += 'Please select a valid veterinarian. \n';
                     }
                     if (errors === undefined) {
@@ -740,13 +780,13 @@
 
         hideAddPracticeForm: function () {
             this.hidePracticeInfo();
+            this.resetSelectedIds();
             this.isUpdate = false;
             $('#addPracticeForm').modal('hide');
         },
 
         getPractices: async function (url) {
             this.resetParameters();
-            const headers = this.getHeaders();
 
             this.practices = await axios.get(url)
                 .then(response => response.data.practices)
@@ -855,10 +895,10 @@
             formData.append('email', this.veterinarian.email);
             formData.append('phone', this.veterinarian.phone);
             formData.append('postal', this.veterinarian.postal);
-            formData.append('image', this.veterinarian.imageUrl);
+            formData.append('image', this.veterinarian.image);
 
-            this.veterinarian.specialties.forEach(s => { formData.append('specialtyIds', s); })
-            this.veterinarian.practices.forEach(p => { formData.append('practiceIds', p); })
+            this.selectedSpecialties.forEach(s => { formData.append('specialties', s); })
+            this.selectedPractices.forEach(p => { formData.append('practices', p); })
 
             return formData;
         },
@@ -876,10 +916,10 @@
                 .catch(error => {
                     this.hasInputError = true;
                     const errors = error.response.data.errors;
-                    if (this.veterinarian.practices.length === 0) {
+                    if (this.selectedPractices.length === 0) {
                         this.errorMessage += 'Please select a valid practice. \n';
                     }
-                    if (this.veterinarian.specialties.length === 0) {
+                    if (this.selectedSpecialties.length === 0) {
                         this.errorMessage += 'Please select a valid specialty. \n';
                     }
                     if (errors === undefined) {
@@ -906,6 +946,7 @@
 
         showUpdateVeterinarianForm: async function () {
             this.isUpdate = true;
+            this.getSelectedIds();
             $('#veterinarianInfo').modal('hide');
             this.showVeterinarianForm();
         },
@@ -941,10 +982,10 @@
                 .catch(error => {
                     this.hasInputError = true;
                     const errors = error.response.data.errors;
-                    if (this.veterinarian.practices.length === 0) {
+                    if (this.selectedPractices.length === 0) {
                         this.errorMessage += 'Please select a valid practice. \n';
                     }
-                    if (this.veterinarian.specialties.length === 0) {
+                    if (this.selectedSpecialties.length === 0) {
                         this.errorMessage += 'Please select a valid specialty. \n';
                     }
                     if (errors === undefined) {
@@ -978,6 +1019,7 @@
 
         hideVeterinarianForm: function () {
             this.hideVeterinarianInfo();
+            this.resetSelectedIds();
             this.isUpdate = false;
             $('#addVeterinarianForm').modal('hide');
         },
@@ -1073,6 +1115,8 @@
 
             const url = `${this.baseUrl}/Specialty`;
 
+            this.specialty.veterinarians = this.selectedVets;
+
             const updatedSpec = await axios.put(url, this.specialty, headers)
                 .then(response => response.data)
                 .catch(error => {
@@ -1099,6 +1143,10 @@
 
         showUpdateSpecialtyForm: async function () {
             this.isUpdate = true;
+
+            if (this.veterinarians !== undefined )
+                this.veterinarians.forEach(v => { this.selectedVets.push(v.id); })
+            
             $('#specialtyInfo').modal('hide');
             this.showSpecialtyForm();
         },
@@ -1126,6 +1174,8 @@
             const headers = this.getHeaders();
 
             const url = `${this.baseUrl}/Specialty`;
+
+            this.specialty.veterinarians = this.selectedVets;
 
             const newSpecialty = await axios.post(url, this.specialty, headers)
                 .then(response => response.data)
@@ -1158,6 +1208,7 @@
 
         hideSpecialtyForm: function () {
             this.hideSpecialtyInfo();
+            this.resetSelectedIds();
             this.isUpdate = false;
             $('#addSpecialtyForm').modal('hide');
         },
@@ -1231,9 +1282,9 @@
             formData.append('color', this.pet.color);
             formData.append('animalType', this.pet.animalType);
             formData.append('weight', this.pet.weight);
-            formData.append('image', this.pet.imageUrl);
-            formData.append('pedigree', this.pet.pedigreeUrl);
-            formData.append('customerId', this.pet.customerId);
+            formData.append('image', this.pet.image);
+            formData.append('pedigree', this.pet.pedigree);
+            formData.append('customer', this.customer.id);
 
             return formData;
         },
@@ -1261,7 +1312,7 @@
                         if (this.errorMessage.includes('weight')) {
                             this.errorMessage = 'Please provide a valid weight.';
                         }
-                        else if (this.errorMessage.includes('customerId')) {
+                        else if (this.errorMessage.includes('ustomer')) {
                             this.errorMessage = 'Please select a valid customer.';
                         }
                     }
@@ -1323,7 +1374,7 @@
                         if (this.errorMessage.includes('weight')) {
                             this.errorMessage = 'Please provide a valid weight.';
                         }
-                        else if (this.errorMessage.includes('customerId')) {
+                        else if (this.errorMessage.includes('ustomer')) {
                             this.errorMessage = 'Please select a valid customer.';
                         }
                     }
@@ -1404,6 +1455,7 @@
 
         hidePetInfo: function () {
             this.resetPetObject();
+            this.resetCustomerObject();
             $('#petInfo').modal('hide');
         },
 
@@ -1479,6 +1531,12 @@
 
             const url = `${this.baseUrl}/Customer`;
 
+            this.selectedPets = [];
+
+            this.customer.practiceId = this.practice.id;
+            this.customer.pets.forEach(p => { this.selectedPets.push(p.id); });
+            this.customer.pets = this.selectedPets;
+
             const updatedCustomer = await axios.put(url, this.customer, headers)
                 .then(response => response.data)
                 .catch(error => {
@@ -1495,7 +1553,7 @@
                         if (this.errorMessage.includes('System.DateTime')) {
                             this.errorMessage = 'Please provide a valid birthday.';
                         }
-                        else if (this.errorMessage.includes('practiceId')) {
+                        else if (this.errorMessage.includes('ractice')) {
                             this.errorMessage = 'Please select a valid practice.';
                         }
                     }
@@ -1539,6 +1597,7 @@
             const headers = this.getHeaders();
 
             const url = `${this.baseUrl}/Customer`;
+            this.customer.practiceId = this.practice.id;
 
             const newCustomer = await axios.post(url, this.customer, headers)
                 .then(response => response.data)
@@ -1556,7 +1615,7 @@
                         if (this.errorMessage.includes('System.DateTime')) {
                             this.errorMessage = 'Please provide a valid birthday.';
                         }
-                        else if (this.errorMessage.includes('practiceId')) {
+                        else if (this.errorMessage.includes('ractice')) {
                             this.errorMessage = 'Please select a valid practice.';
                         }
                     }
@@ -1578,6 +1637,7 @@
 
         hideCustomerForm: function () {
             this.resetCustomerObject();
+            this.resetPracticeObject();
             this.isUpdate = false;
             $('#addCustomerForm').modal('hide');
         },
@@ -1663,12 +1723,14 @@
                 .finally(() => { this.loading = false; });
 
             this.practice = this.customer.practice;
-            this.practice.veterinarianIds = [];
+            this.practice.veterinarians = [];
             $('#customerInfo').modal('show');
         },
 
         hideCustomerInfo: function () {
             this.resetCustomerObject();
+            this.resetPracticeObject();
+            this.resetSelectedIds();
             $('#customerInfo').modal('hide');
         },
 
@@ -1853,13 +1915,13 @@
             formData.append('id', this.consultation.id);
             formData.append('title', this.consultation.title);
             formData.append('dateOfConsultation', this.consultation.dateOfConsultation);
-            formData.append('petId', this.consultation.petId);
-            formData.append('veterinarianId', this.consultation.veterinarianId);
+            formData.append('pet', this.pet.id);
+            formData.append('veterinarian', this.veterinarian.id);
             formData.append('Diagnosis', this.consultation.diagnosis);
             formData.append('treatment', this.consultation.treatment);
             formData.append('notes', this.consultation.notes);
-            formData.append('image', this.consultation.imageUrl);
-            formData.append('document', this.consultation.documentUrl);
+            formData.append('image', this.consultation.image);
+            formData.append('document', this.consultation.document);
 
             return formData;
         },
@@ -1888,10 +1950,10 @@
                         if (this.errorMessage.includes('System.DateTime')) {
                             this.errorMessage = 'Please provide a valid date.';
                         }
-                        else if (this.errorMessage.includes('veterinarianId')) {
+                        else if (this.errorMessage.includes('eterinarian')) {
                             this.errorMessage = 'Please select a valid veterinarian.';
                         }
-                        else if (this.errorMessage.includes('petId')) {
+                        else if (this.errorMessage.includes('pet')) {
                             this.errorMessage = 'Please select a valid pet.';
                         }
                     }
@@ -1902,6 +1964,7 @@
                 this.hideConsultationForm();
                 this.success = true;
                 this.errorMessage = 'Consultation updated successfully.';
+                this.isUpdate = false;
                 this.hideConsultationInfo();
             }
         },
@@ -1954,10 +2017,10 @@
                         if (this.errorMessage.includes('System.DateTime')) {
                             this.errorMessage = 'Please provide a valid date.';
                         }
-                        else if (this.errorMessage.includes('veterinarianId')) {
+                        else if (this.errorMessage.includes('eterinarian')) {
                             this.errorMessage = 'Please select a valid veterinarian.';
                         }
-                        else if (this.errorMessage.includes('petId')) {
+                        else if (this.errorMessage.includes('pet')) {
                             this.errorMessage = 'Please select a valid pet.';
                         }
                     }
@@ -1981,6 +2044,8 @@
 
         hideConsultationForm: function () {
             this.resetConsultationObject();
+            this.resetVetObject();
+            this.resetPetObject();
             $('#addConsultationForm').modal('hide');
         },
 
@@ -2018,6 +2083,7 @@
                     this.errorMessage = error.message;
                 })
                 .finally(() => { this.loading = false; });
+
             $('#consultationInfo').modal('show');
         },
 

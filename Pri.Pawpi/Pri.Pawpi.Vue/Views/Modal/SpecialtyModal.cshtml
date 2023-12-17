@@ -51,8 +51,8 @@
                 </form>
                 <div class="form-group">
                     <label class="col-form-label">Veterinarians:</label>
-                    <select class="form-select" v-model="specialty.veterinarianIds" multiple>
-                        <option v-for="vet in veterinarians" :value="vet.id">
+                    <select class="form-select" v-model="selectedVets" multiple>
+                        <option v-for="vet in veterinarians" :value="vet.id" :key="vet.id">
                             {{ vet.firstName }} - {{ vet.lastName }}
                         </option>
                     </select>
@@ -61,7 +61,7 @@
             <div class="modal-footer">
                 <button type="button" v-on:click="hideSpecialtyForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" v-on:click="addSpecialty" v-if="!isUpdate" class="btn btn-primary">Add Specialty</button>
-                <button type="button" v-on:click="updateSpecialty" v-if="isUpdate" class="btn btn-primary">Update Pet</button>
+                <button type="button" v-on:click="updateSpecialty" v-if="isUpdate" class="btn btn-primary">Update Specialty</button>
             </div>
         </div>
     </div>

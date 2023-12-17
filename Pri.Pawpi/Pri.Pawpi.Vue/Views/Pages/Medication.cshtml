@@ -16,12 +16,14 @@
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Notes</th>
+                        <th scope="col">Side Effects</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="medication in medicine" v-on:click="showMedicationInfo(medication.id)">
                         <td>{{ medication.name }}</td>
                         <td>{{ medication.notes }}</td>
+                        <td>{{ medication.sideEffects }}</td>
                     </tr>
                 </tbody>
             </table>

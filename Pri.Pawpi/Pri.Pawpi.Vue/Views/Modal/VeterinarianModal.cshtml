@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <img v-bind:src="veterinarian.imageUrl" v-bind:alt="veterinarian.firstName" id="practiceLogo" onerror="this.onerror=null; this.src='../assets/images/userPlaceHolder.png'" />
+                    <img v-bind:src="veterinarian.image" v-bind:alt="veterinarian.firstName" id="practiceLogo" onerror="this.onerror=null; this.src='../assets/images/userPlaceHolder.png'" />
                     <h5 class="card-title">{{veterinarian.address}}</h5>
                     <h6>{{veterinarian.postal}} {{veterinarian.city}}</h6>
                     <div class="card-text">
@@ -99,16 +99,16 @@
 
                     <div class="form-group">
                         <label class="col-form-label">Practice:</label>
-                        <select class="form-select" v-model="veterinarian.practices" multiple>
-                            <option v-for="practice in practices" :value="practice.id">
+                        <select class="form-select" v-model="selectedPractices" multiple>
+                            <option v-for="practice in practices" :value="practice.id" :key="practice.id">
                                 {{ practice.name }}
                             </option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Specialty:</label>
-                        <select class="form-select" v-model="veterinarian.specialties" multiple>
-                            <option v-for="specialty in specialties" :value="specialty.id">
+                        <select class="form-select" v-model="selectedSpecialties" multiple>
+                            <option v-for="specialty in specialties" :value="specialty.id" :key="specialty.id">
                                 {{ specialty.name }}
                             </option>
                         </select>
@@ -116,7 +116,7 @@
 
                     <div class="form-group">
                         <label class="col-form-label">Picture:</label>
-                        <input v-on:change="handleVetFileChange" type="file" class="form-control" />
+                        <input v-on:change="handleVetFileChange" id="fileUploadVet" type="file" class="form-control" />
                     </div>
                 </form>
             </div>

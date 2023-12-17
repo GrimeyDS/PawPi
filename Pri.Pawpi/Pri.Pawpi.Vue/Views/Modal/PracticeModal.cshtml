@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <img v-bind:src="practice.logoUrl" v-bind:alt="practice.name" id="practiceLogo" onerror="this.onerror=null; this.src='../assets/images/practicePlaceHolder.jpg'" />
+                    <img v-bind:src="practice.logo" v-bind:alt="practice.name" id="practiceLogo" onerror="this.onerror=null; this.src='../assets/images/practicePlaceHolder.jpg'" />
                     <h5 class="card-title">{{practice.address}}</h5>
                     <h6>{{practice.postal}} {{practice.city}}</h6>
                     <div class="card-text">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="mt-4">
                     <h5 class="card-title  mb-0">Veterinarians:</h5>
-                    <span v-for="vet in practice.veterinarianIds">{{vet.firstName}} {{vet.lastName}}<br /></span>
+                    <span v-for="vet in practice.veterinarians">{{vet.firstName}} {{vet.lastName}}<br /></span>
                 </div>
             </div>
             <div class="modal-footer">
@@ -94,16 +94,16 @@
                     <div class="form-group">
                         <label class="col-form-label">Veterinarians:</label>
                         
-                        <select class="form-select" v-model="practice.veterinarianIds" multiple>
-                            <option v-for="vet in veterinarians" :value="vet.id">
-                                {{ vet.firstName }} - {{ vet.lastName }}
+                        <select class="form-select" v-model="selectedVets" multiple>
+                            <option v-for="vet in veterinarians" :value="vet.id" :key="vet.id">
+                                {{ vet.firstName }} {{ vet.lastName }}
                             </option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label class="col-form-label">Logo:</label>
-                        <input v-on:change="handlePracticeFileChange" type="file" class="form-control" />
+                        <input v-on:change="handlePracticeFileChange" id="fileUploadPractice" type="file" class="form-control" />
                     </div>
                 </form>
             </div>
