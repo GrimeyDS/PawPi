@@ -5,3 +5,11 @@
         new bootstrap.Tooltip(tooltipTriggerEl)
     })
 })()
+
+document.addEventListener('error', function (event) {
+    var elm = event.target;
+    if (elm.tagName == 'IMG') {
+        elm.src = src = '../assets/images/logo.png';
+    }
+}, true)
+

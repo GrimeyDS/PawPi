@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <img v-bind:src="pet.image" v-bind:alt="pet.name" id="petImage" onerror="this.onerror=null; this.src='../assets/images/petPlaceHolder.png'" />
+                    <img v-bind:src="pet.image" v-bind:alt="pet.name" id="petImage" />
                     <h5 class="card-title">{{pet.callName}}</h5>
                     <h6>AnimalType: {{pet.animalType}}</h6>
                     <span><b>Breed:</b> {{pet.breed}}</span><br />
