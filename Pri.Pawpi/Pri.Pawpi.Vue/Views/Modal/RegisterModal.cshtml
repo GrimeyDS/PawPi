@@ -65,7 +65,7 @@
 
                     <div class="form-group">
                         <label class="col-form-label">Practice:</label>
-                        <select class="form-select" name="Practice" v-model="registerCustomerDto.practice">
+                        <select class="form-select" name="Practice" v-model="practice.id">
                             <option v-for="practice in practices":value="practice.id">{{practice.name}}</option>
                         </select>
                     </div>
@@ -149,7 +149,7 @@
  
                     <div class="form-group">
                         <label class="col-form-label">Practice:</label>
-                        <select class="form-select" v-model="registerVetDto.practices" multiple>
+                        <select class="form-select" v-model="selectedPractices" multiple>
                             <option v-for="practice in practices":value="practice.id">
                                 {{ practice.name }}
                             </option>
@@ -157,7 +157,7 @@
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Specialty:</label>
-                        <select class="form-select" v-model="registerVetDto.specialties" multiple>
+                        <select class="form-select" v-model="selectedSpecialties" multiple>
                             <option v-for="specialty in specialties":value="specialty.id">
                                 {{ specialty.name }}
                             </option>

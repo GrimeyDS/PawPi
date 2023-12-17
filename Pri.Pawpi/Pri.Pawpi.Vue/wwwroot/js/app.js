@@ -238,9 +238,6 @@
                 this.veterinarian.practices.forEach(p => { this.selectedPractices.push(p.id); });
                 this.veterinarian.specialties.forEach(s => { this.selectedSpecialties.push(s.id); });
             }
-
-
-
         },
 
         resetSelectedIds: function () {
@@ -309,8 +306,6 @@
 
             document.getElementById('fileUploadPractice').value = '';
             document.getElementById('fileUploadVet').value = '';
-            //document.getElementById('fileUploadPetPicture').value = '';
-            //document.getElementById('fileUploadPetPedigree').value = '';
         },
 
         checkSearchResults: function (results) {
@@ -496,7 +491,6 @@
                 this.loginDto.password = '';
             }
 
-
             this.loading = false;
         },
 
@@ -555,14 +549,15 @@
 
         registerCustomer: async function () {
             this.resetParameters();
-
+            this.registerCustomerDto.practiceId = this.practice.id; 
             const registerUrl = `${this.baseUrl}/Account/RegisterCustomer`;
             await this.registration(registerUrl, this.registerCustomerDto);
         },
 
         registerVeterinarian: async function () {
             this.resetParameters();
-
+            this.registerVetDto.specialties = this.selectedSpecialties;
+            this.registerVetDto.practices = this.selectedPractices;
             const registerUrl = `${this.baseUrl}/Account/RegisterVeterinarian`;
             await this.registration(registerUrl, this.registerVetDto);
         },
@@ -1397,6 +1392,8 @@
         hidePetForm: function () {
             this.resetPetObject();
             this.isUpdate = false;
+            document.getElementById('fileUploadPetPicture').value = '';
+            document.getElementById('fileUploadPetPedigree').value = '';
             $('#addPetForm').modal('hide');
         },
 
@@ -2046,6 +2043,8 @@
             this.resetConsultationObject();
             this.resetVetObject();
             this.resetPetObject();
+            document.getElementById('fileUploadPetPicture').value = '';
+            document.getElementById('fileUploadPetPedigree').value = '';
             $('#addConsultationForm').modal('hide');
         },
 
