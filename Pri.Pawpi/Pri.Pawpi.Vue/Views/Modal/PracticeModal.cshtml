@@ -48,42 +48,53 @@
                     {{errorMessage}}
                 </div>
                 <form>
-                    <div class="form-group">
-                        <label>Name:</label>
-                        <input v-model="practice.name" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>E-mail:</label>
-                        <input v-model="practice.email" type="email" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Phone:</label>
-                        <input v-model="practice.phone" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Address:</label>
-                        <input v-model="practice.address" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>City:</label>
-                        <input v-model="practice.city" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Postal:</label>
-                        <input v-model="practice.postal" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Opening time:</label>
-                        <input v-model="practice.openTime" type="time" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Closing time:</label>
-                        <input v-model="practice.closeTime" type="time" class="form-control" />
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Name:</label>
+                            <input v-model="practice.name" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Phone:</label>
+                            <input v-model="practice.phone" type="tel" class="form-control" />
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Veterinarians:</label>
-                        <select v-model="practice.veterinarianIds" multiple>
+                        <label class="col-form-label">E-mail:</label>
+                        <input v-model="practice.email" type="email" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-form-label">Address:</label>
+                        <input v-model="practice.address" type="text" class="form-control" />
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">City:</label>
+                            <input v-model="practice.city" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Postal:</label>
+                            <input v-model="practice.postal" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Opening time:</label>
+                            <input v-model="practice.openTime" type="time" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Closing time:</label>
+                            <input v-model="practice.closeTime" type="time" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-form-label">Veterinarians:</label>
+                        
+                        <select class="form-select" v-model="practice.veterinarianIds" multiple>
                             <option v-for="vet in veterinarians" :value="vet.id">
                                 {{ vet.firstName }} - {{ vet.lastName }}
                             </option>
@@ -91,7 +102,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Logo:</label>
+                        <label class="col-form-label">Logo:</label>
                         <input v-on:change="handlePracticeFileChange" type="file" class="form-control" />
                     </div>
                 </form>

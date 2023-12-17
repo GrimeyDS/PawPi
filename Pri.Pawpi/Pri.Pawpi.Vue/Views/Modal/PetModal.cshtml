@@ -47,45 +47,53 @@
                     {{errorMessage}}
                 </div>
                 <form>
-                    <div class="form-group">
-                        <label>Name:</label>
-                        <input v-model="pet.name" type="text" class="form-control" />
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Name:</label>
+                            <input v-model="pet.name" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Call name:</label>
+                            <input v-model="pet.callName" type="text" class="form-control" />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Call name:</label>
-                        <input v-model="pet.callName" type="text" class="form-control" />
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Breed:</label>
+                            <input v-model="pet.breed" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Animal type:</label>
+                            <input v-model="pet.animalType" type="text" class="form-control" />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Breed:</label>
-                        <input v-model="pet.breed" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Animal type:</label>
-                        <input v-model="pet.animalType" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Color:</label>
-                        <input v-model="pet.color" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Weight:</label>
-                        <input v-model="pet.weight" type="text" class="form-control" />
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Color:</label>
+                            <input v-model="pet.color" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Weight:</label>
+                            <input v-model="pet.weight" type="number" class="form-control" />
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Customer:</label>
-                        <select name="Customer" v-model="pet.customerId">
+                        <label class="col-form-label">Customer:</label>
+                        <select class="form-select" name="Customer" v-model="pet.customerId">
                             <option v-for="customer in customers" :value="customer.id">{{customer.firstName}} {{customer.lastName}}</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Picture:</label>
+                        <label class="col-form-label">Picture:</label>
                         <input v-on:change="handlePetImageChange" type="file" class="form-control" />
                     </div>
 
                     <div class="form-group">
-                        <label>Pedigree:</label>
+                        <label class="col-form-label">Pedigree:</label>
                         <input v-on:change="handlePetPedigreeChange" type="file" class="form-control" />
                     </div>
                 </form>

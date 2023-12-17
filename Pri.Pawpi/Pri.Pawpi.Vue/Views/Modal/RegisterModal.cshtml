@@ -14,48 +14,58 @@
                 </div>
                 <form>
                     <div class="form-group">
-                        <label>E-mail:</label>
+                        <label class="form-group">E-mail:</label>
                         <input v-model="registerCustomerDto.email" type="email" class="form-control"/>
                     </div>
                     <div class="form-group">
-                        <label>Password:</label>
+                        <label class="col-form-label">Password:</label>
                         <input v-model="registerCustomerDto.password" type="password" class="form-control"/>
                     </div>
                     <div class="form-group">
-                        <label>Repeat password:</label>
+                        <label class="col-form-label">Repeat password:</label>
                         <input v-model="registerCustomerDto.repeatPassword" type="password" class="form-control"/>
                     </div>
-                    <div class="form-group">
-                        <label>First name:</label>
-                        <input v-model="registerCustomerDto.firstName" type="text" class="form-control"/>
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">First name:</label>
+                            <input v-model="registerCustomerDto.firstName" type="text" class="form-control"/>
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Last name:</label>
+                            <input v-model="registerCustomerDto.lastName" type="text" class="form-control"/>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Last name:</label>
-                        <input v-model="registerCustomerDto.lastName" type="text" class="form-control"/>
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Phone:</label>
+                            <input v-model="registerCustomerDto.phone" type="tel" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Birthdate:</label>
+                            <input v-model="registerCustomerDto.birth" type="date" class="form-control"/>
+                        </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label>Birthdate:</label>
-                        <input v-model="registerCustomerDto.birth" type="date" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Address:</label>
+                        <label class="col-form-label">Address:</label>
                         <input v-model="registerCustomerDto.address" type="text" class="form-control"/>
                     </div>
-                    <div class="form-group">
-                        <label>City:</label>
-                        <input v-model="registerCustomerDto.city" type="text" class="form-control"/>
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">City:</label>
+                            <input v-model="registerCustomerDto.city" type="text" class="form-control"/>
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Postal:</label>
+                            <input v-model="registerCustomerDto.postal" type="text" class="form-control"/>
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label>Postal:</label>
-                        <input v-model="registerCustomerDto.postal" type="text" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Phone:</label>
-                        <input v-model="registerCustomerDto.phone" type="text" class="form-control"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Practice:</label>
-                        <select name="Practice" v-model="registerCustomerDto.practiceId">
+                        <label class="col-form-label">Practice:</label>
+                        <select class="form-select" name="Practice" v-model="registerCustomerDto.practiceId">
                             <option v-for="practice in practices":value="practice.id">{{practice.name}}</option>
                         </select>
                     </div>
@@ -87,56 +97,67 @@
                 </div>
                 <form>
                     <div class="form-group">
-                        <label>E-mail:</label>
+                        <label class="col-form-label">E-mail:</label>
                         <input v-model="registerVetDto.email" type="email" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>Password:</label>
+                        <label class="col-form-label">Password:</label>
                         <input v-model="registerVetDto.password" type="password" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>Repeat password:</label>
+                        <label class="col-form-label">Repeat password:</label>
                         <input v-model="registerVetDto.repeatPassword" type="password" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <label>First name:</label>
-                        <input v-model="registerVetDto.firstName" type="text" class="form-control" />
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">First name:</label>
+                            <input v-model="registerVetDto.firstName" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Last name:</label>
+                            <input v-model="registerVetDto.lastName" type="text" class="form-control" />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Last name:</label>
-                        <input v-model="registerVetDto.lastName" type="text" class="form-control" />
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Phone:</label>
+                            <input v-model="registerVetDto.phone" type="tel" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Birthdate:</label>
+                            <input v-model="registerVetDto.birth" type="date" class="form-control" />
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label>Birthdate:</label>
-                        <input v-model="registerVetDto.birth" type="date" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Address:</label>
+                        <label class="col-form-label">Address:</label>
                         <input v-model="registerVetDto.address" type="text" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <label>City:</label>
-                        <input v-model="registerVetDto.city" type="text" class="form-control" />
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">City:</label>
+                            <input v-model="registerVetDto.city" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Postal:</label>
+                            <input v-model="registerVetDto.postal" type="text" class="form-control" />
+                        </div>
                     </div>
+ 
                     <div class="form-group">
-                        <label>Postal:</label>
-                        <input v-model="registerVetDto.postal" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Phone:</label>
-                        <input v-model="registerVetDto.phone" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Practice:</label>
-                        <select v-model="registerVetDto.practiceIds" multiple>
+                        <label class="col-form-label">Practice:</label>
+                        <select class="form-select" v-model="registerVetDto.practiceIds" multiple>
                             <option v-for="practice in practices":value="practice.id">
                                 {{ practice.name }}
                             </option>
                         </select> 
                     </div>
                     <div class="form-group">
-                        <label>Specialty:</label>
-                        <select v-model="registerVetDto.specialtyIds" multiple>
+                        <label class="col-form-label">Specialty:</label>
+                        <select class="form-select" v-model="registerVetDto.specialtyIds" multiple>
                             <option v-for="specialty in specialties":value="specialty.id">
                                 {{ specialty.name }}
                             </option>

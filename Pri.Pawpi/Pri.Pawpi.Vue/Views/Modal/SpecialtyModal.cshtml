@@ -41,17 +41,17 @@
                 </div>
                 <form>
                     <div class="form-group">
-                        <label>Name:</label>
+                        <label class="col-form-label">Name:</label>
                         <input v-model="specialty.name" type="text" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>Description:</label>
-                        <input v-model="specialty.description" type="text" class="form-control" />
+                        <label class="col-form-label">Description:</label>
+                        <textarea v-model="specialty.description" type="text" class="form-control" ></textarea>
                     </div>
                 </form>
                 <div class="form-group">
-                    <label>Veterinarians:</label>
-                    <select v-model="specialty.veterinarianIds" multiple>
+                    <label class="col-form-label">Veterinarians:</label>
+                    <select class="form-select" v-model="specialty.veterinarianIds" multiple>
                         <option v-for="vet in veterinarians" :value="vet.id">
                             {{ vet.firstName }} - {{ vet.lastName }}
                         </option>

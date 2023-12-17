@@ -51,50 +51,63 @@
                     {{errorMessage}}
                 </div>
                 <form>
-                    <div class="form-group">
-                        <label>First name:</label>
-                        <input v-model="veterinarian.firstName" type="text" class="form-control" />
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">First name:</label>
+                            <input v-model="veterinarian.firstName" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Last name:</label>
+                            <input v-model="veterinarian.lastName" type="text" class="form-control" />
+                        </div>
                     </div>
+
+
                     <div class="form-group">
-                        <label>Last name:</label>
-                        <input v-model="veterinarian.lastName" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>E-mail:</label>
+                        <label class="col-form-label">E-mail:</label>
                         <input v-model="veterinarian.email" type="email" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <label>Phone:</label>
-                        <input v-model="veterinarian.phone" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Address:</label>
-                        <input v-model="veterinarian.address" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>City:</label>
-                        <input v-model="veterinarian.city" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Postal:</label>
-                        <input v-model="veterinarian.postal" type="text" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Birthday:</label>
-                        <input v-model="veterinarian.birth" type="date" class="form-control" />
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Phone:</label>
+                            <input v-model="veterinarian.phone" type="tel" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Birthday:</label>
+                            <input v-model="veterinarian.birth" type="date" class="form-control" />
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Practice:</label>
-                        <select v-model="veterinarian.practices" multiple>
+                        <label class="col-form-label">Address:</label>
+                        <input v-model="veterinarian.address" type="text" class="form-control" />
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">City:</label>
+                            <input v-model="veterinarian.city" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Postal:</label>
+                            <input v-model="veterinarian.postal" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-form-label">Practice:</label>
+                        <select class="form-select" v-model="veterinarian.practices" multiple>
                             <option v-for="practice in practices" :value="practice.id">
                                 {{ practice.name }}
                             </option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Specialty:</label>
-                        <select v-model="veterinarian.specialties" multiple>
+                        <label class="col-form-label">Specialty:</label>
+                        <select class="form-select" v-model="veterinarian.specialties" multiple>
                             <option v-for="specialty in specialties" :value="specialty.id">
                                 {{ specialty.name }}
                             </option>
@@ -102,7 +115,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Picture:</label>
+                        <label class="col-form-label">Picture:</label>
                         <input v-on:change="handleVetFileChange" type="file" class="form-control" />
                     </div>
                 </form>
