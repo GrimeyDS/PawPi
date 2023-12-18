@@ -14,8 +14,8 @@
                     <p><b>Treatment:</b> {{consultation.treatment}}</p>
                     <p><b>Note:</b> {{consultation.notes}}</p>
                     <p><b>Date:</b> {{consultation.dateOfConsultation | formatDate() }}</p>
-                    <span><b>Image: </b> {{ consultation.image }} </span><br />
-                    <span><b>Document: </b> {{ consultation.document }} </span><br />
+                    <span v-if="consultation.image !== ''"><b>Image: </b> <a v-bind:href="consultation.image" target="_blank">download</a> </span><br />
+                    <span v-if="consultation.document !== ''"><b>Document: </b> <a v-bind:href="consultation.document" target="_blank">download</a></span><br />
                     <p><b>Veterinarian:</b> {{ consultation.veterinarianName }}</p>
 
                 </div>

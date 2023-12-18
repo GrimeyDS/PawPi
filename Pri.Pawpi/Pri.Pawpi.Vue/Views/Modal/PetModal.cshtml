@@ -15,7 +15,7 @@
                     <span><b>Breed:</b> {{pet.breed}}</span><br />
                     <span><b>Color:</b> {{pet.color}}</span><br />
                     <span><b>Weight:</b> {{pet.weight}}kg</span><br />
-                    <span><b>Pedigree: </b> {{pet.pedigree}} </span><br />
+                    <span v-if="pet.pedigree !== ''"><b>Pedigree: </b> <a v-bind:href="pet.pedigree" target="_blank">download</a> </span><br />
                     <span><b>Owner:</b> {{ customer.firstName }} {{ customer.lastName }}</span><br />
                     <span><b>Email:</b> {{ customer.email }}</span>
                 </div>
