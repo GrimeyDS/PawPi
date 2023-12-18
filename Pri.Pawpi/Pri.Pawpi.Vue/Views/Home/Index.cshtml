@@ -1,6 +1,10 @@
 ﻿<div id="title" class="row">
-    <h1 id="header">{{pageTitle}}</h1>
-    <partial name="../Pages/Login.cshtml" />
+    <div class="col">
+        <h1 id="header">{{pageTitle}}</h1>
+    </div>
+    <div class="col">
+        <partial name="../Pages/Login.cshtml" />
+    </div>
 </div>
 
 <div v-if="hasError" class="alert alert-danger m-auto w-50 text-center" id="error"> 

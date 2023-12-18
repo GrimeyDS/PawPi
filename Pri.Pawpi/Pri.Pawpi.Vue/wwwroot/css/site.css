@@ -19,8 +19,6 @@ h1 {
 
 #header {
     display: inline-block;
-    float: left;
-    width: 400px;
 }
 
 #registerBtn {
@@ -98,7 +96,6 @@ h1 {
     margin-left: auto;
     height: 30px;
     width: 1000px;
-    float: right;
     text-align: right
 }
 
