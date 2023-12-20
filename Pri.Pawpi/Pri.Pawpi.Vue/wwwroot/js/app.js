@@ -205,27 +205,6 @@
             this.consultation.document = event.target.files[0];
         },
 
-        //downloadFile(url) {
-        //    axios({
-        //        url: url, // Download File URL Goes Here
-        //        method: 'GET',
-        //        responseType: 'blob',
-        //        headers: {
-        //            'Access-Control-Allow-Origin': '*',
-        //            'Access-Control-Allow-Methods': ' GET, PUT, POST, DELETE, OPTIONS',
-        //            'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
-        //            'Access-Control-Allow-Credentials': 'false',
-        //        },
-        //    }).then((res) => {
-        //        var FILE = window.URL.createObjectURL(new Blob([res.data]));
-        //        var docUrl = document.createElement('x');
-        //        docUrl.href = FILE;
-        //        docUrl.setAttribute('download', 'file.pdf');
-        //        document.body.appendChild(docUrl);
-        //        docUrl.click();
-        //    });
-        //},
-
         //#endregion Files
 
         //#region General functions
