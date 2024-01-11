@@ -94,7 +94,7 @@ namespace Pri.Pawpi.Api.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Role, "Customer"),
-                new Claim(ClaimTypes.PrimarySid, user.CustomerId.ToString())
+                new Claim(ClaimTypes.PrimarySid, user.Id)
             };
 
             result = await _userManager.AddClaimsAsync(user, claims);
@@ -136,7 +136,7 @@ namespace Pri.Pawpi.Api.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Role, "Veterinarian"),
-                new Claim(ClaimTypes.PrimarySid, user.VeterinarianId.ToString())
+                new Claim(ClaimTypes.PrimarySid, user.Id)
             };
 
             result = await _userManager.AddClaimsAsync(user, claims);
