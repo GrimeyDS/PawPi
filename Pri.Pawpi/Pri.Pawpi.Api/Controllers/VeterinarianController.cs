@@ -13,10 +13,12 @@ namespace Pri.Pawpi.Api.Controllers
     {
 
         private readonly IVeterinarianService _veterinarianService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public VeterinarianController(IVeterinarianService veterinarianService) : base(veterinarianService)
+        public VeterinarianController(IVeterinarianService veterinarianService, IHttpContextAccessor httpContextAccessor) : base(veterinarianService)
         {
             _veterinarianService = veterinarianService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -24,7 +26,7 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var veterinarians = await _veterinarianService.GetAllAsync();
-            var veterinarianResponseDto = veterinarians.Items.MapDto();
+            var veterinarianResponseDto = veterinarians.Items.MapDto(_httpContextAccessor);
 
             return Ok(veterinarianResponseDto);
         }
@@ -38,7 +40,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!veterinarian.IsSuccess)
                 return BadRequest(veterinarian.Errors);
 
-            var veterinarianResponseDto = veterinarian.Item.MapDto();
+            var veterinarianResponseDto = veterinarian.Item.MapDto(_httpContextAccessor);
 
             return Ok(veterinarianResponseDto);
         }
@@ -52,7 +54,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!veterinarians.IsSuccess)
                 return NotFound(veterinarians.Errors);
 
-            var veterinarianResponseDto = veterinarians.Items.MapDto(name);
+            var veterinarianResponseDto = veterinarians.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(veterinarianResponseDto);
         }
@@ -86,7 +88,7 @@ namespace Pri.Pawpi.Api.Controllers
 
             var name = $"{vet.Item.FirstName} {vet.Item.LastName}";
 
-            var veterinarianResponseDto = consultations.Items.MapDto(name);
+            var veterinarianResponseDto = consultations.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(veterinarianResponseDto);
         }
@@ -103,7 +105,7 @@ namespace Pri.Pawpi.Api.Controllers
 
             var name = $"{vet.Item.FirstName} {vet.Item.LastName}";
 
-            var veterinarianResponseDto = practices.Items.MapDto(name);
+            var veterinarianResponseDto = practices.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(veterinarianResponseDto);
         }

@@ -149,7 +149,20 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                         City = "Test",
                         Postal = "9999",
                         Birth = new DateTime(1996, 6, 23),
-                        PracticeId = 1
+                        PracticeId = 999
+                    },
+                    new Customer
+                    {
+                        Id = 11,
+                        FirstName = "chay",
+                        LastName = "De Zutter",
+                        Email = "chaydz@gmail.com",
+                        Phone = "0032459698738",
+                        Address = "Hulstlo 21",
+                        City = "Beernem",
+                        Postal = "8730",
+                        Birth = new DateTime(1996, 6, 23),
+                        PracticeId = 999
                     }
                 );
         }

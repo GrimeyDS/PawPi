@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
 
@@ -14,6 +15,7 @@ namespace Pri.Pawpi.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "Practice/Veterinarian")]
         public virtual async Task<IActionResult> Delete(int id)
         {
             var result = await _service.DeleteAsync(id);

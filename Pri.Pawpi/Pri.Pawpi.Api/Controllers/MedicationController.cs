@@ -12,10 +12,12 @@ namespace Pri.Pawpi.Api.Controllers
     public class MedicationController : BaseController<Medication>
     {
         private readonly IMedicationService _medicationService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MedicationController(IMedicationService medicationService) : base(medicationService)
+        public MedicationController(IMedicationService medicationService, IHttpContextAccessor httpContextAccessor) : base(medicationService)
         {
             _medicationService = medicationService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -54,7 +56,7 @@ namespace Pri.Pawpi.Api.Controllers
 
             var name = medication.Item.Name;
 
-            var medicationResponseDto = pets.Items.MapDto(name);
+            var medicationResponseDto = pets.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(medicationResponseDto);
         }

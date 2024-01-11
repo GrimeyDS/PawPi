@@ -1,4 +1,5 @@
-﻿using Pri.Pawpi.Api.Dtos.Consultation.Response;
+﻿using Microsoft.AspNetCore.Http;
+using Pri.Pawpi.Api.Dtos.Consultation.Response;
 using Pri.Pawpi.Api.Dtos.Customer.Response;
 using Pri.Pawpi.Api.Dtos.Medication.Response;
 using Pri.Pawpi.Api.Dtos.Pet.Response;
@@ -12,15 +13,15 @@ namespace Pri.Pawpi.Api.Extensions
     public static class DtoMapperExtensionMethod
     {
         #region veterinarian dto mapper
-        public static VeterinarianGetAllDto MapDto(this IEnumerable<Veterinarian> vets)
+        public static VeterinarianGetAllDto MapDto(this IEnumerable<Veterinarian> vets, IHttpContextAccessor httpContextAccessor)
         {
             return new VeterinarianGetAllDto
             {
-                Veterinarians = vets.Select(v => v.MapDto())
+                Veterinarians = vets.Select(v => v.MapDto(httpContextAccessor))
             };
         }
 
-        public static VeterinarianGetDto MapDto(this Veterinarian vet)
+        public static VeterinarianGetDto MapDto(this Veterinarian vet, IHttpContextAccessor httpContextAccessor)
         {
             return new VeterinarianGetDto
             {
@@ -33,18 +34,18 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = vet.Email,
                 Phone = vet.Phone,
                 Postal = vet.Postal,
-                ImageUrl = vet.ImageFile,
+                Image = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Veterinarian/{vet.ImageFile}",
                 Specialties = vet.Specialties.MapBaseDto(),
                 Practices = vet.Practices.MapBaseDto(),
             };
         }
 
-        public static VeterinarianSearchDto MapDto(this IEnumerable<Veterinarian> vets, string name)
+        public static VeterinarianSearchDto MapDto(this IEnumerable<Veterinarian> vets, string name, IHttpContextAccessor httpContextAccessor)
         {
             return new VeterinarianSearchDto
             {
                 SearchInfo = $"{vets.Count()} Results were found for {name}",
-                Veterinarians = vets.Select(v => v.MapDto())
+                Veterinarians = vets.Select(v => v.MapDto(httpContextAccessor))
             };
         }
 
@@ -178,6 +179,8 @@ namespace Pri.Pawpi.Api.Extensions
                 Name = med.Name,
                 Notes = med.Notes,
                 SideEffects = med.SideEffects,
+                Dosage = med.Dosage,
+                Frequency = med.Frequency,
                 Pets = med.Pets.MapBaseDto()
             };
         }
@@ -194,15 +197,15 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region pet dto mapper
-        public static PetGetAllDto MapDto(this IEnumerable<Pet> pets)
+        public static PetGetAllDto MapDto(this IEnumerable<Pet> pets, IHttpContextAccessor httpContextAccessor)
         {
             return new PetGetAllDto
             {
-                Pets = pets.Select(p => p.MapDto())
+                Pets = pets.Select(p => p.MapDto(httpContextAccessor))
             };
         }
 
-        public static PetGetDto MapDto(this Pet pet)
+        public static PetGetDto MapDto(this Pet pet, IHttpContextAccessor httpContextAccessor)
         {
             return new PetGetDto
             {
@@ -213,19 +216,19 @@ namespace Pri.Pawpi.Api.Extensions
                 Color = pet.Color,
                 AnimalType = pet.AnimalType,
                 Weight = pet.Weight,
-                ImageUrl = pet.ImageFile,
-                PedigreeUrl = pet.PedigreeFile,
+                Image = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Pet/{pet.ImageFile}",
+                Pedigree = pet.PedigreeFile is not null ? $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Pedigrees/Pet/{pet.PedigreeFile}" : "",
                 Customer= pet.Customer.MapBaseDto(),
                 LastConsultation = pet.Consultations.MapBaseDto().LastOrDefault(),
             };
         }
 
-        public static PetSearchDto MapDto(this IEnumerable<Pet> pets, string name)
+        public static PetSearchDto MapDto(this IEnumerable<Pet> pets, string name, IHttpContextAccessor httpContextAccessor)
         {
             return new PetSearchDto
             {
                 SearchInfo = $"{pets.Count()} Results were found for {name}",
-                Pets = pets.Select(p => p.MapDto())
+                Pets = pets.Select(p => p.MapDto(httpContextAccessor))
             };
         }
 
@@ -246,15 +249,15 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region practice dto mapper
-        public static PracticeGetAllDto MapDto(this IEnumerable<Practice> practices)
+        public static PracticeGetAllDto MapDto(this IEnumerable<Practice> practices, IHttpContextAccessor httpContextAccessor)
         {
             return new PracticeGetAllDto
             {
-                Practices = practices.Select(c => c.MapDto())
+                Practices = practices.Select(c => c.MapDto(httpContextAccessor))
             };
         }
 
-        public static PracticeGetDto MapDto(this Practice practice)
+        public static PracticeGetDto MapDto(this Practice practice, IHttpContextAccessor httpContextAccessor)
         {
             return new PracticeGetDto
             {
@@ -267,17 +270,17 @@ namespace Pri.Pawpi.Api.Extensions
                 Postal = practice.Postal,
                 OpenTime = practice.OpenTime,
                 CloseTime = practice.CloseTime,
-                LogoUrl = practice.Logo,
+                Logo = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Logos/Practice/{practice.Logo}",
                 Veterinarians = practice.Veterinarians.MapBaseDto()
             };
         }
 
-        public static PracticeSearchDto MapDto(this IEnumerable<Practice> practices, string name)
+        public static PracticeSearchDto MapDto(this IEnumerable<Practice> practices, string name, IHttpContextAccessor httpContextAccessor)
         {
             return new PracticeSearchDto
             {
                 SearchInfo = $"{practices.Count()} Results were found for {name}",
-                Practices = practices.Select(c => c.MapDto())
+                Practices = practices.Select(c => c.MapDto(httpContextAccessor))
             };
         }
 
@@ -301,15 +304,15 @@ namespace Pri.Pawpi.Api.Extensions
         #endregion
 
         #region consultation dto mapper
-        public static ConsultationGetAllDto MapDto(this IEnumerable<Consultation> cons)
+        public static ConsultationGetAllDto MapDto(this IEnumerable<Consultation> cons, IHttpContextAccessor httpContextAccessor)
         {
             return new ConsultationGetAllDto
             {
-                Consultations = cons.Select(c => c.MapDto())
+                Consultations = cons.Select(c => c.MapDto(httpContextAccessor))
             };
         }
 
-        public static ConsultationGetDto MapDto(this Consultation con)
+        public static ConsultationGetDto MapDto(this Consultation con, IHttpContextAccessor httpContextAccessor)
         {
             return new ConsultationGetDto
             {
@@ -321,17 +324,17 @@ namespace Pri.Pawpi.Api.Extensions
                 DateOfConsultation = con.DateOfConsultation.Date,
                 VeterinarianName = con.Veterinarian.FirstName + " " + con.Veterinarian.LastName,
                 PetName = con.Pet.Name,
-                ImageUrl = con.ImageFile,
-                DocumentUrl = con.DocumentFile
+                Image = con.ImageFile is not null ? $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Images/Consultation/{con.ImageFile}" : "",
+                Document = con.DocumentFile is not null ?  $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host.Value}/Documents/Consultation/{con.DocumentFile}" : "",
             };
         }
 
-        public static ConsultationSearchDto MapDto(this IEnumerable<Consultation> cons, string name)
+        public static ConsultationSearchDto MapDto(this IEnumerable<Consultation> cons, string name, IHttpContextAccessor httpContextAccessor)
         {
             return new ConsultationSearchDto
             {
                 SearchInfo = $"{cons.Count()} Results were found for {name}",
-                Consultations = cons.Select(c => c.MapDto())
+                Consultations = cons.Select(c => c.MapDto(httpContextAccessor))
             };
         }
 

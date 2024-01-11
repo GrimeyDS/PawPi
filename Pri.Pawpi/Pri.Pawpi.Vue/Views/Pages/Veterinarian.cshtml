@@ -1,0 +1,35 @@
+﻿<div v-if="veterinariansVisible" class="row">
+
+    <div class="col col-lg-10 m-auto">
+        <div class="text-center mb-5">
+            <input id="searchInput" type="text" v-model="searchName" v-on:keyup="searchVeterinarianByName" placeholder="Search by name" />
+        </div>
+
+        <div class="text-end">
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showVeterinarianForm" v-if="isPractice" /></a>
+        </div>
+
+        <div v-if="searchResults">
+            <div v-for="veterinarian in veterinarians" id="card">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" v-on:click="showVeterinarianInfo(veterinarian.id)" v-bind:src="veterinarian.image" v-bind:alt="veterinarian.name">
+                    <div class="card-body" id="vet-body" v-on:click="showVeterinarianInfo(veterinarian.id)">
+                        <h5 class="card-title">{{veterinarian.firstName}} {{veterinarian.lastName}}</h5>
+                        <span v-for="specialties in veterinarian.specialties">{{specialties.name}} <br /> </span>
+                    </div>
+                    <div class="card-body" id="vet-prac">
+                    <ul class="list-group list-group-flush"> <li class="list-group-item"><b>Practice:</b></li></ul>
+                    <ol class="list-group list-group-flush" v-for="practice in veterinarian.practices">
+                        <li class="list-group-item"><a href="#" v-on:click="showPracticeInfo(practice.id)">{{practice.name}}</a></li>
+                    </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else class="alert alert-secondary m-auto w-50 text-center" id="error">
+            Geen resultaten gevonden.
+        </div>
+
+        <partial name="../Modal/PracticeModal.cshtml" />
+    </div>
+</div>

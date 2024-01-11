@@ -30,7 +30,7 @@ namespace Pri.Pawpi.Core.Services
         {
             var vets = await _repository.SearchByNameAsync(name);
 
-            if (vets.Count() == 0)
+            if (vets == null)
                 return vets.ToErrorModel(Constants.NoVeterinarianFoundMessage);
 
             return vets.ToResultModel();

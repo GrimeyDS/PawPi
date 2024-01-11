@@ -4,7 +4,6 @@ using Pri.Pawpi.Api.Dtos.Veterinarian.Request;
 using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
-using System.Security.Claims;
 
 namespace Pri.Pawpi.Api.Controllers
 {
@@ -13,10 +12,12 @@ namespace Pri.Pawpi.Api.Controllers
     public class CustomerController : BaseController<Customer>
     {
         private readonly ICustomerService _customerService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CustomerController(ICustomerService customerService) : base(customerService)
+        public CustomerController(ICustomerService customerService, IHttpContextAccessor httpContextAccessor) : base(customerService)
         {
             _customerService = customerService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -95,7 +96,7 @@ namespace Pri.Pawpi.Api.Controllers
 
             var name = $"{customer.Item.FirstName} {customer.Item.LastName}";
 
-            var customerResponseDto = pets.Items.MapDto(name);
+            var customerResponseDto = pets.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(customerResponseDto);
         }

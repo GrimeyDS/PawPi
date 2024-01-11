@@ -1,0 +1,38 @@
+﻿<div v-if="medicationsVisible" class="row">
+
+    <div class="col col-lg-8 m-auto">
+        <div class="text-center mb-5">
+            <input id="searchInput" type="text" v-model="searchName" v-on:keyup="searchMedicationByName" placeholder="Search by name" />
+            <input id="searchInput" type="text" v-model="searchSideEffect" v-on:keyup="searchMedicationBySideEffect" placeholder="Search by side effect" />
+        </div>
+
+        <div class="text-end">
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showMedicationForm" v-if="isVet" /></a>
+        </div>
+
+        <div v-if="searchResults">
+            <table class="table table-hover table-light table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Notes</th>
+                        <th scope="col">Side Effects</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="medication in medicine" v-on:click="showMedicationInfo(medication.id)">
+                        <td>{{ medication.name }}</td>
+                        <td>{{ medication.notes }}</td>
+                        <td>{{ medication.sideEffects }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-else class="alert alert-secondary m-auto w-50 text-center" id="error">
+            Geen resultaten gevonden.
+        </div>
+
+        <partial name="../Modal/MedicationModal.cshtml" />
+    </div>
+</div>
+

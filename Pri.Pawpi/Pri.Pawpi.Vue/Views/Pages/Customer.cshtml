@@ -1,0 +1,40 @@
+﻿<div v-if="customersVisible" class="row">
+
+    <div class="col col-lg-8 m-auto">
+        <div class="text-center mb-5">
+            <input id="searchInput" type="text" v-model="searchName" v-on:keyup="searchCustomerByName" placeholder="Search by name" />
+            <input id="searchInput" type="text" v-model="searchAddress" v-on:keyup="searchCustomerByAddress" placeholder="Search by address" />
+        </div>
+
+        <div class="text-end">
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showCustomerForm" v-if="isPractice || isVet" /></a>
+        </div>
+
+        <div v-if="searchResults">
+            <table class="table table-hover table-light table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="customer in customers" v-on:click="showCustomerInfo(customer.id)">
+                        <td>{{ customer.firstName }}</td>
+                        <td>{{ customer.lastName }}</td>
+                        <td>{{ customer.address }}</td>
+                        <td>{{ customer.city }}</td>
+                        <td>{{ customer.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-else class="alert alert-secondary m-auto w-50 text-center" id="error">
+            Geen resultaten gevonden.
+        </div>
+    </div>
+</div>
+

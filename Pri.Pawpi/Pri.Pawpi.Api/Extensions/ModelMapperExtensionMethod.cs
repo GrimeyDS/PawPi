@@ -25,7 +25,7 @@ namespace Pri.Pawpi.Api.Extensions
             {
                 Name = specialtyCreateDto.Name,
                 Description = specialtyCreateDto.Description,
-                VeterinarianIds = specialtyCreateDto.VeterinarianIds
+                VeterinarianIds = specialtyCreateDto.Veterinarians
             };
         }
 
@@ -36,7 +36,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Id = specialtyUpdateDto.Id,
                 Name = specialtyUpdateDto.Name,
                 Description = specialtyUpdateDto.Description,
-                VeterinarianIds = specialtyUpdateDto.VeterinarianIds
+                VeterinarianIds = specialtyUpdateDto.Veterinarians
             };
         }
         #endregion
@@ -49,7 +49,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Name = medicationCreateDto.Name,
                 Notes = medicationCreateDto.Notes,
                 SideEffects = medicationCreateDto.SideEffects,
-                PetIds = medicationCreateDto.PetIds,
+                PetIds = medicationCreateDto.Pets,
                 Dosage = medicationCreateDto.Dosage,
                 Frequency = medicationCreateDto.Frequency
             };
@@ -63,7 +63,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Name = medicationUpdateDto.Name,
                 Notes = medicationUpdateDto.Notes,
                 SideEffects = medicationUpdateDto.SideEffects,
-                PetIds = medicationUpdateDto.PetIds,
+                PetIds = medicationUpdateDto.Pets,
                 Dosage = medicationUpdateDto.Dosage,
                 Frequency = medicationUpdateDto.Frequency
             };
@@ -84,9 +84,9 @@ namespace Pri.Pawpi.Api.Extensions
                 Phone = veterinarianCreateDto.Phone,
                 Postal = veterinarianCreateDto.Postal,
                 Image = veterinarianCreateDto.Image,
-                SpecialtyIds = veterinarianCreateDto.SpecialtyIds,
-                ConsultationIds = veterinarianCreateDto.ConsultationIds,
-                PracticeIds = veterinarianCreateDto.PracticeIds
+                SpecialtyIds = veterinarianCreateDto.Specialties,
+                ConsultationIds = veterinarianCreateDto.Consultations,
+                PracticeIds = veterinarianCreateDto.Practices
             };
         }
 
@@ -103,9 +103,10 @@ namespace Pri.Pawpi.Api.Extensions
                 Email = veterinarianUpdateDto.Email,
                 Phone = veterinarianUpdateDto.Phone,
                 Postal = veterinarianUpdateDto.Postal,
-                SpecialtyIds = veterinarianUpdateDto.SpecialtyIds,
-                ConsultationIds = veterinarianUpdateDto.ConsultationIds,
-                PracticeIds = veterinarianUpdateDto.PracticeIds
+                Image = veterinarianUpdateDto.Image,
+                SpecialtyIds = veterinarianUpdateDto.Specialties,
+                ConsultationIds = veterinarianUpdateDto.Consultations,
+                PracticeIds = veterinarianUpdateDto.Practices
             };
         }
         #endregion
@@ -124,7 +125,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Phone = customerCreateDto.Phone,
                 Postal = customerCreateDto.Postal,
                 PracticeId = customerCreateDto.PracticeId,
-                PetIds = customerCreateDto.PetIds
+                PetIds = customerCreateDto.Pets
             };
         }
 
@@ -142,7 +143,7 @@ namespace Pri.Pawpi.Api.Extensions
                 Phone = customerUpdateDto.Phone,
                 Postal = customerUpdateDto.Postal,
                 PracticeId = customerUpdateDto.PracticeId,
-                PetIds = customerUpdateDto.PetIds
+                PetIds = customerUpdateDto.Pets
             };
         }
         #endregion
@@ -159,8 +160,8 @@ namespace Pri.Pawpi.Api.Extensions
                 DateOfConsultation = consultationCreateDto.DateOfConsultation,
                 Image = consultationCreateDto.Image,
                 Document = consultationCreateDto.Document,
-                VeterinarianId = consultationCreateDto.VeterinarianId,
-                PetId = consultationCreateDto.PetId
+                VeterinarianId = consultationCreateDto.Veterinarian,
+                PetId = consultationCreateDto.Pet
             };
         }
 
@@ -176,8 +177,8 @@ namespace Pri.Pawpi.Api.Extensions
                 DateOfConsultation = consultationUpdateDto.DateOfConsultation,
                 Image = consultationUpdateDto.Image,
                 Document = consultationUpdateDto.Document,
-                VeterinarianId = consultationUpdateDto.VeterinarianId,
-                PetId = consultationUpdateDto.PetId
+                VeterinarianId = consultationUpdateDto.Veterinarian,
+                PetId = consultationUpdateDto.Pet
             };
         }
         #endregion
@@ -195,9 +196,9 @@ namespace Pri.Pawpi.Api.Extensions
                 Weight = petCreateDto.Weight,
                 Image = petCreateDto.Image,
                 Pedigree = petCreateDto.Pedigree,
-                ConsultationIds = petCreateDto.ConsultationIds,
-                MedicationIds = petCreateDto.MedicationIds,
-                CustomerId = petCreateDto.CustomerId
+                ConsultationIds = petCreateDto.Consultations,
+                MedicationIds = petCreateDto.Medicine,
+                CustomerId = petCreateDto.Customer
             };
         }
 
@@ -214,9 +215,9 @@ namespace Pri.Pawpi.Api.Extensions
                 Weight = petUpdateDto.Weight,
                 Image = petUpdateDto.Image,
                 Pedigree = petUpdateDto.Pedigree,
-                ConsultationIds = petUpdateDto.ConsultationIds,
-                MedicationIds = petUpdateDto.MedicationIds,
-                CustomerId = petUpdateDto.CustomerId
+                ConsultationIds = petUpdateDto.Consultations,
+                MedicationIds = petUpdateDto.Medicine,
+                CustomerId = petUpdateDto.Customer
             };
         }
         #endregion
@@ -235,8 +236,8 @@ namespace Pri.Pawpi.Api.Extensions
                 OpenTime = practiceCreateDto.OpenTime,
                 CloseTime = practiceCreateDto.CloseTime,
                 Logo = practiceCreateDto.Logo,
-                CustomerIds = practiceCreateDto.CustomerIds,
-                VeterinarianIds = practiceCreateDto.VeterinarianIds
+                CustomerIds = practiceCreateDto.Customers,
+                VeterinarianIds = practiceCreateDto.Veterinarians
             };
         }
 
@@ -254,8 +255,8 @@ namespace Pri.Pawpi.Api.Extensions
                 OpenTime = practiceUpdateDto.OpenTime,
                 CloseTime = practiceUpdateDto.CloseTime,
                 Logo = practiceUpdateDto.Logo,
-                CustomerIds = practiceUpdateDto.CustomerIds,
-                VeterinarianIds = practiceUpdateDto.VeterinarianIds
+                CustomerIds = practiceUpdateDto.Customers,
+                VeterinarianIds = practiceUpdateDto.Veterinarians
             };
         }
         #endregion

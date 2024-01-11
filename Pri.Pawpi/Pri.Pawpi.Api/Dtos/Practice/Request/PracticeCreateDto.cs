@@ -24,7 +24,7 @@ namespace Pri.Pawpi.Api.Dtos.Practice.Request
         [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime CloseTime { get; set; }
         public IFormFile Logo { get; set; }
-        public IEnumerable<int> CustomerIds { get; set; }
-        public IEnumerable<int> VeterinarianIds { get; set; }
+        public IEnumerable<int> Customers { get; set; }
+        public IEnumerable<int> Veterinarians { get; set; }
     }
 }

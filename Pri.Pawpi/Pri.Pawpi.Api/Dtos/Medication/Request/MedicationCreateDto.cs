@@ -14,6 +14,6 @@ namespace Pri.Pawpi.Api.Dtos.Medication.Request
 
         [Required(ErrorMessage = "Frequency is required")]
         public string Frequency { get; set; }
-        public IEnumerable<int> PetIds { get; set; }
+        public IEnumerable<int> Pets { get; set; }
     }
 }

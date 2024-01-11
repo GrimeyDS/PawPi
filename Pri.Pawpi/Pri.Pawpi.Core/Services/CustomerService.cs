@@ -60,7 +60,7 @@ namespace Pri.Pawpi.Core.Services
         {
             var customers = await _customerRepository.SearchByNameAsync(name);
 
-            if (customers.Count() == 0)
+            if (customers == null)
                 return customers.ToErrorModel(Constants.NoCustomerFoundMessage);
 
             return customers.ToResultModel();
@@ -70,7 +70,7 @@ namespace Pri.Pawpi.Core.Services
         {
             var customers = await _customerRepository.SearchByAddressAsync(address);
 
-            if (customers.Count() == 0)
+            if (customers == null)
                 return customers.ToErrorModel(Constants.NoCustomerFoundMessage);
 
             return customers.ToResultModel();

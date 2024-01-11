@@ -143,7 +143,7 @@ namespace Pri.Pawpi.Core.Services
             if (model.Document is null)
                 return string.Empty;
 
-            var docuResulst = await _fileService.StoreFile<Consultation>(model.Image, "Documents");
+            var docuResulst = await _fileService.StoreFile<Consultation>(model.Document, "Documents");
             if (!docuResulst.IsSuccess)
                 return docuResulst.Error;
 

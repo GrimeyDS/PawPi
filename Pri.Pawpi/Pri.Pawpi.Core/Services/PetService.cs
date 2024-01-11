@@ -161,10 +161,6 @@ namespace Pri.Pawpi.Core.Services
             if (!customers.CheckIfIdExists(model.CustomerId))
                 return Constants.UnknownCustomerMessage;
 
-            if (!consultations.CheckIdsInput(modelConsultationIds))
-                return Constants.NoConsultationMessage;
-            if (!medicine.CheckIdsInput(modelMedicineIds))
-                return Constants.NoMedicineMessage;
             if (model.CustomerId == 0)
                 return Constants.NoCustomerMessage;
 
@@ -208,7 +204,7 @@ namespace Pri.Pawpi.Core.Services
             if (model.Pedigree is null)
                 return string.Empty;
 
-            var pedigreeResult = await _fileService.StoreFile<Pet>(model.Image, "Pedigrees");
+            var pedigreeResult = await _fileService.StoreFile<Pet>(model.Pedigree, "Pedigrees");
             if (!pedigreeResult.IsSuccess)
                 return pedigreeResult.Error;
 

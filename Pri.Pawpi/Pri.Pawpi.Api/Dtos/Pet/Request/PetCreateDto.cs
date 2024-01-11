@@ -15,9 +15,9 @@ namespace Pri.Pawpi.Api.Dtos.Pet.Request
         public double? Weight { get; set; }
         public IFormFile Image { get; set; }
         public IFormFile Pedigree { get; set; }
-        public List<int> ConsultationIds { get; set; }
-        public List<int> MedicationIds { get; set; }
+        public List<int> Consultations { get; set; }
+        public List<int> Medicine { get; set; }
         [Required(ErrorMessage = "Customer is required")]
-        public int CustomerId { get; set; }
+        public int Customer { get; set; }
     }
 }

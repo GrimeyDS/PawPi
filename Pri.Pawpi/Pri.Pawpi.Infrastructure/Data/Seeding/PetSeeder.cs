@@ -172,6 +172,28 @@ namespace Pri.Pawpi.Infrastructure.Data.Seeding
                      AnimalType = "Elephant",
                      Weight = 5000,
                      CustomerId = 8
+                 },
+                 new Pet
+                 {
+                    Id = 16,
+                    Name = "The small one",
+                    CallName = "Smallie",
+                    Breed = "Mouse",
+                    Color = "Grey",
+                    AnimalType = "Mouse",
+                    Weight = 0.5,
+                    CustomerId = 999
+                 },
+                 new Pet
+                 {
+                    Id = 17,
+                    Name = "The big one",
+                    CallName = "Biggie",
+                    Breed = "Elephant",
+                    Color = "Grey",
+                    AnimalType = "Elephant",
+                    Weight = 5000,
+                    CustomerId = 999
                  });
         }
     }

@@ -1,0 +1,68 @@
+﻿<div class="modal fade" id="specialtyInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Veterinarians specialized in {{specialty.name}}</h5>
+                <button type="button" v-on:click="hideSpecialtyInfo" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div v-if="veterinarians === undefined || veterinarians === null">No vets available</div>
+                    <div v-else class="card-text" v-for="vet in veterinarians">
+                        <h5 >{{vet.firstName}} {{vet.lastName}}<br /></h5>
+                        <span v-for="prac in vet.practices">{{prac.name}}<br/></span>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="showUpdateSpecialtyForm" v-if="isVet || isPractice" class="btn btn-warning">Update</button>
+                <button type="button" v-on:click.prevent="deleteSpecialty(specialty.id)" v-if="isVet" class="btn btn-danger">Delete</button>
+                <button type="button" v-on:click="hideSpecialtyInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addSpecialtyForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Specialty</h5>
+                <button type="button" v-on:click="hideSpecialtyForm" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div v-if="hasInputError" class="alert alert-danger m-auto" id="formError">
+                    {{errorMessage}}
+                </div>
+                <form>
+                    <div class="form-group">
+                        <label class="col-form-label">Name:</label>
+                        <input v-model="specialty.name" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Description:</label>
+                        <textarea v-model="specialty.description" type="text" class="form-control" ></textarea>
+                    </div>
+                </form>
+                <div class="form-group">
+                    <label class="col-form-label">Veterinarians:</label>
+                    <select class="form-select" v-model="selectedVets" multiple>
+                        <option v-for="vet in veterinarians" :value="vet.id" :key="vet.id">
+                            {{ vet.firstName }} - {{ vet.lastName }}
+                        </option>
+                    </select>
+                </div>
+             </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hideSpecialtyForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" v-on:click="addSpecialty" v-if="!isUpdate" class="btn btn-primary">Add Specialty</button>
+                <button type="button" v-on:click="updateSpecialty" v-if="isUpdate" class="btn btn-primary">Update Specialty</button>
+            </div>
+        </div>
+    </div>
+</div>

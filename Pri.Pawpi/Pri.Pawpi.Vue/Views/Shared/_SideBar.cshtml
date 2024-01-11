@@ -1,0 +1,52 @@
+﻿<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto mx-auto link-dark text-decoration-none">
+        <img id="navLogo" src="../assets/images/logo.png" alt="PawPi logo" />
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="#" v-on:click="setHome" v-on:load="setHome" class="nav-link link-dark" v-bind:class="{ active: homeVisible }">
+                Home
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" v-on:click="getAllPractices" v-bind:class="{ active: practicesVisible }" class="nav-link link-dark">
+                Practices
+            </a>
+        </li>
+        <li>
+            <a href="#" v-on:click="getAllVeterinarians" v-bind:class="{ active: veterinariansVisible }" class="nav-link link-dark">
+                Veterinarians
+            </a>
+        </li>
+        <li v-if="isVet || isPractice">
+            <a href="#" v-on:click="getAllCustomers" v-bind:class="{ active: customersVisible }" class="nav-link link-dark">
+                Customers
+            </a>
+        </li>
+        <li v-if="isVet || isPractice || isCustomer">
+            <a href="#" v-on:click="getAllPets" v-bind:class="{ active: petsVisible }" class="nav-link link-dark">
+                Pets
+            </a>
+        </li>
+        <li v-if="isVet || isPractice">
+            <a href="#" v-on:click="getAllConsultations" v-bind:class="{ active: consultationsVisible }" class="nav-link link-dark">
+                Consultations
+            </a>
+        </li>
+        <li>
+            <a href="#" v-on:click="getAllSpecialties" v-bind:class="{ active: specialtiesVisible }" class="nav-link link-dark">
+                Specialties
+            </a>
+        </li>
+        <li v-if="isVet || isPractice">
+            <a href="#" v-on:click="getAllMedicine" v-bind:class="{ active: medicationsVisible }" class="nav-link link-dark">
+                Medication
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+
+<div class="b-example-divider"></div>

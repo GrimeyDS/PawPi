@@ -13,10 +13,12 @@ namespace Pri.Pawpi.Api.Controllers
     public class PetController : BaseController<Pet>
     {
         private readonly IPetService _petService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PetController(IPetService petService) : base(petService)
+        public PetController(IPetService petService, IHttpContextAccessor httpContextAccessor) : base(petService)
         {
             _petService = petService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
@@ -24,7 +26,7 @@ namespace Pri.Pawpi.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var pets = await _petService.GetAllAsync();
-            var petResponseDto = pets.Items.MapDto();
+            var petResponseDto = pets.Items.MapDto(_httpContextAccessor);
 
             return Ok(petResponseDto);
         }
@@ -44,7 +46,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!pet.IsSuccess)
                 return BadRequest(pet.Errors);
 
-            var petResponseDto = pet.Item.MapDto();
+            var petResponseDto = pet.Item.MapDto(_httpContextAccessor);
 
             return Ok(petResponseDto);
         }
@@ -58,7 +60,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!pets.IsSuccess)
                 return NotFound(pets.Errors);
 
-            var petResponseDto = pets.Items.MapDto(name);
+            var petResponseDto = pets.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(petResponseDto);
         }
@@ -72,7 +74,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!pets.IsSuccess)
                 return NotFound(pets.Errors);
 
-            var petResponseDto = pets.Items.MapDto(animalType);
+            var petResponseDto = pets.Items.MapDto(animalType, _httpContextAccessor);
 
             return Ok(petResponseDto);
         }
@@ -86,7 +88,7 @@ namespace Pri.Pawpi.Api.Controllers
             if (!pets.IsSuccess)
                 return NotFound(pets.Errors);
 
-            var petResponseDto = pets.Items.MapDto(breed);
+            var petResponseDto = pets.Items.MapDto(breed, _httpContextAccessor);
 
             return Ok(petResponseDto);
         }
@@ -140,7 +142,7 @@ namespace Pri.Pawpi.Api.Controllers
 
             var name = $"{pet.Item.Name}";
 
-            var petResponseDto = consultations.Items.MapDto(name);
+            var petResponseDto = consultations.Items.MapDto(name, _httpContextAccessor);
 
             return Ok(petResponseDto);
         }

@@ -1,0 +1,39 @@
+﻿<div v-if="consultationsVisible" class="row">
+
+    <div class="col col-lg-8 m-auto">
+        <div class="text-center mb-5">
+            <input id="searchInput" type="text" v-model="searchName" v-on:keyup="searchConsultationByName" placeholder="Search by title" />
+            <input id="searchInput" type="text" v-model="searchDiagnose" v-on:keyup="searchConsultationByDiagnose" placeholder="Search by diagnose" />
+        </div>
+
+        <div class="text-end">
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showConsultationForm" v-if="isVet" /></a>
+        </div>
+
+        <div v-if="searchResults">
+            <table class="table table-hover table-light table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Pet</th>
+                        <th scope="col">Veterinarian</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="consultation in consultations" v-on:click="showConsultationInfo(consultation.id)">
+                        <td>{{ consultation.title }}</td>
+                        <td>{{ consultation.dateOfConsultation | formatDate() }}</td>
+                        <td>{{ consultation.petName }}</td>
+                        <td>{{ consultation.veterinarianName }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-else class="alert alert-secondary m-auto w-50 text-center" id="error">
+            Geen resultaten gevonden.
+        </div>
+
+        <partial name="../Modal/ConsultationModal.cshtml" />
+    </div>
+</div>

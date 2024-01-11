@@ -1,0 +1,108 @@
+﻿<div class="modal fade" id="petInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{pet.name}}</h5>
+                <button type="button" v-on:click="hidePetInfo" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <img v-bind:src="pet.image" v-bind:alt="pet.name" id="petImage" />
+                    <h5 class="card-title">{{pet.callName}}</h5>
+                    <h6>AnimalType: {{pet.animalType}}</h6>
+                    <span><b>Breed:</b> {{pet.breed}}</span><br />
+                    <span><b>Color:</b> {{pet.color}}</span><br />
+                    <span><b>Weight:</b> {{pet.weight}}kg</span><br />
+                    <span v-if="pet.pedigree !== ''"><b>Pedigree: </b> <a v-bind:href="pet.pedigree" target="_blank">download</a> </span><br />
+                    <span><b>Owner:</b> {{ customer.firstName }} {{ customer.lastName }}</span><br />
+                    <span><b>Email:</b> {{ customer.email }}</span>
+                </div>
+                <div class="mt-4">
+                    <h5 class="card-title  mb-0">Last Consultation:</h5>
+                    <span>{{consultation.title}} - {{consultation.dateOfConsultation | formatDate() }}<br /></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="showUpdatePetForm" v-if="isVet" class="btn btn-warning">Update</button>
+                <button type="button" v-on:click.prevent="deletePet(pet.id)" v-if="isVet || isPractice" class="btn btn-danger">Delete</button>
+                <button type="button" v-on:click="hidePetInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addPetForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Pet</h5>
+                <button type="button" v-on:click="hidePetForm" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div v-if="hasInputError" class="alert alert-danger m-auto" id="formError">
+                    {{errorMessage}}
+                </div>
+                <form>
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Name:</label>
+                            <input v-model="pet.name" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Call name:</label>
+                            <input v-model="pet.callName" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Breed:</label>
+                            <input v-model="pet.breed" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Animal type:</label>
+                            <input v-model="pet.animalType" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label class="col-form-label">Color:</label>
+                            <input v-model="pet.color" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group col">
+                            <label class="col-form-label">Weight:</label>
+                            <input v-model="pet.weight" type="number" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-form-label">Customer:</label>
+                        <select class="form-select" name="Customer" v-model="customer.id">
+                            <option v-for="customer in customers" :value="customer.id">{{customer.firstName}} {{customer.lastName}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-form-label">Picture:</label>
+                        <input v-on:change="handlePetImageChange" id="fileUploadPetPicture" type="file" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-form-label">Pedigree:</label>
+                        <input v-on:change="handlePetPedigreeChange" id="fileUploadPetPedigree" type="file" class="form-control" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" v-on:click="hidePetForm" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" v-on:click="addPet" v-if="!isUpdate" class="btn btn-primary">Add Pet</button>
+                <button type="button" v-on:click="updatePet" v-if="isUpdate" class="btn btn-primary">Update Pet</button>
+            </div>
+        </div>
+    </div>
+</div>

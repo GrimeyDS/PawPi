@@ -1,0 +1,31 @@
+﻿<div v-if="practicesVisible" class="row">
+
+    <div class="col col-lg-8 m-auto">
+        <div class="text-center mb-5">
+            <input id="searchInput" type="text" v-model="searchName" v-on:keyup="searchPracticeByName" placeholder="Search by name" />
+            <input id="searchInput" type="text" v-model="searchAddress" v-on:keyup="searchPracticeByAddress" placeholder="Search by address" />
+        </div>
+
+        <div class="text-end">
+            <a href="#"><img class="crudIcon" src="~/assets/images/add.png" alt="add" v-on:click="showAddPracticeForm" v-if="isPractice && isVet" /></a>
+        </div>
+
+        <div v-if="searchResults">
+            <div v-for="practice in practices" >
+                <div class="card m-3">
+                    <h5 class="card-header">{{practice.name}}</h5>
+                    <div class="card-body">
+                        <img v-bind:src="practice.logo" v-bind:alt="practice.name" id="practiceLogo" />
+                        <h5 class="card-title">{{practice.address}}</h5>
+                        <h6>{{practice.postal}} {{practice.city}}</h6>
+                        <p class="card-text">Opening hours: {{ practice.openTime | formatTime() }} - {{ practice.closeTime | formatTime() }}</p>
+                        <a href="#" v-on:click="showPracticeInfo(practice.id)" class="btn btn-primary">See details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else class="alert alert-secondary m-auto w-50 text-center" id="error">
+            Geen resultaten gevonden.
+        </div>
+    </div>
+</div>

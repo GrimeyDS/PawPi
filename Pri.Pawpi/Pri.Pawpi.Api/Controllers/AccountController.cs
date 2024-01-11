@@ -9,6 +9,7 @@ using Pri.Pawpi.Api.Extensions;
 using Pri.Pawpi.Core.Entities;
 using Pri.Pawpi.Core.Interfaces.Services;
 using Pri.Pawpi.Core.Services;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -106,7 +107,7 @@ namespace Pri.Pawpi.Api.Controllers
 
         [Authorize(Policy = "Practice")]
         [HttpPost("RegisterVeterinarian")]
-        public async Task<IActionResult> Register([FromForm] VeterinarianRegisterRequestDto accountRegisterDto)
+        public async Task<IActionResult> Register(VeterinarianRegisterRequestDto accountRegisterDto)
         {
             var user = new ApplicationUser
             {
@@ -144,6 +145,30 @@ namespace Pri.Pawpi.Api.Controllers
                 return BadRequest(result.Errors);
 
             return Ok("Veterinarian registered");
+        }
+
+        [Authorize(Policy = "AllUsers")]
+        [HttpGet("GetRole")]
+        public IActionResult GetRole()
+        {
+            var userClaims = HttpContext.User.Claims;
+            var role = userClaims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+            var roleArray = role.ToString().Split("role: ");
+            var roleString = roleArray[1];
+
+            return Ok(roleString);
+        }
+
+        [Authorize(Policy = "AllUsers")]
+        [HttpGet("GetId")]
+        public IActionResult GetId()
+        {
+            var userClaims = HttpContext.User.Claims;
+            var id = userClaims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.PrimarySid));
+            var idArray = id.ToString().Split("primarysid: ");
+            var idString = idArray[1];
+
+            return Ok(idString);
         }
     }
 }
